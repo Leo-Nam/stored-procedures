@@ -14,6 +14,6 @@ Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
 
-	SELECT COUNT(ID) INTO OUT_RESULT FROM sys_policy WHERE ID = IN_POLICY_ID;
+	SELECT COUNT(id) INTO OUT_RESULT FROM sys_policy WHERE id = IN_POLICY_ID;
     /*sys_policy에서 요청받은 정책이 존재하는지 체크한다.*/
 END

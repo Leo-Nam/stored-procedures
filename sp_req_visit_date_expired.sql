@@ -29,7 +29,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
 	IF @VISIT_DATE IS NOT NULL THEN
 		IF @CURRENT_DT >= @VISIT_DATE THEN
 			SET rtn_val = 0;
-			SET msg_txt = 'Success1';
+			SET msg_txt = 'Success11111';
 		ELSE
 			SET rtn_val = 26601;
 			SET msg_txt = 'The expected date of visit has not yet come';

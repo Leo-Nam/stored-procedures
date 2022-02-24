@@ -23,13 +23,13 @@ AUTHOR 			: Leo Nam
     IF @VISIT_EARLY_CLOSING IS NULL THEN
     /*조기마감되지 않은 상태*/
 		SET rtn_val 		= 0;
-		SET msg_txt 		= 'Success';
+		SET msg_txt 		= 'Success123';
     ELSE
     /*@VISIT_EARLY_CLOSING이 NULL값이 아니라면*/
 		IF @VISIT_EARLY_CLOSING = FALSE THEN
 		/*방문이 조기마감이 되지 않은 경우*/
 			SET rtn_val 		= 0;
-			SET msg_txt 		= 'Success';
+			SET msg_txt 		= 'Success234';
 		ELSE
 		/*방문이 조기마감된 경우*/
 			SET rtn_val 		= 29501;

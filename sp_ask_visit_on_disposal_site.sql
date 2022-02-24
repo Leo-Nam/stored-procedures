@@ -123,7 +123,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 												IF ROW_COUNT() = 1 THEN
 												/*정상적으로 변경완료된 경우*/
 													SET @rtn_val 		= 0;
-													SET @msg_txt 		= 'Success';
+													SET @msg_txt 		= 'Success99';
 												ELSE
 												/*정상적으로 변경되지 않은 경우*/
 													SET @rtn_val 		= 23101;
@@ -154,7 +154,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 												IF ROW_COUNT() = 1 THEN
 												/*정상적으로 변경완료된 경우*/
 													SET @rtn_val 		= 0;
-													SET @msg_txt 		= 'Success';
+													SET @msg_txt 		= 'Success88';
 												ELSE
 												/*정상적으로 변경되지 않은 경우*/
 													SET @rtn_val 		= 23101;
@@ -196,7 +196,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								IF @rtn_val = 0 THEN
 								/*정상적으로 입력완료된 경우*/
 									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success2';
+									SET @msg_txt 		= 'Success77';
 								ELSE
 								/*정상적으로 입력되지 않은 경우*/
 									SIGNAL SQLSTATE '23000';

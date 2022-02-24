@@ -19,8 +19,8 @@ AUTHOR 			: Leo Nam
     
 	CALL sp_req_policy_direction('minimun_visit_required', @minimum_required_time);
 
-	SET @TIME_REQUIRED = CONCAT(@minimum_required_time, ':00:00');
-	SET @OUT_TIME = ADDTIME(@CURRENT_DT, @TIME_REQUIRED);
+	SET @time_plue = CONCAT(@minimum_required_time, ':00:00');
+	SET @time_new = ADDTIME(@CURRENT_DT, @time_plue);
     
     SELECT VISIT_END_AT INTO @VISIT_END_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
     /*배출자가 지정한 방문예정일을 구해온다.*/
@@ -30,7 +30,7 @@ AUTHOR 			: Leo Nam
 		SET OUT_COLLECTOR_CAN_VISIT = FALSE;
     ELSE
     /*배출자의 방문예정일이 NULL이 아닌 경우로서 배출자가 방문예정일을 정하고 있는 경우*/
-		IF @VISIT_END_AT >= @OUT_TIME THEN
+		IF @VISIT_END_AT >= @time_new THEN
 		/*배출자의 방문예정일에 여유가 있는 경우*/
 			SET OUT_COLLECTOR_CAN_VISIT = TRUE;
         ELSE

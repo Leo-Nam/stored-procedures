@@ -20,7 +20,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
     IF @TRMT_BIZ_CODE IS NOT NULL THEN
 		IF @TRMT_BIZ_CODE < 9 THEN
 			SET rtn_val = 0;
-            SET msg_txt = 'Success99';
+            SET msg_txt = 'Success987';
 		ELSE
 			SET rtn_val = 26301;
             SET msg_txt = 'User is not a manager belonging to the collector';

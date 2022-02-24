@@ -28,7 +28,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
 			SET msg_txt = 'user not fouund';
         ELSE
 			SET rtn_val = 0;
-			SET msg_txt = 'Success';
+			SET msg_txt = 'Success7777';
         END IF;
     ELSE
 		SELECT COUNT(ID) INTO @CHK_COUNT 
@@ -42,7 +42,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
 			SET msg_txt = 'user not fouund';
         ELSE
 			SET rtn_val = 0;
-			SET msg_txt = 'Success';
+			SET msg_txt = 'Success6666';
         END IF;
     END IF;
 END
