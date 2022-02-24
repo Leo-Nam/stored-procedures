@@ -1,5 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_can_ask_visit`(
 	IN IN_DISPOSER_ORDER_ID				BIGINT,				/*폐기물 배출내역 고유등록번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
+    IN	IN_VISIT_AT						DATETIME,			/*수거자가 방문을 요청하는 날짜*/
     OUT	OUT_COLLECTOR_CAN_VISIT			TINYINT				/*방문신청가능한 경우 TRUE, 그렇지 않은 경우 FALSE 반환*/
 )
 BEGIN
@@ -17,10 +18,10 @@ AUTHOR 			: Leo Nam
     CALL sp_req_current_time(@CURRENT_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
-	CALL sp_req_policy_direction('minimun_visit_required', @minimum_required_time);
+	CALL sp_req_policy_direction('minimum_visit_required', @minimum_required_time);
 
 	SET @time_plue = CONCAT(@minimum_required_time, ':00:00');
-	SET @time_new = ADDTIME(@CURRENT_DT, @time_plue);
+	SET @time_new = ADDTIME(IN_VISIT_AT, @time_plue);
     
     SELECT VISIT_END_AT INTO @VISIT_END_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
     /*배출자가 지정한 방문예정일을 구해온다.*/
