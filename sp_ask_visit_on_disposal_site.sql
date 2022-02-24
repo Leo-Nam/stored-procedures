@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_ask_visit_on_disposal_site`(
 	IN IN_USER_ID				BIGINT,				/*입력값 : 방문요청자(수거자 사이트의 관리자)의 고유등록번호(USER.ID)*/
-	IN IN_DISPOSAL_ORDER_ID		BIGINT,				/*입력값 : 배출 신청 고유등록번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
+	IN IN_DISPOSER_ORDER_ID		BIGINT,				/*입력값 : 배출 신청 고유등록번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
 	IN IN_VISIT_AT				DATETIME			/*입력값 : 방문요청을 하는 자의 방문예정일*/
 )
 BEGIN
@@ -52,21 +52,21 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
         /*USER가 소속한 사이트가 수집운반업 등 폐기물을 처리할 자격이 있는 경우*/        
 			CALL sp_req_disposal_order_exists(
 			/*폐기물 배출 요청 내역이 존재하는지 검사한다.*/
-				IN_DISPOSAL_ORDER_ID,
+				IN_DISPOSER_ORDER_ID,
 				@DISPOSAL_ORDER_EXISTS
 			);
 			IF @DISPOSAL_ORDER_EXISTS > 0 THEN
 			/*폐기물 배출 요청 내역이 존재하는 경우*/
 				CALL sp_req_collector_can_ask_visit(
                 /*수집운반업자 등이 방문신청을 할수 있는지 검사한다.*/
-					IN_DISPOSAL_ORDER_ID,
+					IN_DISPOSER_ORDER_ID,
                     @COLLECTOR_CAN_ASK_VISIT
                 );
                 IF @COLLECTOR_CAN_ASK_VISIT = TRUE THEN
                 /*수집운반업자등이 방문신청을 할 수 있는 경우*/
 					CALL sp_req_visit_date_expired(
                     /*방문마감일정이 남아 있는지 확인한다.*/
-						IN_DISPOSAL_ORDER_ID,
+						IN_DISPOSER_ORDER_ID,
 						@rtn_val,
 						@msg_txt
                     );
@@ -74,7 +74,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
                     /*배출자가 결정한 방문마감일이 아직 남아 있는 경우*/
 						CALL sp_req_is_visit_schedule_close_early(
                         /*사이트가 방문조기마감이 되었는지 확인한다.*/
-							IN_DISPOSAL_ORDER_ID,
+							IN_DISPOSER_ORDER_ID,
 							@rtn_val,
 							@msg_txt
                         );
@@ -84,13 +84,13 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 							FROM COLLECTOR_BIDDING 
 							WHERE 
 								COLLECTOR_ID = IN_USER_ID AND 
-								DISPOSAL_ORDER_ID = IN_DISPOSAL_ORDER_ID AND 
+								DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
 								ACTIVE = TRUE;
 							/*기존에 입력된 데이타가 존재하는지 확인한다.*/
 							IF @CHK_COUNT = 1 THEN
 							/*기존 데이타가 존재한다면 데이타를 업데이트 처리한다.*/
 								CALL sp_req_visit_date_on_disposal_order(
-									IN_DISPOSAL_ORDER_ID,
+									IN_DISPOSER_ORDER_ID,
                                     @DISPOSAL_VISIT_START_AT,
                                     @DISPOSAL_VISIT_END_AT
                                 );
@@ -118,7 +118,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 													UPDATED_AT = @REG_DT
 												WHERE 
 													COLLECTOR_ID = IN_USER_ID AND 
-													DISPOSAL_ORDER_ID = IN_DISPOSAL_ORDER_ID AND 
+													DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
 													ACTIVE = TRUE;
 												IF ROW_COUNT() = 1 THEN
 												/*정상적으로 변경완료된 경우*/
@@ -149,7 +149,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 													UPDATED_AT = @REG_DT
 												WHERE 
 													COLLECTOR_ID = IN_USER_ID AND 
-													DISPOSAL_ORDER_ID = IN_DISPOSAL_ORDER_ID AND 
+													DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
 													ACTIVE = TRUE;
 												IF ROW_COUNT() = 1 THEN
 												/*정상적으로 변경완료된 경우*/
@@ -186,7 +186,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
                                 );
 								CALL sp_create_collector_bidding(
 									@USER_SITE_ID, 
-									IN_DISPOSAL_ORDER_ID, 
+									IN_DISPOSER_ORDER_ID, 
 									TRUE, 
 									IN_VISIT_AT, 
 									@REG_DT,
