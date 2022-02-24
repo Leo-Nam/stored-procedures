@@ -1,0 +1,12 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_search_some_text_in_all_procedures`(
+	IN IN_TEXT_TO_SEARCH	VARCHAR(100)
+)
+BEGIN
+	SELECT
+		  *
+	FROM
+		  INFORMATION_SCHEMA.ROUTINES
+	WHERE
+		  ROUTINE_DEFINITION LIKE '%sp_req_super_permission%'
+	ORDER BY ROUTINE_NAME;
+END

@@ -1,0 +1,38 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `chiumdb`@`%` 
+    SQL SECURITY DEFINER
+VIEW `chiumdev_2`.`V_COMP_SITE` AS
+    SELECT 
+        `A`.`ID` AS `COMP_SITE_ID`,
+        `A`.`COMP_ID` AS `COMP_ID`,
+        `A`.`KIKCD_B_CODE` AS `COMP_SITE_KIKCD_B_CODE`,
+        `B`.`SI_DO` AS `COMP_SITE_SI_DO`,
+        `B`.`SI_GUN_GU` AS `COMP_SITE_SI_GUN_GU`,
+        `B`.`EUP_MYEON_DONG` AS `COMP_SITE_EUP_MYEON_DONG`,
+        `B`.`DONG_RI` AS `COMP_SITE_DONG_RI`,
+        `A`.`ADDR` AS `COMP_SITE_ADDR`,
+        `A`.`CONTACT` AS `COMP_SITE_CONTACT`,
+        `A`.`LAT` AS `COMP_SITE_LAT`,
+        `A`.`LNG` AS `COMP_SITE_LNG`,
+        `A`.`SITE_NAME` AS `COMP_SITE_NAME`,
+        `A`.`ACTIVE` AS `COMP_SITE_ACTIVE`,
+        `A`.`TRMT_BIZ_CODE` AS `COMP_SITE_TRMT_BIZ_CODE`,
+        `chiumdev_2`.`C`.`NAME` AS `COMP_SITE_TRMT_BIZ_NM`,
+        `chiumdev_2`.`C`.`USER_TYPE` AS `USER_TYPE`,
+        `chiumdev_2`.`C`.`USER_TYPE_EN_NM` AS `USER_TYPE_EN_NM`,
+        `chiumdev_2`.`C`.`USER_TYPE_KO_NM` AS `USER_TYPE_KO_NM`,
+        `A`.`CREATOR_ID` AS `COMP_SITE_CREATOR_ID`,
+        `A`.`HEAD_OFFICE` AS `COMP_SITE_HEAD_OFFICE`,
+        `A`.`PERMIT_REG_CODE` AS `COMP_SITE_PERMIT_REG_CODE`,
+        `A`.`PERMIT_REG_IMG_PATH` AS `COMP_SITE_PERMIT_REG_IMG_PATH`,
+        `A`.`CS_MANAGER_ID` AS `COMP_SITE_CS_MANAGER_ID`,
+        `A`.`CONFIRMED` AS `COMP_SITE_CONFIRMED`,
+        `A`.`CONFIRMED_AT` AS `COMP_SITE_CONFIRMED_AT`,
+        `A`.`CREATED_AT` AS `COMP_SITE_CREATED_AT`,
+        `A`.`UPDATED_AT` AS `COMP_SITE_UPDATED_AT`,
+        `A`.`RECOVERY_TAG` AS `COMP_SITE_RECOVERY_TAG`
+    FROM
+        ((`chiumdev_2`.`COMP_SITE` `A`
+        LEFT JOIN `chiumdev_2`.`KIKCD_B` `B` ON ((`A`.`KIKCD_B_CODE` = `B`.`B_CODE`)))
+        LEFT JOIN `chiumdev_2`.`V_WSTE_TRMT_BIZ` `C` ON ((`A`.`TRMT_BIZ_CODE` = `chiumdev_2`.`C`.`CODE`)))

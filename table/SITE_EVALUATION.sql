@@ -1,0 +1,9 @@
+CREATE TABLE `SITE_EVALUATION` (
+  `ID` bigint NOT NULL AUTO_INCREMENT,
+  `USER_ID` bigint DEFAULT NULL COMMENT '사용자 고유등록번호(USERS.ID)',
+  `SITE_ID` bigint DEFAULT NULL COMMENT '평가대상이 되는 사업자의 사이트 고유등록번호(COMP_SITE.ID)',
+  `SCORE` int DEFAULT NULL COMMENT '평점',
+  `DESCRIPTION` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '사용에 대한 리뷰',
+  `CREATED_AT` datetime DEFAULT NULL COMMENT '생성일자',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='사업자에 대한 평가를 관리하는 테이블';

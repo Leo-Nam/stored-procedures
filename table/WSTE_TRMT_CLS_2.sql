@@ -1,0 +1,4 @@
+CREATE TABLE `WSTE_TRMT_CLS_2` (
+  `ID` int DEFAULT NULL,
+  `NAME` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

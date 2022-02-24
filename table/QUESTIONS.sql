@@ -1,0 +1,10 @@
+CREATE TABLE `QUESTIONS` (
+  `ID` bigint NOT NULL AUTO_INCREMENT,
+  `PHONE` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EMAIL` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '문의하는사람 이메일주소(비회원 쓰기 가능)',
+  `QUEST_CLASS` int DEFAULT NULL COMMENT '문의유형으로 QUEST_CLASS.ID',
+  `CONTENTS` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '문의내용',
+  `CREATED_AT` datetime DEFAULT NULL COMMENT '작성일시',
+  `UPDATED_AT` datetime DEFAULT NULL COMMENT '최종 변경일시',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='문의하기';

@@ -1,0 +1,11 @@
+CREATE TABLE `WSTE_DISCHARGED_FROM_SITE` (
+  `ID` bigint NOT NULL AUTO_INCREMENT COMMENT '고유등록번호 AUTO_INCREMENT',
+  `DISPOSAL_ORDER_ID` bigint DEFAULT NULL COMMENT '폐기물배출신청을 한 사이트의 고유등록번호(SITE_WSTE_DISPOSAL_ORDER.ID)',
+  `WSTE_CLASS` int DEFAULT NULL COMMENT '폐기물의 대분류로서 WSTE_CLS_1.ID 참조',
+  `WSTE_APPEARANCE` int DEFAULT NULL COMMENT '폐기물의 성상으로서 WSTE_APPEARANCE.ID 참조',
+  `QUANTITY` float DEFAULT NULL COMMENT '입찰수량',
+  `UNIT` enum('kg','m3','전체견적가') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '입찰단위',
+  `CREATED_AT` datetime DEFAULT NULL COMMENT '레코드 최초 생성일',
+  `UPDATED_AT` datetime DEFAULT NULL COMMENT '레코드 최종 변경일',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=287 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='사이트에서 배출될 폐기물 정보를 SITE_WSTE_REGISTRATION에서 분리하여 저장함(배출자가 여러종류의 폐기물을 배출할 수 있을 수 있다는 전제)';

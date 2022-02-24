@@ -1,0 +1,20 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `chiumdb`@`%` 
+    SQL SECURITY DEFINER
+VIEW `chiumdev_2`.`V_WSTE_DISCHARGED_FROM_SITE` AS
+    SELECT 
+        `A`.`ID` AS `WSTE_REG_ID`,
+        `A`.`DISPOSAL_ORDER_ID` AS `DISPOSAL_ORDER_ID`,
+        `A`.`WSTE_CLASS` AS `WSTE_CLASS`,
+        `B`.`CLASS_NAME` AS `WSTE_CLASS_NM`,
+        `A`.`WSTE_APPEARANCE` AS `WSTE_APPEARANCE`,
+        `C`.`KOREAN` AS `WSTE_APPEARANCE_NM`,
+        `A`.`QUANTITY` AS `WSTE_QUANTITY`,
+        `A`.`UNIT` AS `WSTE_UNIT`,
+        `A`.`CREATED_AT` AS `WSTE_DISCHARGED_CREATED_AT`,
+        `A`.`UPDATED_AT` AS `WSTE_DISCHARGED_UPDATED_AT`
+    FROM
+        ((`chiumdev_2`.`WSTE_DISCHARGED_FROM_SITE` `A`
+        LEFT JOIN `chiumdev_2`.`WSTE_CLS_1` `B` ON ((`A`.`WSTE_CLASS` = `B`.`ID`)))
+        LEFT JOIN `chiumdev_2`.`WSTE_APPEARANCE` `C` ON ((`A`.`WSTE_APPEARANCE` = `C`.`ID`)))

@@ -1,0 +1,14 @@
+CREATE TABLE `BIDDING_DETAILS` (
+  `ID` bigint NOT NULL AUTO_INCREMENT,
+  `COLLECTOR_BIDDING_ID` bigint DEFAULT NULL COMMENT '입찰자(수거업체 등)의 입찰고유등록번호(COLLECTOR_BIDDING.ID)',
+  `WSTE_CODE` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '폐기물 분류코드(WSTE_CODE.ID)',
+  `UNIT` enum('Kg','m3') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '단위',
+  `UNIT_PRICE` int DEFAULT NULL COMMENT '단가',
+  `VOLUME` float NOT NULL DEFAULT '1',
+  `TRMT_CODE` varchar(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '폐기물처리방법',
+  `ACTIVE` tinyint DEFAULT NULL,
+  `GREENHOUSE_GAS` float DEFAULT NULL COMMENT '온실가스배출량',
+  `CREATED_AT` datetime DEFAULT NULL,
+  `UPDATED_AT` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='수집업자 등의 입찰신청에 대한 상세내역 관리테이블';

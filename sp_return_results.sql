@@ -1,0 +1,16 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_return_results`(
+	IN IN_RETURN_VALUE			INT,
+    IN IN_TXT_MSG				VARCHAR(200),
+    IN JSON_DATA				JSON
+)
+BEGIN
+	CREATE TEMPORARY TABLE IF NOT EXISTS TEMP_TABLE (
+		rtn_val				INT,
+		msg_txt				VARCHAR(200),
+		json_data			JSON
+	);
+	INSERT INTO TEMP_TABLE (rtn_val, msg_txt, json_data)
+	VALUES (IN_RETURN_VALUE, IN_TXT_MSG, JSON_DATA);
+	SELECT rtn_val, msg_txt, json_data FROM TEMP_TABLE;
+	DROP TABLE IF EXISTS TEMP_TABLE;
+END

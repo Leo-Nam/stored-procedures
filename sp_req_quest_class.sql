@@ -1,0 +1,4 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_quest_class`()
+BEGIN
+	SELECT ID, CLASS_NM FROM QUEST_CLASS;
+END
