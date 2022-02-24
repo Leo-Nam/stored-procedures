@@ -51,18 +51,27 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 		);
 		IF @rtn_val = 26601 THEN
 		/*방문마감일이 종료되지 않은 경우*/
-			UPDATE COLLECTOR_BIDDING SET CANCEL_VISIT = TRUE WHERE ID = IN_COLLECT_BIDDING_ID;
-			/*방문신청을 취소상태(비활성상태)로 변경한다.*/
-			IF ROW_COUNT() = 1 THEN
-			/*데이타베이스 입력에 성공한 경우*/
-				SET @rtn_val 		= 0;
-				SET @msg_txt 		= 'Success';
-			ELSE
-			/*데이타베이스 입력에 실패한 경우*/
-				SET @rtn_val 		= 25601;
-				SET @msg_txt 		= 'db error occurred during visit cancellation';
+			SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+            IF @ITEM_COUNT = 1 THEN
+            /*정보를 수정하려는 데이타가 존재하는 경우 정상처리한다.*/
+				UPDATE COLLECTOR_BIDDING SET CANCEL_VISIT = TRUE WHERE ID = IN_COLLECT_BIDDING_ID;
+				/*방문신청을 취소상태(비활성상태)로 변경한다.*/
+				IF ROW_COUNT() = 1 THEN
+				/*데이타베이스 입력에 성공한 경우*/
+					SET @rtn_val 		= 0;
+					SET @msg_txt 		= 'Success';
+				ELSE
+				/*데이타베이스 입력에 실패한 경우*/
+					SET @rtn_val 		= 25601;
+					SET @msg_txt 		= 'record cancellation error';
+					SIGNAL SQLSTATE '23000';
+				END IF;
+            ELSE
+            /*정보를 수정하려는 데이타가 존재하지 않는 경우 예외처리한다.*/
+				SET @rtn_val 		= 25603;
+				SET @msg_txt 		= 'No data found';
 				SIGNAL SQLSTATE '23000';
-			END IF;
+            END IF;
 		ELSE
 		/*방문마감일이 종료된 경우 예외처리한다.*/
 			SET @rtn_val 		= 25602;

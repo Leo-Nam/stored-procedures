@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_retrieve_my_disposal_lists_by_option_with_json`(
 	IN IN_USER_ID							BIGINT,
-	IN IN_STATE_CODE							VARCHAR(10),
+	IN IN_STATE_CODE						INT,
 	IN IN_USER_TYPE							VARCHAR(20),
     OUT rtn_val								INT,
     OUT msg_txt								VARCHAR(200),
@@ -84,7 +84,7 @@ AUTHOR 			: Leo Nam
         STATE_CODE
     FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE
 	WHERE 
-		STATE = IN_STATE_CODE AND 
+		STATE_CODE = IN_STATE_CODE AND 
         DISPOSER_ORDER_DELETED = FALSE AND
         IF (IN_USER_TYPE = 'Person',
 			(DISPOSER_ID = IN_USER_ID),            
