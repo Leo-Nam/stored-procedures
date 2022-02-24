@@ -1,0 +1,53 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_site`(
+	IN IN_SITE_ID				BIGINT,
+    OUT OUT_COMP_NAME			VARCHAR(100),
+    OUT OUT_SITE_NAME			VARCHAR(100),
+    OUT OUT_REP_NAME			VARCHAR(50),
+    OUT OUT_KIKCD_B_CODE		VARCHAR(10),
+    OUT OUT_ADDR				VARCHAR(300),
+    OUT OUT_CONTACT				VARCHAR(100),
+    OUT OUT_TRMT_BIZ_CODE		VARCHAR(4),
+    OUT OUT_BIZ_REG_CODE		VARCHAR(12),
+    OUT OUT_PERMIT_REG_CODE		VARCHAR(100),
+    OUT OUT_BIZ_REG_IMG_PATH	VARCHAR(200),
+    OUT OUT_PERMIT_REG_IMG_PATH	VARCHAR(200)
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_get_company
+Input param 	: 1개
+Output param 	: 10개
+Job 			: 사이트 정보를 반환한다.
+Update 			: 2022.01.15
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/
+
+	SELECT 
+		COMP_NAME, 
+		SITE_NAME, 
+        REP_NAME, 
+        KIKCD_B_CODE, 
+        ADDR, 
+        CONTACT, 
+        TRMT_BIZ_CODE, 
+        BIZ_REG_CODE, 
+        PERMIT_REG_CODE, 
+        BIZ_REG_IMG_PATH, 
+        PERMIT_REG_IMG_PATH
+	INTO 
+		OUT_COMP_NAME, 
+		OUT_SITE_NAME, 
+        OUT_REP_NAME, 
+        OUT_KIKCD_B_CODE, 
+        OUT_ADDR, 
+        OUT_CONTACT, 
+        OUT_TRMT_BIZ_CODE, 
+        OUT_BIZ_REG_CODE, 
+        OUT_PERMIT_REG_CODE, 
+        OUT_BIZ_REG_IMG_PATH, 
+        OUT_PERMIT_REG_IMG_PATH
+	FROM V_SITE 
+    WHERE SITE_ID = IN_SITE_ID; 
+END

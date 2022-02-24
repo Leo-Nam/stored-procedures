@@ -1,0 +1,104 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_cancel_bidding`(
+	IN IN_USER_ID					BIGINT,				/*입력값 : 사용자 고유등록번호(USERS.ID)*/
+	IN IN_COLLECT_BIDDING_ID		BIGINT				/*입력값 : 입찰 고유등록번호(COLLECTOR_BIDDING.ID)*/
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_cancel_bidding
+Input param 	: 3개
+Output param 	: 3개
+Job 			: 폐기물 수집업자 등의 이전 입찰을 취소한다.
+TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
+Update 			: 2022.01.29
+Version			: 0.0.4
+AUTHOR 			: Leo Nam
+Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경함으로써 입찰을 포기하는 상태로 전환함(0.0.2)
+				: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.3)
+				: 서브 프로시저의 데이타 반환타입 통일(0.0.4)
+*/	
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		/*ROLLBACK;*/
+        COMMIT;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;							
+    /*트랜잭션 시작*/  
+    
+	CALL sp_req_user_exists_by_id(
+	/*생성자가 존재하는지 체크한다.*/
+		IN_USER_ID, 
+		TRUE, 
+		@rtn_val,
+		@msg_txt
+	);
+	/*등록을 요청하는 사용자의 USER_ID가 이미 등록되어 있는 경우에는 @USER_EXISTS = 1, 그렇지 않은 경우에는 @USER_EXISTS = 0이 됨*/ 		
+	IF @rtn_val = 0 THEN
+    /*사용자가 존재하는 경우*/
+		CALL sp_req_disposal_id_of_collector_bidding_id(
+			IN_COLLECT_BIDDING_ID,
+			@DISPOSAL_ORDER_ID
+		);
+		
+		CALL sp_req_bidding_end_date_expired(
+		/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
+			@DISPOSAL_ORDER_ID,
+			@rtn_val,
+			@msg_txt
+		);
+		IF @rtn_val = 0 THEN
+		/*입찰마감일이 종료되지 않은 경우*/
+			CALL sp_req_site_id_of_user_reg_id(
+            /*사용자가 속한 사이트의 고유등록번호를 반환한다.*/
+				IN_USER_ID,
+                @USER_SITE_ID,
+				@rtn_val,
+				@msg_txt
+            );
+			IF @rtn_val = 0 THEN
+			/*사이트가 정상(개인사용자는 제외됨)적인 경우*/
+				CALL sp_req_site_already_bid(
+				/*이전에 입찰한 사실이 존재하는지 확인한다.*/
+					@USER_SITE_ID,
+					@DISPOSAL_ORDER_ID,
+					@rtn_val,
+					@msg_txt
+				);
+				IF @rtn_val > 0 THEN
+				/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
+					UPDATE COLLECTOR_BIDDING SET CANCEL_BIDDING = TRUE WHERE ID = IN_COLLECT_BIDDING_ID;
+					/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
+					IF ROW_COUNT() = 0 THEN
+					/*데이타베이스 입력에 실패한 경우*/
+						SET @rtn_val 		= 23801;
+						SET @msg_txt 		= 'db error occurred during bid cancellation';
+						SIGNAL SQLSTATE '23000';
+					ELSE
+					/*데이타베이스 입력에 성공한 경우*/
+						SET @rtn_val 		= 0;
+						SET @msg_txt 		= 'Success111';
+					END IF;
+				ELSE
+				/*사이트가 이전에 입찰한 사실이 없는 경우에는 예외처리함*/
+					SET @rtn_val 		= 23802;
+					SET @msg_txt 		= 'No previous bids have been made';
+					SIGNAL SQLSTATE '23000';
+				END IF;
+			ELSE
+			/*사이트가 존재하지 않거나 유효하지 않은(개인사용자의 경우) 경우*/
+				SIGNAL SQLSTATE '23000';
+			END IF;
+		ELSE
+		/*입찰마감일이 종료된 경우 예외처리한다.*/
+			SIGNAL SQLSTATE '23000';
+		END IF;
+    ELSE
+    /*사용자가 존재하지 않거나 유효하지 않은 경우*/
+		SIGNAL SQLSTATE '23000';
+    END IF;
+    SET @json_data = NULL;
+    CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
+END
