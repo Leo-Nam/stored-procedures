@@ -8,7 +8,7 @@ BEGIN
 /*
 Procedure Name 	: sp_apply_refusal_of_final_decision
 Input param 	: 3개
-Job 			: 폐기물 수집운반업자가 배출자로부터 최종 낙찰자로 선정된 이후 그 최종결정을 거부한다.
+Job 			: 폐기물 수집운반업자가 배출자로부터 최종 낙찰자로 선정된 이후 최종결정을 한다.
 TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
 Update 			: 2022.01.27
 Version			: 0.0.2
