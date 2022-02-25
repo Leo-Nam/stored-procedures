@@ -1,10 +1,10 @@
 CREATE 
-	ALGORITHM=UNDEFINED 
-    DEFINER=`chiumdb`@`%` 
-    SQL SECURITY DEFINER 
-VIEW `chiumdev_2`.`V_WSTE_CLCT_TRMT_TRANSACTION` AS 
-	select 
-		`A`.`ID` AS `TRANSACTION_ID`,
+    ALGORITHM = UNDEFINED 
+    DEFINER = `chiumdb`@`%` 
+    SQL SECURITY DEFINER
+VIEW `chiumdev_2`.`V_WSTE_CLCT_TRMT_TRANSACTION` AS
+    SELECT 
+        `A`.`ID` AS `TRANSACTION_ID`,
         `A`.`DISPOSAL_ORDER_ID` AS `DISPOSER_ORDER_ID`,
         `A`.`COLLECTOR_BIDDING_ID` AS `COLLECTOR_BIDDING_ID`,
         `chiumdev_2`.`E`.`COLLECTOR_ID` AS `COLLECTOR_SITE_ID`,
@@ -43,18 +43,40 @@ VIEW `chiumdev_2`.`V_WSTE_CLCT_TRMT_TRANSACTION` AS
         `A`.`VISIT_END_AT` AS `VISIT_END_AT`,
         `A`.`CREATED_AT` AS `CREATED_AT`,
         `A`.`UPDATED_AT` AS `UPDATED_AT`,
-        if((`A`.`CONFIRMED_AT` is not null),
-			'처리완료',
-            if((`A`.`VISIT_END_AT` is not null),
-				if((`A`.`VISIT_END_AT` > now()),
-					'방문대기중',
-                    '처리중'
-				),
-                '처리중'
-			)
-		) AS `TRANSACTION_STATE` 
-        from ((((`chiumdev_2`.`WSTE_CLCT_TRMT_TRANSACTION` `A` 
-			left join `chiumdev_2`.`WSTE_CODE` `B` on((`A`.`WSTE_CODE` = `B`.`CODE`))) 
-            left join `chiumdev_2`.`V_USERS` `C` on((`A`.`ASKER_ID` = `chiumdev_2`.`C`.`ID`))) 
-            left join `chiumdev_2`.`WSTE_TRMT_METHOD` `D` on((`A`.`TRMT_METHOD_CODE` = `D`.`CODE`))) 
-            left join `chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER` `E` on((`A`.`DISPOSAL_ORDER_ID` = `chiumdev_2`.`E`.`DISPOSER_ORDER_ID`)))
+        IF((`chiumdev_2`.`E`.`DISPOSER_CLOSE_AT` < NOW()),
+            211,
+            IF((`A`.`VISIT_END_AT` IS NOT NULL),
+                IF((`A`.`VISIT_START_AT` IS NOT NULL),
+                    IF((`A`.`VISIT_START_AT` > NOW()),
+                        217,
+                        IF((`A`.`VISIT_END_AT` > NOW()),
+                            201,
+                            IF((`A`.`TRUCK_START_AT` IS NULL),
+                                220,
+                                IF((`A`.`COLLECT_END_AT` IS NULL),
+                                    221,
+                                    IF((`A`.`CONFIRMED_AT` IS NULL),
+                                        216,
+                                        218))))),
+                    IF((`A`.`VISIT_END_AT` > NOW()),
+                        201,
+                        IF((`A`.`TRUCK_START_AT` IS NULL),
+                            220,
+                            IF((`A`.`COLLECT_END_AT` IS NULL),
+                                221,
+                                IF((`A`.`CONFIRMED_AT` IS NULL),
+                                    216,
+                                    218))))),
+                IF((`A`.`TRUCK_START_AT` IS NULL),
+                    220,
+                    IF((`A`.`COLLECT_END_AT` IS NULL),
+                        221,
+                        IF((`A`.`CONFIRMED_AT` IS NULL),
+                            216,
+                            218))))) AS `TRANSACTION_STATE_CODE`
+    FROM
+        ((((`chiumdev_2`.`WSTE_CLCT_TRMT_TRANSACTION` `A`
+        LEFT JOIN `chiumdev_2`.`WSTE_CODE` `B` ON ((`A`.`WSTE_CODE` = `B`.`CODE`)))
+        LEFT JOIN `chiumdev_2`.`V_USERS` `C` ON ((`A`.`ASKER_ID` = `chiumdev_2`.`C`.`ID`)))
+        LEFT JOIN `chiumdev_2`.`WSTE_TRMT_METHOD` `D` ON ((`A`.`TRMT_METHOD_CODE` = `D`.`CODE`)))
+        LEFT JOIN `chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER` `E` ON ((`A`.`DISPOSAL_ORDER_ID` = `chiumdev_2`.`E`.`DISPOSER_ORDER_ID`)))
