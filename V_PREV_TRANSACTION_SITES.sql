@@ -16,4 +16,4 @@ VIEW `chiumdev_2`.`V_PREV_TRANSACTION_SITES` AS
     FROM
         `chiumdev_2`.`V_COLLECTOR_BIDDING`
     WHERE
-        (`chiumdev_2`.`V_COLLECTOR_BIDDING`.`DISPOSER_CLOSE_AT` > ADDTIME(NOW(), '09:00'))
+        (`chiumdev_2`.`V_COLLECTOR_BIDDING`.`DISPOSER_CLOSE_AT` > NOW())
