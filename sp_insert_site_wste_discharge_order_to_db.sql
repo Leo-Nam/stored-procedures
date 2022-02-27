@@ -19,7 +19,7 @@ Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
      
-	IF IN_BIDDING_END_AT <= ADDTIME(IN_REF_DATE, CONCAT(IN_MAX_BIDDING_DURATION*24, ':00:00')) THEN
+	IF IN_BIDDING_END_AT <= DATE_ADD(IN_REF_DATE, INTERVAL IN_MAX_BIDDING_DURATION DAY) THEN
 	/*입찰종료일이 정책적으로 결정된 기간 이내인 경우에는 정상처리한다.*/
 		CALL sp_req_policy_direction(
 			'min_disposal_duration',
@@ -27,7 +27,7 @@ AUTHOR 			: Leo Nam
 		);
 		IF IN_CLOSE_AT IS NOT NULL THEN
 		/*배출종료일이 결정된 경우*/
-			IF IN_CLOSE_AT >= ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@min_disposal_duration AS UNSIGNED)*24, ':00:00')) THEN
+			IF IN_CLOSE_AT >= DATE_ADD(IN_BIDDING_END_AT, INTERVAL @min_disposal_duration DAY) THEN
 			/*배출종료일이 정책적으로 결정된 기간 이후인 경우 정상처리한다.*/
 			/*데이타베이스 입력처리를 시작한다.*/
 				SET OUT_CLOSE_AT = IN_CLOSE_AT;
@@ -40,7 +40,7 @@ AUTHOR 			: Leo Nam
 			END IF;
 		ELSE
 		/*배출종료일이 결정되지 않은 경우*/
-			SET OUT_CLOSE_AT = ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@min_disposal_duration AS UNSIGNED)*24, ':00:00'));
+			SET OUT_CLOSE_AT = DATE_ADD(IN_BIDDING_END_AT, INTERVAL @min_disposal_duration DAY);
 			/*데이타베이스 입력처리를 시작한다.*/    
 			SET rtn_val = 0;
 			SET msg_txt = 'Success';                                    

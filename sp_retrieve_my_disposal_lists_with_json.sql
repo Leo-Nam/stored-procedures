@@ -207,22 +207,6 @@ AUTHOR 			: Leo Nam
         INTO @WSTE_LIST 
         FROM V_WSTE_DISCHARGED_FROM_SITE 
         WHERE DISPOSAL_ORDER_ID = CUR_DISPOSER_ORDER_ID;
-        /*
-		SELECT JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'WSTE_NM'			, WSTE_NM, 
-                'APR'				, WSTE_APPEARANCE_NM_KO, 
-                'QTY'				, WSTE_QUANTITY, 
-                'UNIT'				, WSTE_UNIT, 
-                'UNIT_PRICE'		, WSTE_UNIT_PRICE, 
-                'DC_AT'				, WSTE_DISCHARGED_AT
-			)
-		) 
-        INTO @WSTE_LIST 
-        FROM V_WSTE_LIST_DISCHARGED 
-        WHERE DISPOSER_ORDER_ID = CUR_DISPOSER_ORDER_ID;
-        */
-		/*처리된 폐기물 종류를 JSON형태로 변환한다.*/
 		
 		SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(

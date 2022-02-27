@@ -81,7 +81,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				'max_visit_start',
                 @max_visit_start
             );
-            IF IN_VISIT_START_AT <= ADDTIME(IN_REG_DT, CONCAT(CAST(@max_visit_start AS UNSIGNED)*24, ':00:00')) THEN
+            /*IF IN_VISIT_START_AT <= ADDTIME(IN_REG_DT, CONCAT(CAST(@max_visit_start AS UNSIGNED)*24, ':00:00')) THEN*/
+            IF IN_VISIT_START_AT <= DATE_ADD(IN_REG_DT, INTERVAL @max_visit_start DAY) THEN
             /*방문시작일이 정책적으로 결정된 기간 이내인 경우에는 정상처리한다.*/
 				IF IN_VISIT_END_AT IS NOT NULL THEN
                 /*방문종료일이 결정된 경우*/
@@ -91,7 +92,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 							'max_visit_duration',
 							@max_visit_duration
 						);
-						IF IN_VISIT_END_AT <= ADDTIME(IN_VISIT_START_AT, CONCAT(CAST(@max_visit_duration AS UNSIGNED)*24, ':00:00')) THEN
+						/*IF IN_VISIT_END_AT <= ADDTIME(IN_VISIT_START_AT, CONCAT(CAST(@max_visit_duration AS UNSIGNED)*24, ':00:00')) THEN*/
+						IF IN_VISIT_END_AT <= DATE_ADD(IN_VISIT_START_AT, INTERVAL @max_visit_duration DAY) THEN
 						/*방문종료일이 정책적으로 결정된 기간 이내인 경우에는 정상처리한다.*/
 							IF IN_OPEN_AT IS NULL THEN
 								SET IN_OPEN_AT = IN_REG_DT;

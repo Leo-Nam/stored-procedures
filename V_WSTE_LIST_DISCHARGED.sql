@@ -6,14 +6,6 @@ VIEW `chiumdev_2`.`V_WSTE_LIST_DISCHARGED` AS
     SELECT 
         `A`.`ID` AS `WSTE_LIST_DISCHARGED_ID`,
         `A`.`WSTE_CLCT_TRMT_TRANSACTION_ID` AS `WSTE_CLCT_TRMT_TRANSACTION_ID`,
-        `chiumdev_2`.`E`.`COLLECTOR_SITE_ID` AS `COLLECTOR_SITE_ID`,
-        `chiumdev_2`.`E`.`DISPOSER_ORDER_ID` AS `DISPOSER_ORDER_ID`,
-        `chiumdev_2`.`E`.`DISPOSER_SITE_ID` AS `DISPOSER_SITE_ID`,
-        `chiumdev_2`.`E`.`DISPOSER_SI_DO` AS `DISPOSER_SI_DO`,
-        `chiumdev_2`.`E`.`DISPOSER_SI_GUN_GU` AS `DISPOSER_SI_GUN_GU`,
-        `chiumdev_2`.`E`.`DISPOSER_EUP_MYEON_DONG` AS `DISPOSER_EUP_MYEON_DONG`,
-        `chiumdev_2`.`E`.`DISPOSER_DONG_RI` AS `DISPOSER_DONG_RI`,
-        `chiumdev_2`.`E`.`DISPOSER_ADDR` AS `DISPOSER_ADDR`,
         `A`.`WSTE_CODE` AS `WSTE_CODE`,
         `B`.`NAME` AS `WSTE_NM`,
         `A`.`WSTE_QUANTITY` AS `WSTE_QUANTITY`,
@@ -27,8 +19,7 @@ VIEW `chiumdev_2`.`V_WSTE_LIST_DISCHARGED` AS
         `D`.`KOREAN` AS `WSTE_APPEARANCE_NM_KO`,
         `C`.`NAME` AS `WSTE_TRMT_METHOD_NM`
     FROM
-        ((((`chiumdev_2`.`WSTE_LIST_DISCHARGED` `A`
+        (((`chiumdev_2`.`WSTE_LIST_DISCHARGED` `A`
         LEFT JOIN `chiumdev_2`.`WSTE_CODE` `B` ON ((`A`.`WSTE_CODE` = `B`.`CODE`)))
         LEFT JOIN `chiumdev_2`.`WSTE_TRMT_METHOD` `C` ON ((`A`.`WSTE_TRMT_METHOD` = `C`.`CODE`)))
         LEFT JOIN `chiumdev_2`.`WSTE_APPEARANCE` `D` ON ((`A`.`WSTE_APPEARANCE` = `D`.`ID`)))
-        LEFT JOIN `chiumdev_2`.`V_WSTE_CLCT_TRMT_TRANSACTION` `E` ON ((`A`.`WSTE_CLCT_TRMT_TRANSACTION_ID` = `chiumdev_2`.`E`.`TRANSACTION_ID`)))
