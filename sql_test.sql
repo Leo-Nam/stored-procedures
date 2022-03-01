@@ -2550,11 +2550,11 @@ CALL sp_ask_visit_on_disposal_site(
 */
 
 
-
+/*
 SET @USER_ID=106;
 SET @CATEGORY=101;
 CALL sp_retrieve_my_disposal_lists_by_option(@USER_ID, @CATEGORY);
-
+*/
 
 
 
@@ -2585,3 +2585,118 @@ CALL sp_disposer_response_visit(
 /*
 CALL sp_req_status()
 */
+
+/*
+SET @USER_ID = 91;
+SET @WSTE_CODE = '1';
+SET @KIKCD_B_CODE = '4182000000';
+CALL sp_req_prev_transaction_site_lists(
+	@USER_ID,
+    @WSTE_CODE,
+    @KIKCD_B_CODE
+);
+*/
+
+
+/*
+CALL sp_retrieve_my_disposal_lists(112);
+*/
+
+
+
+/*
+SET @USER_ID = 101;
+SET @DISPOAER_ORDER_ID = 163;
+SET @VISIT_AT = '2022-03-02 22:22:22';
+
+
+CALL sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @DISPOAER_ORDER_ID,
+    @VISIT_AT
+);
+*/
+
+
+/*
+CALL sp_req_collector_can_ask_visit(
+	@DISPOAER_ORDER_ID,
+	@COLLECTOR_CAN_ASK_VISIT
+);
+SELECT @COLLECTOR_CAN_ASK_VISIT;
+*/
+
+
+/*
+CALL sp_retrieve_my_disposal_lists_by_option(106, 102)
+*/
+
+
+/*
+SET @USER_ID = 110;
+SET @COLLECTOR_BIDDING_ID = 32;
+SET @RES = 1;
+CALL sp_disposer_response_visit(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @RES
+);
+*/
+/*
+CALL sp_retrieve_my_disposal_lists(96);
+*/
+/*
+SET @USER_ID = 16;
+SELECT 
+		COLLECTOR_ID, 
+        COLLECTOR_SITE_NAME, 
+        DISPOSER_CLOSE_AT
+    FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE
+	WHERE 
+		DISPOSER_SITE_ID IN (
+			SELECT AFFILIATED_SITE 
+            FROM USERS 
+            WHERE 
+				ID = @USER_ID AND 
+                ACTIVE = TRUE
+		) AND
+        DISPOSER_CLOSE_AT <= NOW();    
+
+CALL sp_retrieve_past_transactions(
+	@USER_ID
+);
+*/        
+    
+
+/*
+SELECT AFFILIATED_SITE INTO @AFFILIATED_SITE
+            FROM USERS 
+            WHERE 
+				ID = @USER_ID AND 
+                ACTIVE = TRUE;
+SELECT @USER_ID, @AFFILIATED_SITE ;
+
+SELECT 
+		COLLECTOR_ID, 
+        COLLECTOR_SITE_NAME, 
+        DISPOSER_CLOSE_AT
+    FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE
+	WHERE 
+		DISPOSER_SITE_ID = @AFFILIATED_SITE
+		 AND
+        DISPOSER_CLOSE_AT <= NOW();
+*/
+
+/*
+call sp_req_close_bidding_early(106, 149)
+*/
+
+
+/*
+CALL sp_retrieve_my_disposal_lists(77)
+*/
+
+
+SET @USER_ID=77;
+SET @CATEGORY=101;
+CALL sp_retrieve_my_disposal_lists_by_option(@USER_ID, @CATEGORY);

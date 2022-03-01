@@ -1,7 +1,8 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_can_ask_visit`(
 	IN IN_DISPOSER_ORDER_ID				BIGINT,				/*폐기물 배출내역 고유등록번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
-    IN	IN_VISIT_AT						DATETIME,			/*수거자가 방문을 요청하는 날짜*/
-    OUT	OUT_COLLECTOR_CAN_VISIT			TINYINT				/*방문신청가능한 경우 TRUE, 그렇지 않은 경우 FALSE 반환*/
+    OUT	OUT_COLLECTOR_CAN_VISIT			TINYINT				/*방문신청가능한 경우 TRUE, 그렇지 않은 경우 FALSE 반환*/,
+    OUT rtn_val								INT,
+    OUT msg_txt								VARCHAR(200)
 )
 BEGIN
 
@@ -21,7 +22,7 @@ AUTHOR 			: Leo Nam
 	CALL sp_req_policy_direction('minimum_visit_required', @minimum_required_time);
 
 	SET @time_plue = CONCAT(@minimum_required_time, ':00:00');
-	SET @time_new = ADDTIME(IN_VISIT_AT, @time_plue);
+	SET @time_new = ADDTIME(@CURRENT_DT, @time_plue);
     
     SELECT VISIT_END_AT INTO @VISIT_END_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
     /*배출자가 지정한 방문예정일을 구해온다.*/
@@ -29,14 +30,20 @@ AUTHOR 			: Leo Nam
     IF @VISIT_END_AT IS NULL THEN
     /*배출자의 방문예정일이 NULL인 경우로서 배출자가 방문예정일을 정하지 않은 경우*/
 		SET OUT_COLLECTOR_CAN_VISIT = FALSE;
+		SET rtn_val 				= 31302;
+		SET msg_txt 				= 'no scheduled visit date set by the emitter';
     ELSE
     /*배출자의 방문예정일이 NULL이 아닌 경우로서 배출자가 방문예정일을 정하고 있는 경우*/
 		IF @VISIT_END_AT >= @time_new THEN
 		/*배출자의 방문예정일에 여유가 있는 경우*/
 			SET OUT_COLLECTOR_CAN_VISIT = TRUE;
+			SET rtn_val 				= 0;
+			SET msg_txt 				= 'success';
         ELSE
 		/*배출자의 방문예정일에 여유가 없는 경우*/
 			SET OUT_COLLECTOR_CAN_VISIT = FALSE;
+			SET rtn_val 				= 31301;
+			SET msg_txt 				= CONCAT('no room for the discharger scheduled visit date, VISIT_END_AT: ', @VISIT_END_AT, ', TIME_NEW: ', @time_new);
         END IF;
     END IF;
 END

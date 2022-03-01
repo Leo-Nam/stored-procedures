@@ -72,9 +72,11 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 					CALL sp_req_collector_can_ask_visit(
 					/*수집운반업자 등이 방문신청을 할수 있는지 검사한다.*/
 						IN_DISPOSER_ORDER_ID,
-						@COLLECTOR_CAN_ASK_VISIT
+						@COLLECTOR_CAN_ASK_VISIT,
+						@rtn_val,
+						@msg_txt
 					);
-					IF @COLLECTOR_CAN_ASK_VISIT = TRUE THEN
+					IF @rtn_val = 0 THEN
 					/*수집운반업자등이 방문신청을 할 수 있는 경우*/
 						CALL sp_req_visit_date_expired(
 						/*방문마감일정이 남아 있는지 확인한다.*/
@@ -219,8 +221,6 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 						END IF;
 					ELSE
 					/*수집운반업자등이 방문신청을 할 수 없는 경우*/
-						SET @rtn_val 		= 23104;
-						SET @msg_txt 		= 'Cannot apply for visit';
 						SIGNAL SQLSTATE '23000';
 					END IF;
                 ELSE

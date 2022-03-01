@@ -68,22 +68,33 @@ AUTHOR 			: Leo Nam
                     );
                     IF @rtn_val = 0 THEN
                     /*수거자가 입찰한 기록이 존재하는 경우 정상처리한다.*/
-						UPDATE SITE_WSTE_DISPOSAL_ORDER 
-						SET 
-							BIDDING_EARLY_CLOSING 		= TRUE, 
-							BIDDING_EARLY_CLOSED_AT 	= @REG_DT , 
-							BIDDING_END_AT 				= @REG_DT 
-						WHERE ID = IN_DISPOSER_ORDER_ID;
-						IF ROW_COUNT() = 1 THEN
-						/*정보가 성공적으로 변경되었다면*/
-							SET @rtn_val = 0;
-							SET @msg_txt = 'Early closing successfully completed';
-						ELSE
-						/*정보변경에 실패했다면 예외처리한다.*/
-							SET @rtn_val = 24501;
-							SET @msg_txt = 'failure to close early';
+						SELECT COUNT(ID) INTO @COUNT_OF_REQUEST_OF_BIDDING FROM COLLECTOR_BIDDING WHERE DATE_OF_BIDDING IS NOT NULL AND DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;
+						/*입찰신청한 업체수를 계산하여 @COUNT_OF_REQUEST_OF_BIDDING을 통하여 반환한다.*/
+						
+						IF @COUNT_OF_REQUEST_OF_BIDDING > 0 THEN
+						/*입찰신청한 업체가 1이상 존재하는 경우*/
+							UPDATE SITE_WSTE_DISPOSAL_ORDER 
+							SET 
+								BIDDING_EARLY_CLOSING 		= TRUE, 
+								BIDDING_EARLY_CLOSED_AT 	= @REG_DT , 
+								BIDDING_END_AT 				= @REG_DT 
+							WHERE ID = IN_DISPOSER_ORDER_ID;
+							IF ROW_COUNT() = 1 THEN
+							/*정보가 성공적으로 변경되었다면*/
+								SET @rtn_val = 0;
+								SET @msg_txt = 'Early closing successfully completed';
+							ELSE
+							/*정보변경에 실패했다면 예외처리한다.*/
+								SET @rtn_val = 24501;
+								SET @msg_txt = 'failure to close early';
+								SIGNAL SQLSTATE '23000';
+							END IF;
+                        ELSE
+						/*입찰신청한 업체가 존재하지 않는 경우*/
+							SET @rtn_val = 24504;
+							SET @msg_txt = 'The company requested to bid does not exist';
 							SIGNAL SQLSTATE '23000';
-						END IF;
+                        END IF;
                     ELSE
                     /*수거자가 입찰한 기록이 존재하지 않는 경우 예외처리한다.*/
 						SIGNAL SQLSTATE '23000';
