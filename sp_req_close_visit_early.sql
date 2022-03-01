@@ -95,12 +95,14 @@ AUTHOR 			: Leo Nam
 									SET @PERIOD_UNTIL_BIDDING_END_DATE = CAST(@policy_direction AS UNSIGNED);
 									/*정책으로 결정된 시간을 @PERIOD_UNTIL_BIDDING_END_DATE에 저장한다.*/
 									UPDATE SITE_WSTE_DISPOSAL_ORDER 
-									SET BIDDING_END_AT 	= IF(BIDDING_END_AT <= ADDTIME(@REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00')), 
-															BIDDING_END_AT, 					
+                                    SET 
+										BIDDING_END_AT = ADDTIME(@REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00')),
+									/*	BIDDING_END_AT 	= IF(BIDDING_END_AT <= ADDTIME(@REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00')), */
+									/*						BIDDING_END_AT, 				*/	
 															/*조건을 만족하는 경우로서 입찰마감일이 현재일로부터 정책으로 결정된 시간 이내인 경우에는 현재 설정된 입찰마감일을 그대로 사용하도록 한다.*/
-															ADDTIME(@REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'))				
+									/*						ADDTIME(@REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'))		*/		
 															/*조건을 만족하지 않는 경우로서 입찰마감일이 현재일로부터 정책으로 결정된 시간 이후인 경우에는 현재 시간으로부터 정책으로 결정된 시간 이후의 시간으로 입찰마감일을 변경한다.*/
-														), 
+									/*					), */
 										VISIT_END_AT 	= @REG_DT
 									WHERE ID = IN_DISPOSER_ORDER_ID;
 									IF ROW_COUNT() = 1 THEN

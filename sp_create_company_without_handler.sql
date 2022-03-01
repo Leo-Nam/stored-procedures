@@ -66,6 +66,10 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			
 			IF @rtn_val = 0 THEN
 			/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+				CALL sp_req_user_regid_by_user_id(
+					IN_USER_REG_ID,
+                    OUT_USER_ID
+                );
 				CALL sp_member_admin_account_exists(
 					IN_USER_REG_ID, 
 					@rtn_val, 
@@ -119,7 +123,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						);
 						IF @rtn_val = 0 THEN
 							SET rtn_val = 0;
-							SET msg_txt = 'Success';
+							SET msg_txt = 'Success3';
 							SET OUT_SITE_ID = @SITE_REG_ID;
 						ELSE
 							SET rtn_val = @rtn_val;
@@ -215,7 +219,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								IF ROW_COUNT() = 1 THEN
 								/*사용자의 소속 사이트 정보에 대한 업데이트가 성공한 경우*/
 									SET rtn_val = 0;
-									SET msg_txt = 'Success';
+									SET msg_txt = 'Success1';
 									/*사용자 레코드가 정상적으로 생성된 경우에는 최종 COMMIT 처리하여 레코드 생성을 확인한다.*/
 									/*0을 반환함으로써 모든 트랜잭션이 성공하였음을 알린다.*/
 								ELSE

@@ -21,6 +21,6 @@ AUTHOR 			: Leo Nam
 		SET msg_txt = 'Success';
     ELSE
 		SET rtn_val = 29701;
-		SET msg_txt = 'The site is not a collector';
+		SET msg_txt = 'The site does not have the collector license';
     END IF;
 END

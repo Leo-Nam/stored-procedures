@@ -53,6 +53,40 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     
     IF @rtn_val = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
+		IF IN_BIDDING_END_AT IS NULL THEN
+			IF IN_VISIT_END_AT IS NOT NULL THEN
+				SET @VISIT_END_AT = IN_VISIT_END_AT;
+				CALL sp_req_policy_direction(
+				/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+					'bidding_end_date_after_the_visit_early_closing',
+					@policy_direction
+				);
+				SET @PERIOD_UNTIL_BIDDING_END_DATE = CAST(@policy_direction AS UNSIGNED);
+				SET @BIDDING_END_AT = ADDTIME(@VISIT_END_AT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'));
+            ELSE
+				SET @VISIT_END_AT = @REG_DT;
+            END IF;
+		ELSE
+			SET @BIDDING_END_AT = IN_BIDDING_END_AT;
+        END IF;
+        
+        IF IN_OPEN_AT IS NULL THEN
+			SET @OPEN_AT = @REG_DT;
+        ELSE
+			SET @OPEN_AT = IN_OPEN_AT;
+        END IF;
+        
+        IF IN_CLOSE_AT IS NULL THEN
+			CALL sp_req_policy_direction(
+			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+				'max_disposal_duration',
+				@max_disposal_duration
+			);
+			SET @CLOSE_AT = DATE_ADD(@BIDDING_END_AT, INTERVAL @max_disposal_duration DAY);
+        ELSE
+			SET @CLOSE_AT = IN_CLOSE_AT;
+        END IF;
+        
 		CALL sp_req_get_user_current_type(
 			IN_USER_ID,
             @USER_CURRENT_TYPE_CODE
@@ -75,10 +109,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
 					IN_VISIT_START_AT,
-					IN_VISIT_END_AT,
-					IN_BIDDING_END_AT,
-					IN_OPEN_AT,
-					IN_CLOSE_AT,
+					@VISIT_END_AT,
+					@BIDDING_END_AT,
+					@OPEN_AT,
+					@CLOSE_AT,
 					IN_WSTE_CLASS,
 					IN_PHOTO_LIST,
 					IN_NOTE,
@@ -114,10 +148,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 						IN_KIKCD_B_CODE,
 						IN_ADDR,
 						IN_VISIT_START_AT,
-						IN_VISIT_END_AT,
-						IN_BIDDING_END_AT,
-						IN_OPEN_AT,
-						IN_CLOSE_AT,
+						@VISIT_END_AT,
+						@BIDDING_END_AT,
+						@OPEN_AT,
+						@CLOSE_AT,
 						IN_WSTE_CLASS,
 						IN_PHOTO_LIST,
 						IN_NOTE,
@@ -142,6 +176,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
         /*사용자의 현재 타입정보가 배출자가 아닌 경우에는 예외처리한다.*/
 			SET @rtn_val = 31001;
 			SET @msg_txt = 'Discharge is not possible with the current user type';
+			SIGNAL SQLSTATE '23000';
         END IF;
     ELSE
     /*CREATOR가 유효하지 않은 경우에는 예외처리한다.*/

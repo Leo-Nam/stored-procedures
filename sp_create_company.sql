@@ -61,8 +61,6 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
     
     IF @rtn_val = 0 THEN
 	/*사업자 개설에 성공한 경우*/
-		SET @rtn_val 		= 0;
-		SET @msg_txt 		= 'Success';
 		SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(
 				'SITE_ID'			, @OUT_SITE_ID,
