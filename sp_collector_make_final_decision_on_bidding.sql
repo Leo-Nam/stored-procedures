@@ -60,17 +60,12 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			/*사이트가 배출자로부터 최종 낙찰자로 선정된 경우*/
 				UPDATE COLLECTOR_BIDDING 
 				SET 
-					REJECT_DECISION = IN_FINAL_DECISION, 
+					MAKE_DECISION = IN_FINAL_DECISION, 
 					REJECTED_AT = @REG_DT,
 					UPDATED_AT = @REG_DT  
 				WHERE ID = IN_COLLECT_BIDDING_ID;
-				/*최종처리결정에 대한 거부권(TRUE:거부, FALSE:수락)을 행사한다.*/
-				IF ROW_COUNT() = 0 THEN
-				/*데이타베이스 입력에 실패한 경우*/
-					SET @rtn_val 		= 24101;
-					SET @msg_txt 		= 'db error occurred during bid cancellation';
-					SIGNAL SQLSTATE '23000';
-				ELSE
+				/*최종처리결정에 대한 거부권(TRUE:수락, FALSE:거부)을 행사한다.*/
+				IF ROW_COUNT() = 1 THEN
 				/*데이타베이스 입력에 성공한 경우*/
 					UPDATE SITE_WSTE_DISPOSAL_ORDER 
                     SET 
@@ -105,6 +100,11 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						SET @msg_txt 		= 'Failed to change emitter record';
 						SIGNAL SQLSTATE '23000';
                     END IF;
+				ELSE
+				/*데이타베이스 입력에 실패한 경우*/
+					SET @rtn_val 		= 24101;
+					SET @msg_txt 		= 'db error occurred during bid cancellation';
+					SIGNAL SQLSTATE '23000';
 				END IF;
 			ELSE
 			/*사이트가 배출자로부터 최종 낙찰자로 선정되지 경우*/

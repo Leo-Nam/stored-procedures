@@ -68,7 +68,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 					/*최종결정에 대한 거절을 실행하는 경우*/
 						UPDATE COLLECTOR_BIDDING 
 						SET 
-							REJECT_DECISION = IN_FINAL_DECISION, 
+							MAKE_DECISION = IN_FINAL_DECISION, 
 							REJECTED_AT = @REG_DT,
 							UPDATED_AT = @REG_DT  
 						WHERE ID = IN_COLLECT_BIDDING_ID;
@@ -76,7 +76,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 					/*최종결정에 대한 수락을 실행하는 경우*/
 						UPDATE COLLECTOR_BIDDING 
 						SET 
-							REJECT_DECISION = IN_FINAL_DECISION, 
+							MAKE_DECISION = IN_FINAL_DECISION, 
 							UPDATED_AT = @REG_DT 
 						WHERE ID = IN_COLLECT_BIDDING_ID;
 					END IF;

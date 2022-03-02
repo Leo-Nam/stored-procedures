@@ -1,5 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_is_visit_request_rejected`(
-	IN IN_COLLECTOR_SITE_ID					BIGINT,
+	IN IN_COLLECTOR_BIDDING_ID				BIGINT,
     IN IN_DISPOSER_ORDER_ID					BIGINT,
     OUT rtn_val 							INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 							VARCHAR(100)		/*출력값 : 처리결과 문자열*/
@@ -21,7 +21,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
     INTO @RESPONSE_VISIT 
     FROM COLLECTOR_BIDDING 
     WHERE 
-		COLLECTOR_ID = IN_COLLECTOR_SITE_ID AND 
+		ID = IN_COLLECTOR_BIDDING_ID AND 
         DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
         RESPONSE_VISIT_AT IS NOT NULL;
         

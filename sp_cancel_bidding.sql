@@ -28,6 +28,8 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
+    CALL sp_req_current_time(@REG_DT);
+    
 	CALL sp_req_user_exists_by_id(
 	/*생성자가 존재하는지 체크한다.*/
 		IN_USER_ID, 
@@ -69,7 +71,11 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 				);
 				IF @rtn_val > 0 THEN
 				/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
-					UPDATE COLLECTOR_BIDDING SET CANCEL_BIDDING = TRUE WHERE ID = IN_COLLECT_BIDDING_ID;
+					UPDATE COLLECTOR_BIDDING 
+                    SET 
+						CANCEL_BIDDING 		= TRUE, 
+                        CANCEL_VISIT_AT 	= @REG_DT 
+                    WHERE ID = IN_COLLECT_BIDDING_ID;
 					/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
 					IF ROW_COUNT() = 0 THEN
 					/*데이타베이스 입력에 실패한 경우*/

@@ -61,7 +61,11 @@ AUTHOR 			: Leo Nam
 				);
 				IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 				/*관리자가 정보를 변경할 권한이 있는 경우*/
-					SELECT DISPOSAL_ORDER_ID, WINNER INTO @COLLECTOR_DISPOSAL_ORDER_ID, @WINNER FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					SELECT DISPOSAL_ORDER_ID, WINNER 
+                    INTO @COLLECTOR_DISPOSAL_ORDER_ID, @WINNER 
+                    FROM COLLECTOR_BIDDING 
+                    WHERE ID = IN_COLLECTOR_BIDDING_ID;
+                    
                     IF @COLLECTOR_DISPOSAL_ORDER_ID IS NOT NULL THEN
                     /*입찰에 참여한 수거자의 입찰등록번호가 존재하는 경우 정상처리한다.*/
 						IF @COLLECTOR_DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID THEN

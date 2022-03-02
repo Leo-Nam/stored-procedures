@@ -95,7 +95,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 							IF @rtn_val = 0 THEN
 							/*방문종료일이 마감되었으면 입찰가능상태로서 정상입찰을 진행한다.*/
 								CALL sp_req_apply_for_visit(
-								/*방문의무가 있는 사이트에 방문신청을 하였는지 여부 확인*/
+								/*방문의무가 있는 사이트에 방문신청을 한 사실이 있는지에 대한 여부 확인*/
 									@USER_SITE_ID,
 									IN_DISPOSAL_ID,
 									@COLLECTOR_BIDDING_ID,
@@ -106,13 +106,16 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 								/*방문신청을 한 사실이 있다면*/
 									CALL sp_req_is_visit_reqeust_rejected(
 									/*배출자로부터 방문거절을 당했는지 확인한다.*/
-										@USER_SITE_ID,
+										@COLLECTOR_BIDDING_ID,
 										IN_DISPOSAL_ID,
 										@rtn_val,
 										@msg_txt
 									);
 									IF @rtn_val = 0 THEN
 									/*배출자로부터 방문거절을 당하지 않았다면 정상처리한다.*/
+										CALL sp_req_is_visit_request_already_not_canceled(
+											
+                                        );
 										CALL sp_req_bidding_end_date_expired(
 										/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
 											IN_DISPOSAL_ID,
