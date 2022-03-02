@@ -32,9 +32,6 @@ Change			: Creator 정보 입력 부분 삭제(0.0.3)
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
-	SET @COMP_REG_CODE_EXISTS 	= FALSE;
-    SET @COMPANY_EXISTS 		= FALSE;
-    
     SET @LAT = NULL, @LNG = NULL;
     /*사이트 소재지의 위경도는 NULL값으로 하고 시스템 관리자에 의하여 그 값(위경도 계산 API 사용하여 일괄적으로 처리)이 정해짐*/
     

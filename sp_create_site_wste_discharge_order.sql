@@ -53,19 +53,20 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     
     IF @rtn_val = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
+		IF IN_VISIT_END_AT IS NOT NULL THEN
+			SET @VISIT_END_AT = IN_VISIT_END_AT;
+		ELSE
+			SET @VISIT_END_AT = @REG_DT;
+		END IF;
+        
 		IF IN_BIDDING_END_AT IS NULL THEN
-			IF IN_VISIT_END_AT IS NOT NULL THEN
-				SET @VISIT_END_AT = IN_VISIT_END_AT;
-				CALL sp_req_policy_direction(
-				/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
-					'bidding_end_date_after_the_visit_early_closing',
-					@policy_direction
-				);
-				SET @PERIOD_UNTIL_BIDDING_END_DATE = CAST(@policy_direction AS UNSIGNED);
-				SET @BIDDING_END_AT = ADDTIME(@VISIT_END_AT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'));
-            ELSE
-				SET @VISIT_END_AT = @REG_DT;
-            END IF;
+			CALL sp_req_policy_direction(
+			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+				'bidding_end_date_after_the_visit_early_closing',
+				@policy_direction
+			);
+			SET @PERIOD_UNTIL_BIDDING_END_DATE = CAST(@policy_direction AS UNSIGNED);
+			SET @BIDDING_END_AT = ADDTIME(@VISIT_END_AT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'));
 		ELSE
 			SET @BIDDING_END_AT = IN_BIDDING_END_AT;
         END IF;
@@ -138,7 +139,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					@rtn_val,
 					@msg_txt
 				);
-				IF @rtn_val = FALSE THEN
+				IF @rtn_val = 0 THEN
 				/*사이트가 유효한 경우*/
 					CALL sp_insert_site_wste_discharge_order_without_handler(
 						IN_USER_ID,
