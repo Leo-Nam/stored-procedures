@@ -70,6 +70,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 					IN_USER_REG_ID,
                     OUT_USER_ID
                 );
+                SET @CREATOR_REG_ID = OUT_USER_ID;
 				CALL sp_member_admin_account_exists(
 					IN_USER_REG_ID, 
 					@rtn_val, 
@@ -79,6 +80,10 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				IF @rtn_val = 0 THEN
 				/*사용자에게 사업자를 생성할 권한이 있는 경우*/
 					CALL sp_req_comp_max_id(@COMP_MAX_ID);
+                    CALL sp_req_comp_id_of_user_by_id(
+						@CREATOR_REG_ID,
+                        @P_COMP_ID
+                    );
 					CALL sp_insert_company(
 						@COMP_MAX_ID, 
 						IN_COMP_NAME, 
@@ -99,11 +104,6 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				
 					IF @rtn_val = 0 THEN
 					/*사업자 레코드가 정상적으로 생성된 경우 기본 사이트 개설 절차를 진행한다.*/
-						CALL sp_req_user_regid_by_user_id(
-						/*생성자 로그인 아이디로 생성자 고유등록번호를 반환한다.*/
-							IN_USER_REG_ID,
-							@CREATOR_REG_ID
-						);
 						CALL sp_create_site_without_handler(
 							@CREATOR_REG_ID, 
 							@COMP_MAX_ID, 
@@ -152,6 +152,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				IF @rtn_val = 0 THEN
 				/*등록하려는 핸드폰이 등록되어 있지 않은 경우*/
 					CALL sp_req_comp_max_id(@COMP_MAX_ID);
+                    SET @P_COMP_ID = 0;
 					CALL sp_insert_company(
 						@COMP_MAX_ID, 
 						IN_COMP_NAME, 
@@ -163,7 +164,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						IN_CONTACT, 
 						IN_TRMT_BIZ_CODE, 
 						IN_BIZ_REG_CODE, 
-						0, 
+						@P_COMP_ID, 
 						@REG_DT, 
 						@REG_DT, 
 						@rtn_val, 
