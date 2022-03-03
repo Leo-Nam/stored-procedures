@@ -48,7 +48,9 @@ AUTHOR 			: Leo Nam
 			IN_USER_ID,
 			@COMP_ID,
 			@PERMISSION,
-			@IS_USER_SITE_HEAD_OFFICE
+			@IS_USER_SITE_HEAD_OFFICE,
+			@rtn_val,
+			@msg_txt
 		);
 		
 		CALL sp_req_user_class_by_user_reg_id(

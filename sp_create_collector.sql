@@ -65,7 +65,9 @@ Change			: JWT 입력변수 삭제(0.0.3) / 폐기물 종류 정보(IN_WSTE_CLS)
 				IN_USER_ID, 
                 @COMP_ID, 
                 @REGISTRATION_RIGHT,
-                @IS_USER_BELONGS_TO_HEAD_OFFICE
+                @IS_USER_BELONGS_TO_HEAD_OFFICE,
+				@rtn_val,
+				@msg_txt
             );
 			/*@REGISTRATION_RIGHT로 사업자 등록을 요청하는 사용자의 권한을 구분한다.*/
 			

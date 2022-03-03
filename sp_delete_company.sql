@@ -59,7 +59,9 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 				IN_USER_ID, 
 				IN_COMP_ID, 
 				@PERMISSION, 
-				@IS_USER_SITE_HEAD_OFFICE
+				@IS_USER_SITE_HEAD_OFFICE,
+				@rtn_val,
+				@msg_txt
 			);
 			IF @PERMISSION IN (1, 2) THEN
 			/*IN_USER_ID가 sys.admin:101, 102인 경우*/

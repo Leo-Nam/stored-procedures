@@ -127,7 +127,9 @@ Changes			: 사이트에 등록할 수 있는 사용자 제한규정(정책사�
 							IN_USER_ID,
 							@COMP_ID_SITE_BELONGS_TO,
 							@PERMISSION,
-							@IS_CREATOR_SITE_HEAD_OFFICE
+							@IS_CREATOR_SITE_HEAD_OFFICE,
+							@rtn_val,
+							@msg_txt
 						);
 						
 						CALL sp_req_is_site_head_office(

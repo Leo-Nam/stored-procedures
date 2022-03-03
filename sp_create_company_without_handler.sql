@@ -104,11 +104,16 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				
 					IF @rtn_val = 0 THEN
 					/*사업자 레코드가 정상적으로 생성된 경우 기본 사이트 개설 절차를 진행한다.*/
+						CALL sp_req_comp_site_max_id(
+							@MAX_SITE_ID
+						);
+						/*지금 개설할 사이트를 위한 고유번호(COMP_SITE.ID)로 사용할 ID를 @MAX_SITE_ID를 통하여 반환한다.*/
 						CALL sp_create_site_without_handler(
 							@CREATOR_REG_ID, 
 							@COMP_MAX_ID, 
 							IN_KIKCD_B_CODE, 
 							IN_ADDR, 
+							@MAX_SITE_ID, 
 							IN_COMP_NAME, 
 							0, 
 							@REG_DT, 
@@ -194,11 +199,16 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						);
 						IF @rtn_val = 0 THEN
 						/*사용자 레코드가 정상적으로 생성된 경우에는 정상처리 진행한다.*/  
+							CALL sp_req_comp_site_max_id(
+								@MAX_SITE_ID
+							);
+							/*지금 개설할 사이트를 위한 고유번호(COMP_SITE.ID)로 사용할 ID를 @MAX_SITE_ID를 통하여 반환한다.*/
 							CALL sp_create_site_without_handler(
 								@USER_MAX_ID, 
 								@COMP_MAX_ID, 
 								IN_KIKCD_B_CODE, 
 								IN_ADDR, 
+								@MAX_SITE_ID, 
 								IN_COMP_NAME, 
 								0, 
 								@REG_DT, 

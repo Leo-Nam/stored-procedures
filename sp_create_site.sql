@@ -64,19 +64,26 @@ Change			: Creator 정보 입력 부분 삭제(0.0.3)
 				IN_USER_ID,
 				IN_COMP_ID,
 				@PERMISSION,
-				@IS_SITE_HEAD_OFFICE
+				@IS_SITE_HEAD_OFFICE,
+				@rtn_val,
+				@msg_txt
 			);
 			
 			IF @PERMISSION = 1 OR @PERMISSION = 2 OR ((@PERMISSION = 3 OR @PERMISSION = 5) AND @IS_SITE_HEAD_OFFICE = TRUE) THEN
 			/*사이트를 개설할 권한이 있는 경우*/
 			/*1. 치움서비스의 관리자 그룹에 속하는 사용자인 경우*/
 			/*2. 사용자가 속한 사이트가 HEAD OFFICE이면서 사용자의 권한이 201인 경우*/
+				CALL sp_req_comp_site_max_id(
+					@MAX_SITE_ID
+				);
+				/*지금 개설할 사이트를 위한 고유번호(COMP_SITE.ID)로 사용할 ID를 @MAX_SITE_ID를 통하여 반환한다.*/
             
 				CALL sp_create_site_without_handler(
 					IN_USER_ID,
                     IN_COMP_ID,
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
+					@MAX_SITE_ID,
 					IN_SITE_NAME,
                     NULL,
 					@REG_DT,

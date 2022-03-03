@@ -3,6 +3,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_site_without_handler`(
 	IN IN_COMP_ID			BIGINT,				/*입력값 : 사업자 고유등록번호*/
 	IN IN_KIKCD_B_CODE		VARCHAR(10),		/*입력값 : 사이트가 소재하는 주소지에 대한 시군구 법정동코드*/
 	IN IN_ADDR				VARCHAR(255),		/*입력값 : 사이트가 소재하는 주소지에 대한 시군구 주소를 제외한 상세주소*/
+	IN IN_SITE_ID			BIGINT,				/*입력값 : 사이트 등록번호*/
 	IN IN_SITE_NAME			VARCHAR(255),		/*입력값 : 사이트 이름*/
 	IN IN_SITE_ORDER		INT,				/*입력값 : 활성화된 사이트 개설순서*/
 	IN IN_REG_DT			DATETIME,			/*입력값 : 레코드 생성일시*/
@@ -30,11 +31,8 @@ Version			: 0.0.4
 AUTHOR 			: Leo Nam
 */
 
-	CALL sp_req_comp_site_max_id(
-		@MAX_SITE_ID
-	);
-	/*지금 개설할 사이트를 위한 고유번호(COMP_SITE.ID)로 사용할 ID를 @MAX_COMP_SITE_ID를 통하여 반환한다.*/
-	
+	SET @MAX_SITE_ID = IN_SITE_ID;
+    
 	INSERT INTO COMP_SITE(
 		ID,
 		COMP_ID,
