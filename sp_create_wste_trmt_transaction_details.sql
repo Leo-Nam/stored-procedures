@@ -51,7 +51,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				@rtn_val,
 				@msg_txt
             );
-            IF @rtn_val = FALSE THEN
+            IF @rtn_val = 0 THEN
             /*사이트가 유효한 경우*/
 				CALL sp_insert_wste_transaction_without_handler(
 					IN_USER_ID,
