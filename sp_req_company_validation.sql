@@ -1,7 +1,7 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_company_validation`(
     IN IN_COMP_ID			BIGINT,				/*입력값 : 사용자 아이디*/
-    OUT STATE_CODE 			INT,				/*출력값 : 처리결과 반환값*/
-    OUT MSG_TXT 			VARCHAR(100)		/*출력값 : 처리결과 문자열*/
+    OUT rtn_val 			INT,				/*출력값 : 처리결과 반환값*/
+    OUT msg_txt 			VARCHAR(100)		/*출력값 : 처리결과 문자열*/
 )
 BEGIN
 
@@ -23,8 +23,8 @@ AUTHOR 			: Leo Nam
     
 	IF @COMPANY_EXISTS = 0 THEN
 	/*COMPANY ID가 존재하지 않는 경우 예외처리한다.*/
-		SET STATE_CODE = 20201;
-		SET MSG_TXT = 'company is not existed';
+		SET rtn_val = 20201;
+		SET msg_txt = 'company is not existed';
 	ELSE  
 	/*COMPANY ID가 존재하는 경우에는 정상처리 진행한다.*/
 		SELECT ACTIVE INTO ACTIVE_STAT FROM COMPANY WHERE ID = IN_COMP_ID;
@@ -32,12 +32,12 @@ AUTHOR 			: Leo Nam
 		
 		IF ACTIVE_STAT = FALSE THEN
 		/*계정이 비활성화된 상태인 경우에는 예외처리한다.*/
-			SET STATE_CODE = 20202;
-			SET MSG_TXT = 'company is not activated';
+			SET rtn_val = 20202;
+			SET msg_txt = 'company is not activated';
 		ELSE
 		/*계정이 활성화된 상태인 경우에는 정상처리한다.*/
-			SET STATE_CODE = 0;
-			SET MSG_TXT = 'company is valid';
+			SET rtn_val = 0;
+			SET msg_txt = 'company is valid';
 		END IF;
     END IF;
 END
