@@ -1,19 +1,20 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_company`(
-	IN IN_USER_REG_ID		VARCHAR(50),		/*입력값 : 관리자아이디*/
-    IN IN_PWD 				VARCHAR(100),		/*입력값 : 관리자암호*/
-    IN IN_USER_NAME 		VARCHAR(20),		/*입력값 : 관리자이름*/
-    IN IN_PHONE 			VARCHAR(20),		/*입력값 : 관리자 핸드폰 번호*/
-    IN IN_COMP_NAME 		VARCHAR(100),		/*입력값 : 사업자 상호*/
-    IN IN_REP_NAME 			VARCHAR(50),		/*입력값 : 대표자 이름*/
-    IN IN_KIKCD_B_CODE 		VARCHAR(10),		/*입력값 : 사무실 소재지 시군구 법정동코드로서 10자리 코드*/
-    IN IN_ADDR 				VARCHAR(255),		/*입력값 : 사무실 소재지 상세주소*/
-    IN IN_LNG 				DECIMAL(12,9),		/*입력값 : 사무실 좌표 경도*/
-    IN IN_LAT 				DECIMAL(12,9),		/*입력값 : 사무실 좌표 위도*/
-    IN IN_CONTACT 			VARCHAR(100),		/*입력값 : 사무실 연락처*/
-    IN IN_TRMT_BIZ_CODE 	VARCHAR(4),			/*입력값 : 사업자 분류코드로서 WSTE_TRMT_BIZ에 등록된 종류별 코드임*/
-    IN IN_BIZ_REG_CODE 		VARCHAR(12),		/*입력값 : 사업자번호*/
-	IN IN_SOCIAL_NO			VARCHAR(20),		/*입력값 : 주민등록번호*/
-	IN IN_AGREE_TERMS		TINYINT				/*입력값 : 약관동의여부(동의시 1)*/
+	IN IN_USER_REG_ID			VARCHAR(50),		/*입력값 : 관리자아이디*/
+    IN IN_PWD 					VARCHAR(100),		/*입력값 : 관리자암호*/
+    IN IN_USER_NAME 			VARCHAR(20),		/*입력값 : 관리자이름*/
+    IN IN_PHONE 				VARCHAR(20),		/*입력값 : 관리자 핸드폰 번호*/
+    IN IN_COMP_NAME 			VARCHAR(100),		/*입력값 : 사업자 상호*/
+    IN IN_REP_NAME 				VARCHAR(50),		/*입력값 : 대표자 이름*/
+    IN IN_KIKCD_B_CODE 			VARCHAR(10),		/*입력값 : 사무실 소재지 시군구 법정동코드로서 10자리 코드*/
+    IN IN_ADDR 					VARCHAR(255),		/*입력값 : 사무실 소재지 상세주소*/
+    IN IN_LNG 					DECIMAL(12,9),		/*입력값 : 사무실 좌표 경도*/
+    IN IN_LAT 					DECIMAL(12,9),		/*입력값 : 사무실 좌표 위도*/
+    IN IN_CONTACT 				VARCHAR(100),		/*입력값 : 사무실 연락처*/
+    IN IN_TRMT_BIZ_CODE 		VARCHAR(4),			/*입력값 : 사업자 분류코드로서 WSTE_TRMT_BIZ에 등록된 종류별 코드임*/
+    IN IN_BIZ_REG_CODE 			VARCHAR(12),		/*입력값 : 사업자번호*/
+    IN IN_BIZ_REG_IMG_PATH		VARCHAR(255),		/*입력값 : 사업자 분류코드로서 WSTE_TRMT_BIZ에 등록된 종류별 코드임*/
+	IN IN_SOCIAL_NO				VARCHAR(20),		/*입력값 : 주민등록번호*/
+	IN IN_AGREE_TERMS			TINYINT				/*입력값 : 약관동의여부(동의시 1)*/
     )
 BEGIN
 
@@ -51,6 +52,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 		IN_CONTACT,
 		IN_TRMT_BIZ_CODE,
 		IN_BIZ_REG_CODE,
+		IN_BIZ_REG_IMG_PATH,
 		IN_SOCIAL_NO,
 		IN_AGREE_TERMS,
 		@rtn_val,

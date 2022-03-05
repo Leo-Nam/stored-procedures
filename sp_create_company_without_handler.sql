@@ -12,6 +12,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_company_without_handler`(
     IN IN_CONTACT 			VARCHAR(100),		/*입력값 : 사무실 연락처*/
     IN IN_TRMT_BIZ_CODE 	VARCHAR(4),			/*입력값 : 사업자 분류코드로서 WSTE_TRMT_BIZ에 등록된 종류별 코드임*/
     IN IN_BIZ_REG_CODE 		VARCHAR(12),		/*입력값 : 사업자번호*/
+    IN IN_BIZ_REG_IMG_PATH	VARCHAR(255),		/*입력값 : 사업자번호*/
 	IN IN_SOCIAL_NO			VARCHAR(20),		/*입력값 : 주민등록번호*/
 	IN IN_AGREE_TERMS		TINYINT,			/*입력값 : 약관동의여부(동의시 1)*/
     OUT rtn_val 			INT,				/*출력값 : 처리결과 반환값*/
@@ -95,6 +96,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						IN_CONTACT, 
 						IN_TRMT_BIZ_CODE, 
 						IN_BIZ_REG_CODE, 
+						IN_BIZ_REG_IMG_PATH, 
 						@P_COMP_ID, 
 						@REG_DT, 
 						@REG_DT, 
@@ -169,6 +171,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						IN_CONTACT, 
 						IN_TRMT_BIZ_CODE, 
 						IN_BIZ_REG_CODE, 
+						IN_BIZ_REG_IMG_PATH, 
 						@P_COMP_ID, 
 						@REG_DT, 
 						@REG_DT, 
