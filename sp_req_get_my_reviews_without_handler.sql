@@ -1,0 +1,138 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_get_my_reviews_without_handler`(
+	IN IN_USER_ID				BIGINT,				/*입력값 : 게시판 소유자(COMP_SITE.ID)*/
+	OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
+	OUT msg_txt 				VARCHAR(200),		/*출력값 : 처리결과 문자열*/
+	OUT json_data 				json				/*출력값 : 포스팅 리스트*/
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_req_get_my_reviews_without_handler
+Input param 	: 2개
+Job 			: 게시판 목록을 반환한다.
+Update 			: 2022.02.16
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/		
+
+    DECLARE vRowCount 						INT DEFAULT 0;
+    DECLARE endOfRow 						TINYINT DEFAULT FALSE;  
+    
+    DECLARE CUR_ID		 					BIGINT;
+    DECLARE CUR_RATING				 		FLOAT;
+    DECLARE CUR_SITE_ID		 				BIGINT;
+    DECLARE CUR_SITE_NAME		 			VARCHAR(255);
+    DECLARE CUR_CONTENTS			 		TEXT;
+    DECLARE CUR_CREATED_AT			 		DATETIME;
+    DECLARE CUR_DISPOSER_ORDER_ID			BIGINT;
+    
+    DECLARE TEMP_CURSOR 					CURSOR FOR 
+    SELECT 
+		POST_ID, 
+        POST_RATING, 
+        POST_SITE_ID, 
+        POST_SITE_NAME, 
+        POST_CONTENTS, 
+        POST_CREATED_AT, 
+        POST_DISPOSER_ORDER_ID
+	FROM V_POSTS 
+    WHERE 
+        POST_CREATOR_ID 	= IN_USER_ID AND 
+        POST_CATEGORY_ID 	= 4  AND 
+        POST_ACTIVE		 	= TRUE 
+	ORDER BY POST_UPDATED_AT DESC /*LIMIT IN_OFFSET, IN_ITEMS*/;   
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;   
+    
+    SET json_data = NULL;
+	CREATE TEMPORARY TABLE IF NOT EXISTS TEMP_POST_LIST2 (
+		ID 							BIGINT, 
+		RATING						FLOAT, 
+		SITE_ID						BIGINT, 
+		SITE_NAME 					VARCHAR(255), 
+		CONTENTS 					TEXT, 
+		CREATED_AT 					DATETIME, 
+		AVATAR_PATH 				VARCHAR(255), 
+		DISPOSER_ORDER_ID			BIGINT, 
+		DISPOSER_ORDER_CODE			VARCHAR(10), 
+		USER_NAME					VARCHAR(20), 
+		USER_TYPE					VARCHAR(20)
+	);
+	
+	OPEN TEMP_CURSOR;	
+	cloop: LOOP
+		FETCH TEMP_CURSOR 
+		INTO 
+			CUR_ID, 
+			CUR_RATING, 
+			CUR_SITE_ID, 
+			CUR_SITE_NAME, 
+			CUR_CONTENTS, 
+			CUR_CREATED_AT, 
+			CUR_DISPOSER_ORDER_ID;
+		
+		SET vRowCount = vRowCount + 1;
+		IF endOfRow THEN
+			LEAVE cloop;
+		END IF;
+				
+		INSERT INTO 
+			TEMP_POST_LIST2(
+			ID, 
+			RATING, 
+			SITE_ID, 
+			SITE_NAME, 
+			CONTENTS, 
+			CREATED_AT, 
+			DISPOSER_ORDER_ID
+		) 
+		VALUES(
+			CUR_ID, 
+			CUR_RATING, 
+			CUR_SITE_ID, 
+			CUR_SITE_NAME, 
+			CUR_CONTENTS, 
+            CUR_CREATED_AT,
+			CUR_DISPOSER_ORDER_ID
+		);  
+        
+		SELECT AVATAR_PATH, USER_NAME, USER_CURRENT_TYPE_NM
+        INTO @AVATAR_PATH, @USER_NAME, @USER_CURRENT_TYPE_NM 
+        FROM V_USERS 
+        WHERE ID = IN_USER_ID;	
+        
+        SELECT ORDER_CODE INTO @DISPOSER_ORDER_CODE 
+        FROM SITE_WSTE_DISPOSAL_ORDER 
+        WHERE ID = CUR_DISPOSER_ORDER_ID;
+        
+        UPDATE TEMP_POST_LIST2 
+        SET 
+			AVATAR_PATH 			= @AVATAR_PATH, 
+            DISPOSER_ORDER_CODE 	= @DISPOSER_ORDER_CODE, 
+            USER_NAME 				= @USER_NAME, 
+            USER_CURRENT_TYPE_NM	= @USER_CURRENT_TYPE_NM 
+        WHERE ID = CUR_ID;
+        
+
+	END LOOP;   
+	CLOSE TEMP_CURSOR;
+	
+	SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'ID'						, ID, 
+		'RATING'					, RATING, 
+		'SITE_ID'					, SITE_ID, 
+		'SITE_NAME'					, SITE_NAME, 
+		'CONTENTS'					, CONTENTS, 
+		'CREATED_AT'				, CREATED_AT, 
+		'AVATAR_PATH'				, AVATAR_PATH, 
+		'DISPOSER_ORDER_ID'			, DISPOSER_ORDER_ID, 
+		'DISPOSER_ORDER_CODE'		, DISPOSER_ORDER_CODE, 
+		'USER_NAME'					, USER_NAME, 
+		'USER_CURRENT_TYPE_NM'		, USER_CURRENT_TYPE_NM
+	)) 
+	INTO json_data 
+	FROM TEMP_POST_LIST2;
+	
+	SET rtn_val = 0;
+	SET msg_txt = 'Success1';
+    DROP TABLE IF EXISTS TEMP_POST_LIST2;
+END

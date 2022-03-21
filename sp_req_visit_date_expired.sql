@@ -20,16 +20,16 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	SELECT VISIT_END_AT
-    INTO @VISIT_DATE
+    INTO @VISIT_END_AT
     FROM SITE_WSTE_DISPOSAL_ORDER 
     WHERE 
 		ID = IN_DISPOSER_ORDER_ID AND 
         ACTIVE = TRUE;
         
-	IF @VISIT_DATE IS NOT NULL THEN
-		IF @CURRENT_DT >= @VISIT_DATE THEN
+	IF @VISIT_END_AT IS NOT NULL THEN
+		IF @CURRENT_DT >= @VISIT_END_AT THEN
 			SET rtn_val = 0;
-			SET msg_txt = 'Success11111';
+			SET msg_txt = 'Success';
 		ELSE
 			SET rtn_val = 26601;
 			SET msg_txt = 'The expected date of visit has not yet come';

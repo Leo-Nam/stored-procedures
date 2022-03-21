@@ -3,7 +3,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_check_auth_to_create_user`(
     IN IN_TARGET_SITE_ID	BIGINT,
     IN IN_CREATOR_CLASS		INT,
     IN IN_CREATOR_SITE_ID	BIGINT,
-    OUT OUT_TARGET_SITE_ID	BIGINT,
+    OUT OUT_TARGET_COMP_ID	BIGINT,
     OUT rtn_val 			INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 			VARCHAR(200)		/*출력값 : 처리결과 문자열*/
 )
@@ -37,7 +37,7 @@ BEGIN
 					SELECT COMP_ID INTO @TARGET_COMP_ID FROM COMP_SITE WHERE ID = IN_TARGET_SITE_ID;
 					SELECT P_COMP_ID INTO @TARGET_COMP_PID FROM COMPANY WHERE ID = @TARGET_COMP_ID;
 					SELECT HEAD_OFFICE INTO @CREATOR_SITE_HEAD_OFFICE FROM COMP_SITE WHERE ID = IN_CREATOR_SITE_ID;
-                    SET OUT_TARGET_SITE_ID = @TARGET_COMP_ID;
+                    SET OUT_TARGET_COMP_ID = @TARGET_COMP_ID;
 					
 					IF IN_CREATOR_CLASS = 101 THEN
 						IF IN_TARGET_CLASS < 200 THEN
@@ -128,8 +128,8 @@ BEGIN
 					END IF;
 				ELSE
 				/*생성하고자 하는 사용자의 CLASS가 유효하지 않은 경우 예외처리한다.*/
-					SET rtn_val = 30601;
-					SET msg_txt = 'The class for the user to be created is not valid';
+					SET rtn_val = @rtn_val;
+					SET msg_txt = @msg_txt;
 				END IF;
 			ELSE
 				IF IN_TARGET_CLASS = 201 THEN
@@ -146,11 +146,11 @@ BEGIN
                 END IF;
 			END IF;
 		ELSE
-			SET rtn_val = 31613;
-			SET msg_txt = 'The site the creator belongs to is invalid';
+			SET rtn_val = @rtn_val;
+			SET msg_txt = @msg_txt;
 		END IF;
     ELSE
-		SET rtn_val = 31614;
-		SET msg_txt = 'The site of the user you are trying to create is not valid';
+		SET rtn_val = @rtn_val;
+		SET msg_txt = @msg_txt;
     END IF;
 END

@@ -69,7 +69,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						UPDATE COLLECTOR_BIDDING 
 						SET 
 							MAKE_DECISION = IN_FINAL_DECISION, 
-							REJECTED_AT = @REG_DT,
+							MAKE_DECISION_AT = @REG_DT,
 							UPDATED_AT = @REG_DT  
 						WHERE ID = IN_COLLECT_BIDDING_ID;
 					ELSE

@@ -61,7 +61,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				UPDATE COLLECTOR_BIDDING 
 				SET 
 					MAKE_DECISION = IN_FINAL_DECISION, 
-					REJECTED_AT = @REG_DT,
+					MAKE_DECISION_AT = @REG_DT,
 					UPDATED_AT = @REG_DT  
 				WHERE ID = IN_COLLECT_BIDDING_ID;
 				/*최종처리결정에 대한 거부권(TRUE:수락, FALSE:거부)을 행사한다.*/
@@ -69,7 +69,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				/*데이타베이스 입력에 성공한 경우*/
 					UPDATE SITE_WSTE_DISPOSAL_ORDER 
                     SET 
-						COLLECTOR_SELECTION_CONFIRMED 		= TRUE,  
+						COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION,  
                         COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT 
 					WHERE ID = @DISPOSAL_ORDER_ID;
                     IF ROW_COUNT() = 1 THEN

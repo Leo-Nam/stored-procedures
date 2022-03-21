@@ -81,7 +81,8 @@ Change			: sp_cancel_bidding의 기능 전부 sp_req_cancel_bidding에 통합
 						);
 						IF @SITE_ALREADY_BID > 0 THEN
 						/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
-							UPDATE COLLECTOR_BIDDING SET CANCEL_BIDDING = TRUE WHERE ID = IN_COLLECT_BIDDING_ID;
+							CALL sp_req_current_time(@REG_DT);
+							UPDATE COLLECTOR_BIDDING SET CANCEL_BIDDING = TRUE, CANCEL_BIDDING_AT = @REG_DT WHERE ID = IN_COLLECT_BIDDING_ID;
 							/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
 							IF ROW_COUNT() = 0 THEN
 							/*데이타베이스 입력에 실패한 경우*/

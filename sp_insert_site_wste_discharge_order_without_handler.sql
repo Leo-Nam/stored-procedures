@@ -75,6 +75,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     
     IF IN_VISIT_START_AT IS NOT NULL THEN
     /*방문 시작일이 결정된 경우*/
+		IF IN_VISIT_START_AT = DATE(IN_REG_DT) THEN
+        /*방문시작일이 시간이 지정되지 않은 신청당일인 경우에는 신청일시를 방문시작일시로 정한다.*/
+			SET IN_VISIT_START_AT = IN_REG_DT;
+        END IF;
 		IF IN_VISIT_START_AT >= IN_REG_DT THEN
         /*방문시작일이 입찰등록일 이후인 경우에는 정상처리한다.*/
 			CALL sp_req_policy_direction(
@@ -185,9 +189,11 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 		IF IN_VISIT_END_AT IS NOT NULL THEN
 		/*방문종료일이 결정된 경우*/
 			SET @REF_DATE = IN_VISIT_END_AT;
+            SET @VISIT_END_AT = IN_VISIT_END_AT;
 		ELSE
 		/*방문종료일이 결정되지 않은 경우*/
 			SET @REF_DATE = IN_REG_DT;
+            SET @VISIT_END_AT = NULL;
 		END IF;    
         
 		IF IN_BIDDING_END_AT IS NOT NULL THEN
@@ -217,7 +223,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
 					IN_VISIT_START_AT,
-					@REF_DATE,
+					@VISIT_END_AT,
 					IN_BIDDING_END_AT,
 					@OPEN_AT,
 					@CLOSE_AT,

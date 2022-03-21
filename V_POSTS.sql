@@ -13,12 +13,18 @@ VIEW `chiumdev_2`.`V_POSTS` AS
         `A`.`CONTENTS` AS `POST_CONTENTS`,
         `A`.`CATEGORY` AS `POST_CATEGORY_ID`,
         `D`.`NAME` AS `POST_CATEGORY_NAME`,
+        `A`.`SUB_CATEGORY` AS `POST_SUB_CATEGORY_ID`,
+        `E`.`CATEGORY_NAME` AS `POST_SUB_CATEGORY_NAME`,
         `A`.`VISITORS` AS `POST_VISITORS`,
         `A`.`PID` AS `POST_PID`,
         `A`.`CREATED_AT` AS `POST_CREATED_AT`,
-        `A`.`UPDATED_AT` AS `POST_UPDATED_AT`
+        `A`.`UPDATED_AT` AS `POST_UPDATED_AT`,
+        `A`.`ACTIVE` AS `POST_ACTIVE`,
+        `A`.`RATING` AS `POST_RATING`,
+        `A`.`STATUS` AS `POST_STATUS`
     FROM
-        (((`chiumdev_2`.`POSTS` `A`
+        ((((`chiumdev_2`.`POSTS` `A`
         LEFT JOIN `chiumdev_2`.`COMP_SITE` `B` ON ((`A`.`SITE_ID` = `B`.`ID`)))
         LEFT JOIN `chiumdev_2`.`USERS` `C` ON ((`A`.`CREATOR_ID` = `C`.`ID`)))
         LEFT JOIN `chiumdev_2`.`POST_CATEGORY` `D` ON ((`A`.`CATEGORY` = `D`.`ID`)))
+        LEFT JOIN `chiumdev_2`.`POST_SUB_CATEGORY` `E` ON ((`A`.`SUB_CATEGORY` = `E`.`ID`)))

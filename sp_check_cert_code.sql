@@ -18,6 +18,7 @@ BEGIN
     INTO @DUPLICATED_NUMBER 
     FROM USERS 
     WHERE PHONE = IN_PHONE_NO;
+    SET @DUPLICATED_NUMBER = 0;
     IF @DUPLICATED_NUMBER = 0 THEN
 		SELECT COUNT(ID) 
 		INTO @HAVE_SENT 
@@ -39,7 +40,9 @@ BEGIN
 				INTO @CERT_CODE, @CREATED_AT
 				FROM CELL_PHONE_CERTIFICATION 
 				WHERE ID = IN_ID;
+/*
 				IF NOW() >= ADDTIME(@CREATED_AT, CONCAT('0:', @max_verification_time_out, ':00')) THEN
+*/
 					IF @CERT_CODE = IN_CERT_CODE THEN
 						UPDATE CELL_PHONE_CERTIFICATION
 						SET 
@@ -78,6 +81,7 @@ BEGIN
 						SET @rtn_val = 32404;
 						SET @msg_txt = 'Verification code does not match';
 					END IF;
+/*
 				ELSE
 					SELECT JSON_ARRAYAGG(JSON_OBJECT(
 						'ID', IN_ID,
@@ -89,6 +93,7 @@ BEGIN
 					SET @rtn_val = 32403;
 					SET @msg_txt = 'authentication timeout';
 				END IF;
+*/
 			ELSE
 				SELECT JSON_ARRAYAGG(JSON_OBJECT(
 					'ID', IN_ID,

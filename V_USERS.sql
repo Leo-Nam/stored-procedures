@@ -30,7 +30,10 @@ VIEW `chiumdev_2`.`V_USERS` AS
                 'person'),
             `chiumdev_2`.`C`.`USER_TYPE_EN_NM`) AS `USER_TYPE`,
         `A`.`CREATED_AT` AS `CREATED_AT`,
-        `A`.`UPDATED_AT` AS `UPDATED_AT`
+        `A`.`UPDATED_AT` AS `UPDATED_AT`,
+        `A`.`PUSH_ENABLED` AS `PUSH_ENABLED`,
+        `A`.`NOTICE_ENABLED` AS `NOTICE_ENABLED`,
+        `A`.`AVATAR_PATH` AS `AVATAR_PATH`
     FROM
         (((`chiumdev_2`.`USERS` `A`
         LEFT JOIN `chiumdev_2`.`USERS_CLASS` `B` ON ((`A`.`CLASS` = `B`.`ID`)))

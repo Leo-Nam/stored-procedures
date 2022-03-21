@@ -18,14 +18,15 @@ BEGIN
 Procedure Name 	: sp_create_site_wste_discharge_order
 Input param 	: 11개
 Job 			: 폐기물 배출 작업 ORDER를 작성(SITE_WSTE_DISPOSAL_ORDER)한다.
-Update 			: 2022.02.19
-Version			: 0.0.8
+Update 			: 2022.03.17
+Version			: 0.0.9
 AUTHOR 			: Leo Nam
 Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨으로써 입력값으로 IN_SITE_ID 받아서 sp_insert_site_wste_discharge_order_without_handler에 전달해준다.
 				: 폐기물 배출자의 타입을 프론트에서 입력받는 방식을 삭제하고 DB에서 구분을 하는 방식으로 전환(0.0.4)
 				: 기존거래업체와의 재거래를 위한 컬럼 추가로 인한 로직 변경(0.0.5)
 				: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.6)
 				: VISIT_START_AT 칼럼 추가(0.0.7)
+				: IN_VISIT_END_AT이 시간이 없이 날짜만 존재하는 경우에는 IN_VISIT_END_AT에 1일을 추가해준다.(0.0.9)
 				: 사용자의 현재 타입에 따른 배출권한 제한(0.0.8)
 */
 
@@ -54,19 +55,31 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     IF @rtn_val = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
 		IF IN_VISIT_END_AT IS NOT NULL THEN
-			SET @VISIT_END_AT = IN_VISIT_END_AT;
+			SET IN_VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:59') AS DATETIME);
+        END IF;
+        
+		IF IN_BIDDING_END_AT IS NOT NULL THEN
+			SET IN_BIDDING_END_AT = CAST(CONCAT(DATE(IN_BIDDING_END_AT), ' ', '23:59:59') AS DATETIME);
+        END IF;
+        
+		IF IN_CLOSE_AT IS NOT NULL THEN
+			SET IN_CLOSE_AT = CAST(CONCAT(DATE(IN_CLOSE_AT), ' ', '23:59:59') AS DATETIME);
+        END IF;
+        
+		SET @VISIT_END_AT = IN_VISIT_END_AT;
+		IF IN_VISIT_END_AT IS NOT NULL THEN
+			SET @REF_DATE = IN_VISIT_END_AT;
 		ELSE
-			SET @VISIT_END_AT = @REG_DT;
+			SET @REF_DATE = @REG_DT;
 		END IF;
         
 		IF IN_BIDDING_END_AT IS NULL THEN
 			CALL sp_req_policy_direction(
 			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
 				'bidding_end_date_after_the_visit_early_closing',
-				@policy_direction
+				@bidding_end_date_after_the_visit_early_closing
 			);
-			SET @PERIOD_UNTIL_BIDDING_END_DATE = CAST(@policy_direction AS UNSIGNED);
-			SET @BIDDING_END_AT = ADDTIME(@VISIT_END_AT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00'));
+			SET @BIDDING_END_AT = ADDTIME(@REF_DATE, CONCAT(CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), ':00:00'));
 		ELSE
 			SET @BIDDING_END_AT = IN_BIDDING_END_AT;
         END IF;

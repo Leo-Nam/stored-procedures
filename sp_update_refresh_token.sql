@@ -1,23 +1,41 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_update_refresh_token`(
-	IN IN_USER_REG_ID		VARCHAR(50),		/*입력값 : 사용자 아이디*/
-	IN IN_PWD				VARCHAR(20),		/*입력값 : 사용자 등록 전화번호*/
-	IN IN_JWT				VARCHAR(200),		/*입력값 : Refresh Token*/
-    OUT rtn_val 			INT,				/*출력값 : 처리결과 반환값*/
-    OUT msg_txt 			VARCHAR(200)		/*출력값 : 처리결과 문자열*/
+	IN IN_USER_ID			BIGINT,
+    IN IN_REFRESH_TOKEN		VARCHAR(200)
 )
 BEGIN
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;
+	START TRANSACTION;
+    /*트랜잭션 시작*/
+    
     CALL sp_req_current_time(@REG_DT);
-	UPDATE USERS 
-    SET JWT = IN_JWT, UPDATED_AT = @REG_DT
-    WHERE 
-		USER_ID = IN_USER_REG_ID AND
-        PWD = IN_PWD AND 
-        ACTIVE = TRUE;
-	IF ROW_COUNT() = 1 THEN
-		SET rtn_val = 0;
-		SET msg_txt = 'Success';
+	CALL sp_req_user_exists_by_id(
+		IN_USER_ID,
+        TRUE,
+        @rtn_val,
+        @msg_txt
+    );
+    IF @rtn_val = 0 THEN
+		UPDATE USERS 
+        SET 
+			JWT = IN_REFRESH_TOKEN ,
+            UPDATED_AT = @REG_DT
+        WHERE ID = IN_USER_ID;
+        IF ROW_COUNT() = 1 THEN
+			SET @rtn_val = 0;
+			SET @msg_txt = 'success';
+        ELSE
+			SET @rtn_val = 29801;
+			SET @msg_txt = 'Failed to save refresh token';
+			SIGNAL SQLSTATE '23000';
+        END IF;
     ELSE
-		SET rtn_val = 29801;
-		SET msg_txt = 'Failed to change refresh token information';
+		SIGNAL SQLSTATE '23000';
     END IF;
+	COMMIT;
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

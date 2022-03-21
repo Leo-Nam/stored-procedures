@@ -1,8 +1,8 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_user_management_rights_by_user_id`(
 	IN IN_USER_ID				BIGINT,											/*관리자 권한을 요구하는 사용자 아이디*/
     IN IN_TARGET_USER_ID		BIGINT,											/*관리자가 변경 또는 삭제 등의 정보 처리작업을 해야 하는 대상이 되는 사용자 아이디*/
-    IN IN_JOB					ENUM('CREATE', 'READ', 'UPDATE', 'DELETE'),		/*관리자가 수행하고자 하는 작업*/
-    OUT OUT_RIGHTS				TINYINT											/*권한이 있는 경우 TRUE, 그렇지 않은 경우 FALSE 반환*/
+    OUT rtn_val 				INT,											/*출력값 : 처리결과 반환값*/
+    OUT msg_txt 				VARCHAR(200)									/*출력값 : 처리결과 문자열*/
 )
 BEGIN
 
@@ -42,42 +42,46 @@ AUTHOR 			: Leo Nam
         IF @ADMIN_CLASS < 200 THEN
         /*ADMIN이 sys.admin인 경우*/
 			IF @ADMIN_CLASS = 101 THEN
+            /*ADMIN이 sys.admin:101인 경우*/
 				IF IN_USER_ID = IN_TARGET_USER_ID THEN
                 /*ADMIN이 sys.admin:101인 경우에 처리할 정보가 본인인 경우*/
-					IF IN_JOB = 'DELETE' THEN
-						/*정보를 삭제하는 경우에는 권한이 부여되지 않는다.*/
-						SET OUT_RIGHTS = FALSE;
-					ELSE
-						/*정보를 삭제하는 경우를 제외한 경우에는 모든 권한이 부여된다.*/
-						SET OUT_RIGHTS = TRUE;
-                    END IF;
+					SET @rtn_val = 33101;
+					SET @msg_txt = 'The highest authority in Chium cannot delete his or her account';
 				ELSE
                 /*ADMIN이 처리할 정보가 본인이 아닌 경우에는 모든 권한이 부여된다.*/
-					SET OUT_RIGHTS = TRUE;
+					SET @rtn_val = 0;
+					SET @msg_txt = 'success';
                 END IF;
             ELSE
-				IF @USER_CLASS < @ADMIN_CLASS THEN
-				/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자보다 상위 레벨(@USER_CLASS < @ADMIN_CLASS)인 경우에는 권한이 부여되지 않도록 한다.*/
-					SET OUT_RIGHTS = FALSE;
+            /*ADMIN이 sys.admin:101이 아닌 경우*/
+				IF @USER_CLASS <= @ADMIN_CLASS THEN
+				/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자보다 상위 레벨(@USER_CLASS <= @ADMIN_CLASS)인 경우에는 권한이 부여되지 않도록 한다.*/
+					SET @rtn_val = 33102;
+					SET @msg_txt = 'Chium administrators cannot delete same or upper-level authorities';
 				ELSE
-					IF @USER_CLASS = @ADMIN_CLASS THEN
-					/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자와 동일한 레벨인 경우에는 본인의 정보 이외에는 권한이 부여되지 않도록 한다.*/
-						IF IN_USER_ID <> IN_TARGET_USER_ID THEN
-						/*정보처리요청자(ADMIN)과 정보처리대상자(USER)가 동일인이 아닌 경우에는 권한이 부여되지 않도록 한다.*/
-							SET OUT_RIGHTS = FALSE;
-						ELSE
-						/*정보처리요청자(ADMIN)과 정보처리대상자(USER)가 동일인인 경우에는 권한이 DELETE권한을 제외한 모든 권한이 부여되지 않도록 한다.*/
-							IF IN_JOB = 'DELETE' THEN
-								/*정보를 삭제하는 경우에는 권한이 부여되지 않는다.*/
-								SET OUT_RIGHTS = FALSE;
-							ELSE
-								/*정보를 삭제하는 경우를 제외한 경우에는 모든 권한이 부여된다.*/
-								SET OUT_RIGHTS = TRUE;
-							END IF;
-						END IF;
+				/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자보다 하위 레벨(@USER_CLASS > @ADMIN_CLASS)인 경우에는 권한이 정상처리한다.*/
+					IF @ADMIN_CLASS = 102 THEN
+					/*삭제권자가 치움의 관리자인 경우*/
+						IF @USER_CLASS >= 200 THEN
+                        /*삭제대상자가 개인이거나 사업자의 관리자인 경우에는 정상처리한다.*/
+							SET @rtn_val = 0;
+							SET @msg_txt = 'success';
+                        ELSE
+                        /*삭제대상자가 치움관리자인 경우에는 예외처리한다.*/
+							SET @rtn_val = 33103;
+							SET @msg_txt = 'Chium administrators cannot delete Chium internal users';
+                        END IF;
 					ELSE
-					/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자와 하위 레벨인 경우에는 모든 권한이 부여되도록 한다.*/
-						SET OUT_RIGHTS = TRUE;
+					/*삭제권자가 치움의 일반 사용자인 경우*/
+						IF IN_USER_ID = IN_TARGET_USER_ID THEN
+                        /*삭제권자가 자신의 계정을 삭제시도하는 경우 정상처리한다.*/
+							SET @rtn_val = 0;
+							SET @msg_txt = 'success';
+                        ELSE
+                        /*삭제권자가 타인의 계정을 삭제시도하는 경우 예외처리한다.*/
+							SET @rtn_val = 33104;
+							SET @msg_txt = 'The highest authority in Chium cannot delete his or her account';
+                        END IF;
 					END IF;
 				END IF;
             END IF;
@@ -85,54 +89,71 @@ AUTHOR 			: Leo Nam
         /*ADMIN이 개인회원인 경우*/
 			IF IN_USER_ID = IN_TARGET_USER_ID THEN
             /*ADMIN과 USER가 동일한 사용자인 경우*/
-				SET OUT_RIGHTS = TRUE;
+				SET @rtn_val = 0;
+				SET @msg_txt = 'success';
             ELSE
             /*ADMIN과 USER가 동일한 사용자가 아닌 경우*/
-				SET OUT_RIGHTS = FALSE;
+				SET @rtn_val = 33105;
+				SET @msg_txt = 'Individual users can only delete their own account';
             END IF;
         END IF;
     ELSE
     /*ADMIN이 사업자 회원인 경우*/
 		IF @ADMIN_BELONG_TO = @USER_BELONG_TO THEN
         /*정보변경 대상자가 정보처리를 요청하는 사용자의 소속 사업자가 동일한 경우 */
-			IF @USER_CLASS < @ADMIN_CLASS THEN
-			/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자보다 상위 레벨(@USER_CLASS < @ADMIN_CLASS)인 경우에는 권한이 부여되지 않도록 한다.*/
-				SET OUT_RIGHTS = FALSE;
-			ELSE
-				IF @USER_CLASS = @ADMIN_CLASS THEN
-				/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자와 동일한 레벨인 경우에는 본인의 정보 이외에는 권한이 부여되지 않도록 한다.*/
-					IF IN_USER_ID <> IN_TARGET_USER_ID THEN
-					/*정보처리요청자(ADMIN)과 정보처리대상자(USER)가 동일인이 아닌 경우에는 권한이 부여되지 않도록 한다.*/
-						SET OUT_RIGHTS = FALSE;
-					ELSE
-					/*정보처리요청자(ADMIN)과 정보처리대상자(USER)가 동일인인 경우에는 권한이 DELETE권한을 제외한 모든 권한이 부여되지 않도록 한다.*/
-						IF IN_JOB = 'DELETE' THEN
-							/*정보를 삭제하는 경우에는 권한이 부여되지 않는다.*/
-							SET OUT_RIGHTS = FALSE;
-						ELSE
-							/*정보를 삭제하는 경우를 제외한 경우에는 모든 권한이 부여된다.*/
-							SET OUT_RIGHTS = TRUE;
-						END IF;
-					END IF;
-				ELSE
-				/*정보변경 대상자의 @USER_CLASS가 정보처리를 요청하는 사용자와 하위 레벨인 경우에는 모든 권한이 부여되도록 한다.*/
-					SET OUT_RIGHTS = TRUE;
-				END IF;
-			END IF;
+			SELECT AFFILIATED_SITE INTO @ADMIN_SITE FROM USERS WHERE ID = IN_USER_ID;
+			SELECT AFFILIATED_SITE INTO @TARGET_SITE FROM USERS WHERE ID = IN_TARGET_USER_ID;
+            IF @ADMIN_SITE = @TARGET_SITE THEN
+            /*삭제권자와 삭제대상자의 소속이 같은 사이트인 경우*/
+				IF @ADMIN_CLASS = 201 THEN
+                /*삭제권자가 사이트의 최고권한자인 경우*/
+					SET @rtn_val = 0;
+					SET @msg_txt = 'success';
+                ELSE
+                /*삭제권자가 사이트의 최고권한자가 아닌 경우*/
+					SET @rtn_val = 33106;
+					SET @msg_txt = 'Normal users of the site do not have the right to delete users';
+                END IF;
+            ELSE
+            /*삭제권자와 삭제대상자의 소속이 다른 사이트인 경우*/
+				SELECT B.HEAD_OFFICE INTO @ADMIN_HEAD_OFFICE FROM USERS A LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID WHERE A.ID = IN_USER_ID;
+                IF @ADMIN_HEAD_OFFICE = 1 THEN
+                /*삭제권자가 소속한 사이트가 HEAD OFFICE인 경우*/
+					SET @rtn_val = 0;
+					SET @msg_txt = 'success';
+                ELSE
+                /*삭제권자가 소속한 사이트가 HEAD OFFICE가 아닌 경우*/
+					SET @rtn_val = 33107;
+					SET @msg_txt = 'Administrators of sites other than the Head Office cannot delete users belonging to other sites';
+                END IF;
+            END IF;
         ELSE
         /*정보변경 대상자가 정보처리를 요청하는 사용자의 소속 사업자가 다른 경우 */
-			IF @ADMIN_CLASS = 201 THEN
-            /*정보수정을 요청하는 사용자의 CLASS가 201(사업자 회원에 속한 최고 관리자)인 경우에는 자회사 사용자에 대한 모든 권한이 부여된다.*/
-				SELECT @USER_BELONG_TO IN (SELECT CHILD.ID FROM COMPANY CHILD LEFT JOIN COMPANY PARENT ON CHILD.P_COMP_ID = PARENT.ID WHERE PARENT.ID = @ADMIN_BELONG_TO) INTO @IS_SUBSIDIARY;
-				/*ADMIN이 변경하려는 사용자가 소속한 사업자의 모회사 관리자인 경우 @IS_SUBSIDIARY=1, 그렇지 않으면 @IS_SUBSIDIARY=0이 됨*/
-				IF @IS_SUBSIDIARY = 1 THEN
-					SET OUT_RIGHTS = TRUE;
-				ELSE
-					SET OUT_RIGHTS = FALSE;
-				END IF;
+			SELECT BELONG_TO INTO @ADMIN_COMP FROM USERS WHERE ID = IN_USER_ID;
+			SELECT B.P_COMP_ID INTO @TARGET_PARENT_COMP FROM USERS A LEFT JOIN COMPANY B ON A.BELONG_TO = B.ID WHERE A.ID = IN_TARGET_USER_ID;
+            IF @ADMIN_COMP = @TARGET_PARENT_COMP THEN
+            /*삭제권자가 소속하고 있는 삭제대상자가 소속한 사이트의 모회사인 경우*/
+				IF @ADMIN_CLASS = 201 THEN
+                /*삭제권자의 권한이 201인 경우*/
+					SELECT B.HEAD_OFFICE INTO @ADMIN_HEAD_OFFICE FROM USERS A LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID WHERE A.ID = IN_USER_ID;
+					IF @ADMIN_HEAD_OFFICE = 1 THEN
+					/*삭제권자가 소속한 사이트가 HEAD OFFICE인 경우*/
+						SET @rtn_val = 0;
+						SET @msg_txt = 'success';
+					ELSE
+					/*삭제권자가 소속한 사이트가 HEAD OFFICE가 아닌 경우*/
+						SET @rtn_val = 33108;
+						SET @msg_txt = 'Administrators of sites other than the Head Office cannot delete users belonging to other sites';
+					END IF;
+                ELSE
+                /*삭제권자의 권한이 201이 아닌 경우*/
+					SET @rtn_val = 33109;
+					SET @msg_txt = 'In case the deletion requester belonging to the parent company does not have the right to delete the user';
+                END IF;
             ELSE
-            /*정보수정을 요청하는 사용자의 CLASS가 201(사업자 회원에 속한 최고 관리자)이 아닌 경우에는 자회사에 대한 권한이 없다.*/
-				SET OUT_RIGHTS = FALSE;
+            /*삭제권자가 소속하고 있는 삭제대상자가 소속한 사이트의 모회사가 아닌 경우*/
+				SET @rtn_val = 33110;
+				SET @msg_txt = 'When a parent company administrator deletes a user in a subsidiary company, the parent company administrator must belong to the Head Office';
             END IF;
         END IF;
     END IF;

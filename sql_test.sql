@@ -2940,7 +2940,7 @@ SELECT @USER_MAX_ID;
 */
 
 
-
+/*
 SET @USER_ID = 108;
 SET @SITE_ID = 152;
 SET @DISPOSAL_ID = 46;
@@ -2954,3 +2954,827 @@ call sp_apply_bidding(
     @TRMT_METHOD,
     @BIDDING_DETAILS
 );
+*/
+
+
+
+/*
+SET @IN_USER_ID = 106;
+SET @IN_SITE_ID = 74;
+SET @IN_WSTE_LIST = '[{"WAST_CLASS": 1}]';
+SET @IN_TRMT_BIZ_CODE = '1';
+SET @IN_PERMIT_REG_CODE = '12343';
+SET @In_PERMIT_REG_IMG_PATH = '12345';
+
+CALL sp_update_site_permit_info(
+	@IN_USER_ID,
+	@IN_SITE_ID,
+	@IN_WSTE_LIST,
+	@IN_TRMT_BIZ_CODE,
+	@IN_PERMIT_REG_CODE,
+	@In_PERMIT_REG_IMG_PATH
+);
+*/
+
+
+
+
+/*
+CALL sp_retrieve_my_disposal_lists(119);
+*/
+/*
+SET @USER_ID=119;
+SET @COLLECTOR_BIDDING_ID=73;
+SET @DISPOSER_ORDER_ID=194;
+CALL sp_req_select_collector (
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @DISPOSER_ORDER_ID
+);
+*/
+
+/*
+SET @SITE_ID = 105;
+SET @DISPOSER_ORDER_ID = 199;
+SELECT * FROM COLLECTOR_BIDDING
+WHERE 
+	COLLECTOR_ID = @SITE_ID AND 
+	DISPOSAL_ORDER_ID = @DISPOSER_ORDER_ID;
+*/
+/*
+SELECT COUNT(ID) 
+INTO @APPLY_FOR_VISIT 
+FROM COLLECTOR_BIDDING 
+WHERE 
+	COLLECTOR_ID = @SITE_ID AND 
+	DISPOSAL_ORDER_ID = @DISPOSER_ORDER_ID AND
+	DATE_OF_VISIT IS NOT NULL AND
+	ACTIVE = TRUE;
+SELECT @APPLY_FOR_VISIT;
+*/
+
+
+/*
+SET @USER_ID = 91;
+SET @COLLECTOR_SITE_ID = 69;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @VISIT_START_AT = NULL;
+SET @VISIT_END_AT = NULL;
+SET @BIDDING_END_AT = '2022-03-05';
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "note_new999";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);
+*/
+
+
+/*
+SET @USER_ID = 128;
+SET @SITE_ID = 152;
+SET @DISPOSAL_ID = 196;
+SET @BIDDING_DETAILS = '[{"WSTE_CODE":"51", "UNIT":"Kg", "UNIT_PRICE": 7, "VOLUME": "1", "TRMT_CODE": "1"}, {"WSTE_CODE":"51-01", "UNIT":"Kg", "UNIT_PRICE": 45, "VOLUME": "1", "TRMT_CODE": "2"}]';
+SET @TRMT_METHOD = '1001';
+SET @BID_AMOUNT= 25580;
+call sp_apply_bidding(
+    @USER_ID,
+    @DISPOSAL_ID,
+    @BID_AMOUNT,
+    @TRMT_METHOD,
+    @BIDDING_DETAILS
+);
+*/
+
+
+
+/*
+SET @USER_ID = 122;
+SET @COLLECTOR_BIDDING_ID = 77;
+SET @DISPOSER_ORDER_ID = 198;
+SET @VISIT_AT = '2022-03-05';
+SET @RES = 0;
+*/
+/*
+CALL sp_disposer_response_visit(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @RES
+);
+*/
+/*
+call sp_cancel_visiting(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID
+);
+*/
+/*
+SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = @COLLECTOR_BIDDING_ID;
+SELECT @ITEM_COUNT ;
+*/
+
+/*
+call sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @VISIT_AT
+);
+*/
+
+/*
+call sp_retrieve_my_disposal_lists (119);
+*/
+
+
+/*
+SET @USER_ID = 1200;
+SET @COMP_ID = 10;
+SELECT NULLIF(BELONG_TO, NULL) INTO @CREATOR_BELONG_TO FROM USERS WHERE ID = @USER_ID AND CLASS = 201;
+SELECT @CREATOR_BELONG_TO;
+*/
+
+/*
+call sp_check_if_class_exists(103, @rtn_val, @msg_txt);
+SELECT @rtn_val, @msg_txt;
+*/
+
+/*
+SET @TARGET_CLASS = 201;
+SET @TARGET_SITE_ID = 100;
+SET @CREATOR_CLASS = 101;
+SET @CREATOR_SITE_ID = 0;
+CALL sp_check_auth_to_create_user(
+	@TARGET_CLASS,
+    @TARGET_SITE_ID,
+    @CREATOR_CLASS,
+    @CREATOR_SITE_ID,
+    @rtn_val,
+    @msg_txt
+);
+SELECT @rtn_val, @msg_txt;
+*/
+
+/*
+SET @CREATOR_ID = 128;
+SET @USER_ID = '111212111';
+SET @PWD = '111';
+SET @USER_NAME = '111_NAME';
+SET @PHONE = '2121_PHONE11';
+SET @CLASS = 202;
+SET @SITE_ID = 105;
+SET @DEPARTMENT = NULL;
+SET @SOCIAL_NO = '1232123';
+SET @AGREE_TERMS = 1;
+
+CALL sp_create_user(
+	@CREATOR_ID,
+	@USER_ID,
+	@PWD,
+	@USER_NAME,
+	@PHONE,
+	@CLASS,
+	@SITE_ID,
+	@DEPARTMENT,
+	@SOCIAL_NO,
+	@AGREE_TERMS
+);
+*/
+
+/*
+SET @USER_MAX_ID = 131;
+SET @SITE_ID = 105;
+SET @CLASS = 202;
+SET @USER_TYPE = 'company';
+CALL sp_cs_confirm_account(
+	@USER_MAX_ID,
+	@SITE_ID,
+	@CLASS,
+	@USER_TYPE,
+	@rtn_val,
+	@msg_txt
+);
+SELECT @rtn_val, @msg_txt;
+*/
+
+
+/*
+SET @IN_USER_ID = 'com_col_3122';
+SET @IN_PWD = '123412';
+SET @IN_USER_NAME = '수집자12';
+SET @IN_PHONE = '030-0000-3012';
+SET @IN_COMP_NAME = '1';
+SET @IN_REP_NAME = '1';
+SET @IN_KIKCD_B_CODE = '4181000000';
+SET @IN_ADDR = '마을면 계록리 100';
+SET @IN_LNG = 1.1;
+SET @IN_LAT = 1.1;
+SET @IN_CONTACT = '1';
+SET @IN_TRMT_BIZ_CODE = '1';
+SET @IN_BIZ_REG_CODE = '12033456';
+SET @IN_SOCIAL_NO = '0';
+SET @IN_AGREE_TERMS = 0;
+call sp_create_company(
+	@IN_USER_ID,
+	@IN_PWD,
+	@IN_USER_NAME,
+	@IN_PHONE,
+	@IN_COMP_NAME,
+	@IN_REP_NAME,
+	@IN_KIKCD_B_CODE,
+	@IN_ADDR,
+	@IN_LNG,
+	@IN_LAT,
+	@IN_CONTACT,
+	@IN_TRMT_BIZ_CODE,
+	@IN_BIZ_REG_CODE,
+	@IN_SOCIAL_NO,
+	@IN_AGREE_TERMS
+);
+*/
+
+/*
+CALL sp_create_cert_code('010-9169-2399');
+*/
+
+/*
+SET @ID = 3;
+SET @PHONE_NO = '010-9169-2399';
+SET @CERT_CODE = 425007;
+CALL sp_check_cert_code(
+	@ID,
+    @PHONE_NO,
+    @CERT_CODE
+);
+*/
+
+/*
+CALL sp_req_policy_direction(
+	'max_verification_time_out', 
+	@max_verification_time_out
+);
+SELECT CERT_CODE, CREATED_AT 
+INTO @CERT_CODE, @CREATED_AT
+FROM CELL_PHONE_CERTIFICATION 
+WHERE ID = 3;
+SELECT @CREATED_AT, ADDTIME(@CREATED_AT, CONCAT('0:', @max_verification_time_out, ':00'));
+*/
+
+/*
+CALL sp_req_is_biz_reg_code_duplicate('022801');
+
+call sp_req_user_login('tester0308', '1234')
+*/
+/*
+CALL sp_req_user_detail(98)
+*/
+
+/*
+CALL sp_req_site_detail(78,49);
+*/
+
+/*
+CALL sp_req_business_area(50);
+*/
+
+/*
+SET @USER_ID = 39;
+SET @SITE_ID = 11;
+SET @CATEGORY = 4;
+*/
+/*
+SELECT POST_ID, POST_SITE_ID, POST_SITE_NAME, POST_CREATOR_ID, POST_CREATOR_NAME, POST_SUBJECTS, POST_CONTENTS, POST_CATEGORY_ID, POST_CATEGORY_NAME, POST_VISITORS, POST_CREATED_AT, POST_UPDATED_AT FROM V_POSTS WHERE POST_SITE_ID = @SITE_ID AND POST_CATEGORY_ID = @CATEGORY ORDER BY POST_UPDATED_AT DESC LIMIT @IN_OFFSET, @IN_ITEMS;  
+*/
+/*
+CALL sp_req_get_posts(
+	@USER_ID,
+	@SITE_ID,
+	@CATEGORY
+);
+*/
+/*
+CALL sp_req_get_posts_without_handler(
+	@USER_ID,
+	@SITE_ID,
+	@CATEGORY,
+	@IN_OFFSET,
+	@IN_ITEMS,
+    @rtn_val,
+    @msg_txt,
+    @json_data
+);
+
+select @USER_ID,
+	@SITE_ID,
+	@CATEGORY,
+	@IN_OFFSET,
+	@IN_ITEMS,
+    @rtn_val,
+    @msg_txt,
+    @json_data
+*/
+
+/*
+    SELECT 
+		POST_ID, 
+        POST_SITE_ID, 
+        POST_SITE_NAME, 
+        POST_CREATOR_ID, 
+        POST_CREATOR_NAME, 
+        POST_SUBJECTS, 
+        POST_CONTENTS, 
+        POST_CATEGORY_ID, 
+        POST_CATEGORY_NAME, 
+        POST_VISITORS, 
+        POST_CREATED_AT, 
+        POST_UPDATED_AT 
+	FROM V_POSTS 
+    WHERE 
+		POST_PID 			= 0 AND 
+        POST_SITE_ID 		= @SITE_ID AND 
+        POST_CATEGORY_ID 	= @CATEGORY 
+*/       
+
+/*
+CALL sp_req_site_details(11); 
+*/
+
+/*
+SET @USER_ID = 39;
+SET @POST_ID = 1;
+SET @SUBJECTS = 'UPDATED SUBJECTS';
+SET @CONTENTS = 'UPDATED CONTENTS';
+CALL sp_update_post(
+	@USER_ID,
+    @POST_ID,
+    @SUBJECTS,
+    @CONTENTS
+);
+*/
+
+/*
+CALL sp_req_business_area(50);
+*/
+
+/*
+SET @ASKER_ID = 4;
+SET @TARGET_ID = 4;
+
+CALL sp_delete_user(
+	@ASKER_ID,
+    @TARGET_ID
+);
+*/
+
+/*
+SET @USER_ID = 10;
+SET @AVATAR_PATH = '12345';
+call sp_update_avatar(
+	@USER_ID,
+    @AVATAR_PATH
+);
+*/
+
+/*
+SET @USER_ID = 0;
+SET @SUBJECTS = NULL;
+SET @CONTENTS = '해결되었습니다';
+SET @SITE_ID = 111;
+SET @CATEGORY = 3;
+SET @SUB_CATEGORY = 1;
+SET @PID = 5;
+SET @RATING = NULL;
+CALL sp_write_post(
+	@USER_ID,
+	@SUBJECTS,
+	@CONTENTS,
+	@SITE_ID,
+	@CATEGORY,
+	@SUB_CATEGORY,
+	@PID,
+	@RATING
+);
+*/
+/*
+SET @USER_ID = 10;
+SET @SITE_ID = 111;
+SET @CATEGORY = 3;
+CALL sp_req_get_posts(
+	@USER_ID,
+	@SITE_ID,
+	@CATEGORY
+);
+*//*
+CALL sp_update_push(100, 1);
+*/
+
+
+/*
+SET @USER_ID = 16;
+SET @CONTENTS = 'HELLO_REVIEW_4_10';
+SET @SITE_ID = 7;
+SET @PID = 0;
+SET @RATING = 3.5;
+SET @DISPOSER_ORDER_ID = 10;
+
+CALL sp_write_review(
+	@USER_ID,
+	@CONTENTS,
+	@SITE_ID,
+	@PID,
+	@RATING,
+	@DISPOSER_ORDER_ID
+);
+*/
+
+
+/*
+SET @USER_ID = 6;
+SET @CONTENTS = 'HELLO_REVIEW';
+SET @PID = 0;
+SET @SUB_CATEGORY = 3;
+CALL sp_write_question(
+	@USER_ID,
+	@CONTENTS,
+	@PID,
+	@SUB_CATEGORY
+);
+*/
+
+/*
+SET @USER_ID = 11;
+CALL sp_req_get_my_reviews(
+	@USER_ID
+);
+*/
+
+/*
+CALL sp_toggle_push(119, 0);
+*/
+/*
+SET @USER_ID = 10;
+SET @USER_NAME = 'HELLO';
+CALL sp_update_user_name(
+	@USER_ID,
+    @USER_NAME
+);
+*/
+
+/*
+SET @USER_ID = 6;
+SET @SITE_ID = 7;
+SET @CATEGORY = 4;
+CALL sp_req_get_posts(
+	@USER_ID,
+	@SITE_ID,
+	@CATEGORY    
+);
+*/
+/*
+SET @USER_ID = 39;
+SET @POST_ID = 1;
+CALL sp_delete_post(
+	@USER_ID,
+    @POST_ID
+);
+*/
+
+
+
+/*
+SET @USER_ID = 101;
+SET @DISPOSER_ORDER_ID = 149;
+SET @VISIT_AT = '2022-03-20';
+call sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @VISIT_AT
+);
+*/
+
+/*
+SET @AAA = '2022-03-20 15:00:00';
+SET @BBB = '2022-03-20';
+SELECT TIME(@BBB) INTO @CCC;
+SELECT IF(TIME(@BBB) < '06:00:00', TRUE, FALSE) INTO @DDD;
+SELECT @AAA, @BBB, @CCC, @DDD;
+*/
+/*
+SELECT IF(DATE(@AAA) = DATE(@BBB), TRUE, FALSE) INTO @DDD;
+select TIME(@BBB) INTO @BBB_TIME;
+select IF(LEFT(TIME(@BBB), 8)='00:00:00', TRUE, FALSE) INTO @NEW_BBB_B;
+select IF(TIME(@BBB)='00:00:00.000000', CONCAT(DATE(@BBB), LEFT(TIME(@AAA), 8)), @BBB) INTO @NEW_BBB;
+SELECT IF(@NEW_BBB<@AAA, TRUE, FALSE) INTO @CCC;
+
+SELECT @AAA, @BBB, @NEW_BBB, @NEW_BBB_B, @BBB_TIME, @CCC, @DDD
+*/
+/*
+SET @USER_ID = 6;
+SET @SITE_ID = 0;
+
+CALL sp_req_get_my_question(
+	@USER_ID,
+	@SITE_ID
+);
+*/
+/*
+SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = @USER_ID;
+select @USER_SITE_ID;
+*/
+
+
+/*
+SET @USER_ID = 6;
+SET @CONTENTS = 'HELLO_REVIEW_4_10';
+SET @SITE_ID = 7;
+SET @PID = 0;
+SET @RATING = 3.5;
+SET @DISPOSER_ORDER_ID = 10;
+
+CALL sp_write_review(
+	@USER_ID,
+	@CONTENTS,
+	@SITE_ID,
+	@PID,
+	@RATING,
+	@DISPOSER_ORDER_ID
+);
+*/
+
+
+/*
+SET @USER_ID=119;
+call sp_retrieve_my_disposal_lists(
+	@USER_ID
+);
+*/
+
+
+
+
+/*
+SET @USER_ID = 122;
+SET @COLLECTOR_BIDDING_ID = 77;
+SET @DISPOSER_ORDER_ID = 198;
+SET @VISIT_AT = '2022-03-05';
+SET @RES = 0;
+*/
+/*
+CALL sp_disposer_response_visit(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @RES
+);
+*/
+/*
+call sp_cancel_visiting(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID
+);
+*/
+/*
+SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = @COLLECTOR_BIDDING_ID;
+SELECT @ITEM_COUNT ;
+*/
+
+/*
+call sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @VISIT_AT
+);
+*/
+
+/*
+SET @USER_ID = 119;
+SET @PUSH = 0;
+CALL sp_toggle_push(
+	@USER_ID,
+    @PUSH
+);
+*/
+
+/*
+SET @USER_ID = 121;
+SET @NOTICE = 1;
+CALL sp_toggle_notice(
+	@USER_ID,
+    @NOTICE
+);
+*/
+
+/*
+SET @USER_ID = 119;
+SET @SITE_ID = 0;
+CALL sp_req_get_my_question(
+	
+);
+*/
+
+/*
+SET @USER_ID = 121;
+CALL sp_req_user_detail(
+	@USER_ID
+);
+*/
+
+/*
+SET @TEMP_A_AT = '2022-03-17';
+SELECT LENGTH(@TEMP_A_AT) INTO @TEMP;
+SELECT TIME(@TEMP_A_AT) INTO @TEMP_B_AT;
+SET @AAA = DATE_ADD(@TEMP_A_AT, INTERVAL 1 DAY);
+SELECT @TEMP_A_AT, @TEMP_B_AT, @TEMP, @AAA;
+*/
+
+/*
+SET @USER_ID = 120;
+SET @SITE_ID = 85;
+CALL sp_req_get_my_question(
+	@USER_ID,
+    @SITE_ID
+);
+*/
+
+
+
+/*
+SET @USER_ID = 6;
+CALL sp_req_get_my_question(
+	@USER_ID
+);
+*/
+
+/*
+UPDATE COLLECTOR_BIDDING SET REJECT_BIDDING = FALSE;
+*/
+
+/*
+SET @DISPOSER_ORDER_ID = 230;
+CALL sp_retrieve_sites_that_can_bid(
+	@DISPOSER_ORDER_ID,
+    @rtn_val,
+    @msg_txt,
+    @json_data
+);
+SELECT @rtn_val,
+    @msg_txt,
+    @json_data;
+*/
+
+/*
+SELECT 
+		COLLECTOR_SITE_ID, 
+        COLLECTOR_SITE_NAME, 
+        COLLECTOR_BIDDING_ID,
+        TRMT_BIZ_NM
+    FROM V_COLLECTOR_BIDDING_WITH_STATE
+	WHERE 
+		DISPOSER_ORDER_ID = @DISPOSER_ORDER_ID AND
+        STATUS_PID <> 211;
+*/
+/*
+UPDATE SITE_WSTE_DISPOSAL_ORDER SET VISIT_EARLY_CLOSING = FALSE, VISIT_EARLY_CLOSED_AT = NULL WHERE ID = 230;
+
+SET @USER_ID = 189;
+SET @DISPOSER_ORDER_ID = 230;
+CALL sp_req_close_visit_early(
+	@USER_ID,
+    @DISPOSER_ORDER_ID
+);
+*/
+/*
+SET @USER_ID = 189;
+SET @DISPOSER_SITE_ID = 230;
+SET @COLLECTOR_BIDDING_ID = 91;
+
+CALL sp_req_reject_bidding_apply(
+	@USER_ID,
+    @DISPOSER_SITE_ID,
+    @COLLECTOR_BIDDING_ID
+);
+*/
+/*
+SELECT COUNT(ID) INTO @USER_DISPOSAL_ORDER_EXISTS FROM SITE_WSTE_DISPOSAL_ORDER WHERE DISPOSER_ID = @USER_ID AND ID = @DISPOSER_SITE_ID;
+SELECT @USER_DISPOSAL_ORDER_EXISTS, @USER_ID, @DISPOSER_SITE_ID;
+*/
+
+/*
+SET @USER_ID = 0;
+SET @SUBJECT = '공지사항';
+SET @CONTENTS = '치움서비스 런칭';
+CALL sp_write_notice(
+	@USER_ID,
+    @SUBJECT,
+    @CONTENTS
+);
+*/
+
+/*
+SET @USER_ID = 167;
+SET @COLLECTOR_BIDDING_ID = 91;
+CALL sp_cancel_visiting(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID
+);
+*/
+
+
+
+
+/*
+SET @USER_ID = 189;
+SET @COLLECTOR_BIDDING_ID = 90;
+SET @RES = 0;
+
+CALL sp_disposer_response_visit(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @RES
+);
+*/
+
+/*
+SET @USER_ID = 25;
+SET @REFRESH_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBlcl9lbWl0MDEiLCJzdWIiOiIxMjM0IiwiaWF0IjoxNjQ3NTY1OTk4LCJleHAiOjE2NzkxMjM1OTh9.BkqxmCl3LQnvo_PRXA3SB8M9d';
+CALL sp_update_refresh_token(
+	@USER_ID,
+    @REFRESH_TOKEN
+);
+*/
+
+/*
+SET @USER_ID = 190;
+SET @DISPOSER_ORDER_ID = 265;
+SET @VISIT_AT = '2022-03-19';
+
+
+call sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @VISIT_AT
+);
+*/
+/*
+SET @AAA = '2022-03-18';
+
+CALL sp_test2(
+	@AAA,
+    @OUT_DATE
+);
+SELECT @AAA, @OUT_DATE;
+*/
+
+
+/*
+SET @USER_ID = 11;
+CALL sp_req_get_my_reviews(
+	@USER_ID
+);
+*/
+
+
+
+
+SET @USER_ID = 76;
+SET @COMP_ID = 56;
+
+
+CALL sp_delete_company(
+	@USER_ID,
+    @COMP_ID
+);
+
+
+/*
+SET @USER_ID = 76;
+SET @COMP_ID = 56;
+CALL sp_req_super_permission_by_userid(
+	@USER_ID, 
+	@COMP_ID, 
+	@PERMISSION, 
+	@IS_USER_SITE_HEAD_OFFICE, 
+    @rtn_val,
+    @msg_txt
+);
+SELECT 
+	@USER_ID, 
+	@COMP_ID, 
+	@PERMISSION, 
+	@IS_USER_SITE_HEAD_OFFICE, 
+    @rtn_val,
+    @msg_txt;
+*/

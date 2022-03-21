@@ -98,6 +98,7 @@ IN_JSON_DATA	: JSON 데이타에서 사용하는 KEY와 VALUE 타입
 			SET rtn_val = 23602;
 			SET msg_txt = 'Failed to calculate the total estimate';
 		ELSE
+/*
 			SELECT ID INTO @WINNER_ID 
 			FROM COLLECTOR_BIDDING 
 			WHERE 
@@ -112,19 +113,24 @@ IN_JSON_DATA	: JSON 데이타에서 사용하는 KEY와 VALUE 타입
 						ACTIVE = TRUE AND 
 						BID_AMOUNT IS NOT NULL
 				);
-			/*최저견적가의 등록아이디를 구한다.*/
+			SELECT ID INTO @WINNER_ID FROM COLLECTOR_BIDDING WHERE DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;
 			
 			UPDATE COLLECTOR_BIDDING SET WINNER = NULL, UPDATED_AT = IN_REG_DT WHERE DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND ACTIVE = TRUE;
 			UPDATE COLLECTOR_BIDDING SET WINNER = TRUE, UPDATED_AT = IN_REG_DT WHERE ID = @WINNER_ID;
 			IF ROW_COUNT() > 0 THEN
+*/            
 			/*새로운 최저입찰가를 신청한 아이디(COLLECTOR_BIDDING.ID)의 WINNER값을 TRUE로 성공적으로 변경한 경우*/
 				SET rtn_val = 0;
 				SET msg_txt = 'Success3';
+/*                
 			ELSE
+*/            
 			/*새로운 최저입찰가를 신청한 아이디(COLLECTOR_BIDDING.ID)의 WINNER값을 TRUE로 변경하는데 실패한 경우*/
+/*            
 				SET rtn_val = 23603;
 				SET msg_txt = 'Failure to correct information about the new lowest bidder';
 			END IF;
+*/                
 		END IF;
     END IF;
 END

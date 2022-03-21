@@ -9,11 +9,12 @@ Procedure Name 	: sp_cancel_visiting
 Input param 	: 2개
 Job 			: 폐기물 수집업자 등이 자신이 신청한 입찰건에 대한 방문을 취소한다.
 TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
-Update 			: 2022.01.27
-Version			: 0.0.3
+Update 			: 2022.03.18
+Version			: 0.0.4
 AUTHOR 			: Leo Nam
 Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경함으로써 입찰을 포기하는 상태로 전환함(0.0.2)
 				: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.3)
+				: 방문취소가 실행된 경우 전체 방문가능자수를 계산하여 SITE_WSTE_DISPOSAL_ORDER.PROSPECTIVE_VISITORS를 UPDATE한다.(0.0.4)
 */
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -51,29 +52,87 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 		);
 		IF @rtn_val = 26601 THEN
 		/*방문마감일이 종료되지 않은 경우*/
-			SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+			SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID AND DATE_OF_VISIT IS NOT NULL;
+            /*수거자가 방문신청을 한 사실이 있는지 확인하여 그 결과를 @TEMP_COUNT에 반환한다*/
             IF @ITEM_COUNT = 1 THEN
-            /*정보를 수정하려는 데이타가 존재하는 경우 정상처리한다.*/
-				UPDATE COLLECTOR_BIDDING 
-                SET 
-					CANCEL_VISIT 		= TRUE, 
-                    CANCEL_VISIT_AT 	= @REG_DT 
-                WHERE ID = IN_COLLECT_BIDDING_ID;
-				/*방문신청을 취소상태(비활성상태)로 변경한다.*/
-				IF ROW_COUNT() = 1 THEN
-				/*데이타베이스 입력에 성공한 경우*/
-					SET @rtn_val 		= 0;
-					SET @msg_txt 		= 'Success';
-				ELSE
-				/*데이타베이스 입력에 실패한 경우*/
-					SET @rtn_val 		= 25601;
-					SET @msg_txt 		= 'record cancellation error';
+            /*수거자가 방문신청을 한 사실이 존재하는 경우 정상처리한다.*/
+				SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID AND CANCEL_VISIT = TRUE;
+				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 있는지 확인하여 그 결과를 @IS_ALREADY_CANCELED 반환한다. 방문취소한 사실이 존재하는 경우 1, 그렇지 않으면 0*/
+                IF @IS_ALREADY_CANCELED = 0 THEN
+				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하지 않는 경우 정상처리한다.*/
+					SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+                    /*배출자가 수거자의 방문신청에 대한 수락 또는 거절의사를 확인하여 그 결과를 @EMITTOR_RESPONSE_FOR_VISIT에 반환한다.*/
+                    IF @EMITTOR_RESPONSE_FOR_VISIT IS NULL THEN
+                    /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시하지 않은 대기상태인 경우*/
+						UPDATE COLLECTOR_BIDDING 
+						SET 
+							CANCEL_VISIT 		= TRUE, 
+							CANCEL_VISIT_AT 	= @REG_DT 
+						WHERE ID = IN_COLLECT_BIDDING_ID;
+						/*방문신청을 취소상태(비활성상태)로 변경한다.*/
+						IF ROW_COUNT() = 1 THEN
+						/*데이타베이스 입력에 성공한 경우*/
+							SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
+							FROM COLLECTOR_BIDDING 
+							WHERE 
+								DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID AND 
+								DATE_OF_VISIT 		IS NOT NULL AND
+								CANCEL_VISIT 		= FALSE AND
+								RESPONSE_VISIT 		= TRUE;
+							UPDATE SITE_WSTE_DISPOSAL_ORDER SET PROSPECTIVE_VISITORS = @PROSPECTIVE_VISITORS WHERE ID = @DISPOSAL_ORDER_ID;
+							SET @rtn_val 		= 0;
+							SET @msg_txt 		= 'Success';
+						ELSE
+						/*데이타베이스 입력에 실패한 경우*/
+							SET @rtn_val 		= 25606;
+							SET @msg_txt 		= 'record cancellation error';
+							SIGNAL SQLSTATE '23000';
+						END IF;
+                    ELSE
+                    /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시한 경우*/
+						IF @EMITTOR_RESPONSE_FOR_VISIT <> 0 THEN
+						/*배출자가 수거자의 방문신청에 대하여 거절의사를 밝힌 경우가 아닌 경우에는 정상처리한다.*/
+							UPDATE COLLECTOR_BIDDING 
+							SET 
+								CANCEL_VISIT 		= TRUE, 
+								CANCEL_VISIT_AT 	= @REG_DT 
+							WHERE ID = IN_COLLECT_BIDDING_ID;
+							/*방문신청을 취소상태(비활성상태)로 변경한다.*/
+							IF ROW_COUNT() = 1 THEN
+							/*데이타베이스 입력에 성공한 경우*/
+								SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
+								FROM COLLECTOR_BIDDING 
+								WHERE 
+									DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID AND 
+									DATE_OF_VISIT 		IS NOT NULL AND
+									CANCEL_VISIT 		= FALSE AND
+									RESPONSE_VISIT 		= TRUE;
+								UPDATE SITE_WSTE_DISPOSAL_ORDER SET PROSPECTIVE_VISITORS = @PROSPECTIVE_VISITORS WHERE ID = @DISPOSAL_ORDER_ID;
+								SET @rtn_val 		= 0;
+								SET @msg_txt 		= 'Success';
+							ELSE
+							/*데이타베이스 입력에 실패한 경우*/
+								SET @rtn_val 		= 25601;
+								SET @msg_txt 		= 'record cancellation error';
+								SIGNAL SQLSTATE '23000';
+							END IF;
+						ELSE
+						/*배출자가 수거자의 방문신청에 대하여 거절의사를 이미 밝힌 경우에는 정상처리한다.*/
+							SET @rtn_val 		= 25605;
+							SET @msg_txt 		= 'The emitter has already refused to visit';
+							SIGNAL SQLSTATE '23000';
+						END IF;
+                    END IF;
+                ELSE
+				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하는 경우 예외처리한다.*/
+					SET @rtn_val 		= 25604;
+					SET @msg_txt 		= 'The collector has already canceled the visit';
 					SIGNAL SQLSTATE '23000';
-				END IF;
+                END IF;
             ELSE
-            /*정보를 수정하려는 데이타가 존재하지 않는 경우 예외처리한다.*/
+            /*수거자가 방문신청을 한 사실이 존재하지 않는 경우 예외처리한다.*/
 				SET @rtn_val 		= 25603;
-				SET @msg_txt 		= 'No data found';
+				SET @msg_txt 		= 'No fact that the collector has requested a visit';
 				SIGNAL SQLSTATE '23000';
             END IF;
 		ELSE

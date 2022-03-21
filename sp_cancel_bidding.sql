@@ -74,7 +74,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 					UPDATE COLLECTOR_BIDDING 
                     SET 
 						CANCEL_BIDDING 		= TRUE, 
-                        CANCEL_VISIT_AT 	= @REG_DT 
+                        CANCEL_BIDDING_AT 	= @REG_DT 
                     WHERE ID = IN_COLLECT_BIDDING_ID;
 					/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
 					IF ROW_COUNT() = 0 THEN

@@ -39,7 +39,7 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
             
 		IF @CHK_COUNT = 0 THEN
 			SET rtn_val = 26202;
-			SET msg_txt = 'user not fouund';
+			SET msg_txt = 'user not found';
         ELSE
 			SET rtn_val = 0;
 			SET msg_txt = 'Success6666';

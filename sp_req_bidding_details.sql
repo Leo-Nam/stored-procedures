@@ -51,7 +51,7 @@ AUTHOR 			: Leo Nam
 								IF (STATE = '입찰포기', COLLECTOR_RECORD_UPDATED_AT, 
 									IF (STATE = '선정중', DISPOSER_BIDDING_END_AT, 
 										IF (STATE = '선정대기중', DISPOSER_BIDDING_END_AT, 
-											IF (STATE = '낙찰포기', COLLECTOR_REJECTED_AT, 
+											IF (STATE = '낙찰포기', COLLECTOR_MAKE_DECISION_AT, 
 												IF (STATE = '낙찰', COLLECTOR_RECORD_UPDATED_AT, 
 													IF (STATE = '유찰', DISPOSER_BIDDING_END_AT, 
 														DISPOSER_BIDDING_END_AT

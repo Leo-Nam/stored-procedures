@@ -49,8 +49,15 @@ VIEW `chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE` AS
         `chiumdev_2`.`A`.`DISPOSER_ORDER_DELETED_AT` AS `DISPOSER_ORDER_DELETED_AT`,
         `chiumdev_2`.`A`.`DISPOSER_CREATED_AT` AS `DISPOSER_CREATED_AT`,
         `chiumdev_2`.`A`.`DISPOSER_UPDATED_AT` AS `DISPOSER_UPDATED_AT`,
+        `chiumdev_2`.`A`.`COLLECTOR_SELECTION_CONFIRMED` AS `COLLECTOR_SELECTION_CONFIRMED`,
+        `chiumdev_2`.`A`.`COLLECTOR_SELECTION_CONFIRMED_AT` AS `COLLECTOR_SELECTION_CONFIRMED_AT`,
+        `chiumdev_2`.`A`.`PROSPECTIVE_VISITORS` AS `PROSPECTIVE_VISITORS`,
+        `chiumdev_2`.`A`.`BIDDERS` AS `BIDDERS`,
         `chiumdev_2`.`A`.`STATE_CODE` AS `STATE_CODE`,
-        `B`.`STATUS_NM_KO` AS `STATE`
+        `chiumdev_2`.`B`.`STATUS_NM_KO` AS `STATE`,
+        `chiumdev_2`.`B`.`STATUS_CATEGORY_ID` AS `STATE_CATEGORY_ID`,
+        `chiumdev_2`.`B`.`STATUS_CATEGORY` AS `STATE_CATEGORY`,
+        `chiumdev_2`.`A`.`NOTE` AS `NOTE`
     FROM
         (`chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER` `A`
-        LEFT JOIN `chiumdev_2`.`STATUS` `B` ON ((`chiumdev_2`.`A`.`STATE_CODE` = `B`.`ID`)))
+        LEFT JOIN `chiumdev_2`.`V_STATUS` `B` ON ((`chiumdev_2`.`A`.`STATE_CODE` = `chiumdev_2`.`B`.`ID`)))

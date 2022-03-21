@@ -1,9 +1,8 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_get_posts_without_handler`(
 	IN IN_SITE_ID				BIGINT,				/*입력값 : 게시판 소유자(COMP_SITE.ID)*/
 	IN IN_CATEGORY				INT,				/*입력값 : 게시판 종류(1: 공지사항, 2: 업무게시판)*/    
-	IN IN_PAGE_NO				INT,				/*입력값 : 현재 페이지 번호*/    
-    IN IN_OFFSET				INT,				/*입력값 : 스킵할 아이템의 갯수*/
-    IN IN_ITEMS					INT,				/*입력값 : 폐이지당 반환할 리스트의 개수*/
+/*    IN IN_OFFSET				INT,*/				/*입력값 : 스킵할 아이템의 갯수*/
+/*    IN IN_ITEMS					INT,*/				/*입력값 : 폐이지당 반환할 리스트의 개수*/
     OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 				VARCHAR(200),		/*출력값 : 처리결과 문자열*/
     OUT json_data 				json				/*출력값 : 포스팅 리스트*/
@@ -34,6 +33,7 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_VISITORS			 		INT;
     DECLARE CUR_CREATED_AT			 		DATETIME;
     DECLARE CUR_UPDATED_AT			 		DATETIME;
+    DECLARE CUR_RATING				 		FLOAT;
     
     DECLARE TEMP_CURSOR 					CURSOR FOR 
     SELECT 
@@ -48,13 +48,15 @@ AUTHOR 			: Leo Nam
         POST_CATEGORY_NAME, 
         POST_VISITORS, 
         POST_CREATED_AT, 
-        POST_UPDATED_AT 
+        POST_UPDATED_AT, 
+        POST_RATING 
 	FROM V_POSTS 
     WHERE 
 		POST_PID 			= 0 AND 
         POST_SITE_ID 		= IN_SITE_ID AND 
-        POST_CATEGORY_ID 	= IN_CATEGORY 
-	ORDER BY POST_UPDATED_AT DESC LIMIT IN_OFFSET, IN_ITEMS;   
+        POST_CATEGORY_ID 	= IN_CATEGORY  AND 
+        POST_ACTIVE		 	= TRUE 
+	ORDER BY POST_UPDATED_AT DESC /*LIMIT IN_OFFSET, IN_ITEMS*/;   
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;   
     
     SET json_data = NULL;
@@ -71,7 +73,9 @@ AUTHOR 			: Leo Nam
 		VISITORS 		INT, 
 		CREATED_AT 		DATETIME, 
 		UPDATED_AT 		DATETIME, 
-		REPLY 			JSON
+		REPLY 			JSON, 
+		RATING			FLOAT, 
+		AVATAR_PATH		VARCHAR(255)
 	);
 	
 	OPEN TEMP_CURSOR;	
@@ -89,7 +93,8 @@ AUTHOR 			: Leo Nam
 			CUR_CATEGORY_NAME, 
 			CUR_VISITORS,  
 			CUR_CREATED_AT, 
-			CUR_UPDATED_AT;   
+			CUR_UPDATED_AT, 
+			CUR_RATING;   
 		
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -109,7 +114,8 @@ AUTHOR 			: Leo Nam
 			CATEGORY_NAME, 
 			VISITORS, 
 			CREATED_AT, 
-			UPDATED_AT
+			UPDATED_AT, 
+			RATING
 		) 
 		VALUES(
 			CUR_ID, 
@@ -123,7 +129,8 @@ AUTHOR 			: Leo Nam
 			CUR_CATEGORY_NAME, 
 			CUR_VISITORS, 
 			CUR_CREATED_AT, 
-			CUR_UPDATED_AT
+			CUR_UPDATED_AT, 
+			CUR_RATING
 		);    
 
 		SELECT JSON_ARRAYAGG(
@@ -139,14 +146,18 @@ AUTHOR 			: Leo Nam
 				'CATEGORY_NAME'		, POST_CATEGORY_NAME, 
 				'VISITORS'			, POST_VISITORS, 
 				'CREATED_AT'		, POST_CREATED_AT, 
-				'UPDATED_AT'		, POST_UPDATED_AT
+				'UPDATED_AT'		, POST_UPDATED_AT, 
+				'RATING'			, POST_RATING
 			)
 		) 
 		INTO @REPLY 
 		FROM V_POSTS 
-		WHERE POST_PID = CUR_ID;   
+		WHERE POST_PID = CUR_ID AND
+			POST_ACTIVE = TRUE;   
 			
-		UPDATE TEMP_POST_LIST SET REPLY = @REPLY WHERE ID = CUR_ID;      
+		UPDATE TEMP_POST_LIST SET REPLY = @REPLY WHERE ID = CUR_ID;   
+        
+        SELECT A.AVATAR_PATH INTO @AVATAR_PATH FROM USERS A LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID WHERE A.AFFILIATED_SITE = CUR_SITE_ID AND A.CLASS = 201;
 
 	END LOOP;   
 	CLOSE TEMP_CURSOR;
@@ -165,8 +176,8 @@ AUTHOR 			: Leo Nam
 		'CREATED_AT'		, CREATED_AT, 
 		'UPDATED_AT'		, UPDATED_AT, 
 		'REPLY'				, REPLY, 
-		'PAGE_NO'			, IN_PAGE_NO, 
-		'ITEMS'				, IN_ITEMS
+		'RATING'			, RATING, 
+		'AVATAR_PATH'		, @AVATAR_PATH
 	)) 
 	INTO json_data 
 	FROM TEMP_POST_LIST;

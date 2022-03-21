@@ -94,6 +94,9 @@ AUTHOR 			: Leo Nam
 						'PHONE', 						PHONE,			/*0.0.4에서 추가 PHONE추가*/
 						'USER_TYPE', 					USER_TYPE,
 						'USER_CURRENT_TYPE', 			USER_CURRENT_TYPE_NM,
+						'PUSH_ENABLED', 				PUSH_ENABLED,
+						'NOTICE_ENABLED', 				NOTICE_ENABLED,
+						'AVATAR_PATH', 					AVATAR_PATH,
 						'PWD_MATCH', 					@PWD_MATCH
 					) 
 					INTO @json_data 

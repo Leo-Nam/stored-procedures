@@ -28,59 +28,59 @@ AUTHOR 			: Leo Nam
     );
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
-    call sp_req_user_validation_by_user_id(
+    call sp_req_user_exists_by_id(
 		IN_USER_ID, 
+        TRUE,
         @rtn_val, 
         @msg_txt
     );
     
-    IF @rtn_val > 0 THEN
-    /*요청자가 인증되지 않은 사용자인 경우*/
-		SIGNAL SQLSTATE '23000';
-    ELSE   
+    IF @rtn_val = 0 THEN
     /*요청자가 인증된 사용자인 경우*/ 
-		call sp_req_user_validation_by_user_id(
+		call sp_req_user_exists_by_id(
 			IN_TARGET_USER_ID, 
+			TRUE,
             @rtn_val, 
             @msg_txt
         );
         
 		IF @rtn_val > 0 THEN
-		/*요청자가 인증되지 않은 사용자인 경우*/
-			SIGNAL SQLSTATE '23000';
-		ELSE  
 			CALL sp_req_user_management_rights_by_user_id(
 			/*IN_UPDATOR가 IN_TARGET_USER_ID에 대하여 UPDATE할 권한이 있는지 체크한 후 권한이 있다면 TRUE, 권한이 없다면 FALSE를 @permission을 통하여 반환함*/
 				IN_USER_ID, 
                 IN_TARGET_USER_ID, 
-                JOB, 
-                @IS_DELETER_ABLE_TO_DELETE
+				@rtn_val, 
+				@msg_txt
             );
 			
-			IF @IS_DELETER_ABLE_TO_DELETE = FALSE THEN
+			IF @rtn_val = 0 THEN
 			/*요청자(DELETER)가 정보삭제의 권한이 없는 사용자인 경우*/
-				SET @rtn_val = 20701;
-				SET @msg_txt = 'attempts to delete users who do not have permission to delete';
-				SIGNAL SQLSTATE '23000';
-			ELSE
 				UPDATE USERS 
                 SET 
 					ACTIVE = FALSE, 
                     UPDATED_AT = @REG_DT 
                 WHERE ID = IN_TARGET_USER_ID;
 					
-				IF ROW_COUNT() = 0 THEN
-				/*변경이 적용되지 않은 경우*/
-					SET @rtn_val = 20702;
-					SET @msg_txt = 'failed to delete from database';
-					SIGNAL SQLSTATE '23000';
-				ELSE
+				IF ROW_COUNT() = 1 THEN
 				/*모든 트랜잭션이 성공한 경우에만 로그를 한다.*/
 					SET @rtn_val = 0;
 					SET @msg_txt = 'Success';
+					SIGNAL SQLSTATE '23000';
+				ELSE
+				/*변경이 적용되지 않은 경우*/
+					SET @rtn_val = 20701;
+					SET @msg_txt = 'Failed to delete user account';
 				END IF;
+			ELSE
+				SIGNAL SQLSTATE '23000';
 			END IF;
+		ELSE  
+		/*요청자가 인증되지 않은 사용자인 경우*/
+			SIGNAL SQLSTATE '23000';
         END IF;
+    ELSE   
+    /*요청자가 인증되지 않은 사용자인 경우*/
+		SIGNAL SQLSTATE '23000';
 	END IF;
 	COMMIT;
 	SET @json_data 		= NULL;

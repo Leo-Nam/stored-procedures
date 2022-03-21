@@ -1,5 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_is_visit_request_already_not_canceled`(
-	IN IN_COLLECTOR_SITE_ID					BIGINT,
+	IN IN_COLLECTOR_BIDDING_ID				BIGINT,
     IN IN_DISPOSER_ORDER_ID					BIGINT,
     OUT rtn_val 							INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 							VARCHAR(100)		/*출력값 : 처리결과 문자열*/
@@ -20,10 +20,10 @@ AUTHOR 			: Leo Nam
     INTO @CANCEL_VISIT 
     FROM COLLECTOR_BIDDING 
     WHERE 
-		COLLECTOR_ID = IN_COLLECTOR_SITE_ID AND 
+		ID = IN_COLLECTOR_BIDDING_ID AND 
         DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;
         
-	IF @RESPONSE_VISIT = FALSE THEN
+	IF @CANCEL_VISIT = FALSE THEN
 	/*방문신청을 취소한 사실이 없는 경우*/
 		SET rtn_val = 0;
 		SET msg_txt = 'Success';

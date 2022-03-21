@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_apply_bidding`(
 	IN IN_USER_ID				BIGINT,				/*입력값 : 입찰을 시도하는 사용자 아이디(USERS.ID)*/
-    IN IN_DISPOSAL_ID			BIGINT,				/*입력값 : 폐기물배출신청 등록고유번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
+    IN IN_DISPOSAL_ORDER_ID		BIGINT,				/*입력값 : 폐기물배출신청 등록고유번호(SITE_WSTE_DISPOSAL_ORDER.ID)*/
     IN IN_BID_AMOUNT			FLOAT,				/*입력값 : 폐기물처리견적가 총액*/
     IN IN_TRMT_METHOD			VARCHAR(4),			/*입력값 : 폐기물 처리방법*/
     IN IN_BIDDING_DETAILS		JSON				/*입력값 : 폐기물 수집운반 및 처리에 대한 입찰내역서*/
@@ -57,7 +57,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 			CALL sp_req_site_already_bid(
 			/*입찰신청을 하려는 사이트가 이미 입찰을 했는지 검사한다.*/
 				@USER_SITE_ID,
-				IN_DISPOSAL_ID,
+				IN_DISPOSAL_ORDER_ID,
 				@rtn_val,
 				@msg_txt
 			);
@@ -80,7 +80,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 					/*사이트가 수집운반 등의 폐기물 처리권한이 있는 경우*/
 						CALL sp_get_duty_to_apply_for_visit(
 						/*폐기물 배출신청 사이트에 방문의무가 있는지 여부를 확인한다.*/
-							IN_DISPOSAL_ID,
+							IN_DISPOSAL_ORDER_ID,
 							@rtn_val,
 							@msg_txt
 						);
@@ -88,7 +88,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 						/*폐기물 배출신청 사이트에 방문의무가 있는 경우*/
 							CALL sp_req_visit_date_expired(
 							/*방문종료일이 마감되었는지 확인한다.*/
-								IN_DISPOSAL_ID,
+								IN_DISPOSAL_ORDER_ID,
 								@rtn_val,
 								@msg_txt
 							);
@@ -97,45 +97,43 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 								CALL sp_req_apply_for_visit(
 								/*방문의무가 있는 사이트에 방문신청을 한 사실이 있는지에 대한 여부 확인*/
 									@USER_SITE_ID,
-									IN_DISPOSAL_ID,
+									IN_DISPOSAL_ORDER_ID,
 									@COLLECTOR_BIDDING_ID,
 									@rtn_val,
 									@msg_txt
 								);
 								IF @rtn_val = 0 THEN
 								/*방문신청을 한 사실이 있다면*/
-									CALL sp_req_is_visit_reqeust_rejected(
+									CALL sp_req_is_visit_request_rejected(
 									/*배출자로부터 방문거절을 당했는지 확인한다.*/
 										@COLLECTOR_BIDDING_ID,
-										IN_DISPOSAL_ID,
+										IN_DISPOSAL_ORDER_ID,
 										@rtn_val,
 										@msg_txt
 									);
 									IF @rtn_val = 0 THEN
 									/*배출자로부터 방문거절을 당하지 않았다면 정상처리한다.*/
 										CALL sp_req_is_visit_request_already_not_canceled(
-											
-                                        );
-										CALL sp_req_bidding_end_date_expired(
-										/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
-											IN_DISPOSAL_ID,
+										/*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 없는지 검사한다.*/
+											@COLLECTOR_BIDDING_ID,
+											IN_DISPOSAL_ORDER_ID,
 											@rtn_val,
 											@msg_txt
 										);
-										IF @rtn_val = 0 THEN
-										/*입찰마감일이 종료되지 않은 경우*/
-											CALL sp_req_is_bidding_schedule_close_early(
-											/*배출자의 배출일정 중에서 입찰마감일정이 조기마감되었는지 검사한다.*/
-												IN_DISPOSAL_ID,
+                                        IF @rtn_val = 0 THEN
+                                        /*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 없는 경우 정상처리한다.*/
+											CALL sp_req_bidding_end_date_expired(
+											/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
+												IN_DISPOSAL_ORDER_ID,
 												@rtn_val,
 												@msg_txt
 											);
 											IF @rtn_val = 0 THEN
-											/*입찰일정이 조기마감되지 않았다면 정상처리한다.*/
+											/*입찰마감일이 종료되지 않은 경우*/
 												CALL sp_insert_collector_wste_lists(
 												/*수거자 등이 입력한 입찰정보를 데이타베이스에 저장한다.*/
 													@COLLECTOR_BIDDING_ID,
-													IN_DISPOSAL_ID,
+													IN_DISPOSAL_ORDER_ID,
 													@REG_DT,
 													IN_BIDDING_DETAILS,
 													@rtn_val,
@@ -146,13 +144,26 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 													UPDATE COLLECTOR_BIDDING 
 													SET 
 														DATE_OF_BIDDING 		= @REG_DT, 
-														BID_AMOUNT 				= IN_BID_AMOUNT, 
+														BID_AMOUNT 				= IN_BID_AMOUNT,  
+                                                        /*BID_AMOUNT를 폐기물 견적에서 단가와 수량을 곱한 후 합산한 금액으로 sp_insert_collector_wste_lists의 실행으로 계산을 하고 있으나 
+                                                        앱 사용측면에서 페기물 리스트를 업로드 하는것과는 별개로 전체 금액을 입력하고 있으므로 위의 계산결과와는 별개로 BID_AMOUNT통하여 
+                                                        입력받은 전체 금액을 데이타베이스에 입력하고 있다. 추후 견적관련 서비스를 수정하게 되면 이 부분은 삭제되어야 한다.*/
 														TRMT_METHOD 			= IN_TRMT_METHOD, 
 														UPDATED_AT 				= @REG_DT 
 													WHERE 
 														ID = @COLLECTOR_BIDDING_ID;
 													IF ROW_COUNT() = 1 THEN
 													/*데이타 입력에 성공하였다면*/
+                                                        CALL sp_calc_make_decision_at(
+                                                        /*수거자가 배출자의 낙찰통보에 대하여 최종결심할 수 있는 최대시간을 확정한다.*/
+															@COLLECTOR_BIDDING_ID
+                                                        );
+														CALL sp_calc_bidders(
+															IN_DISPOSAL_ORDER_ID
+														);
+														CALL sp_calc_bidding_rank(
+															IN_DISPOSAL_ORDER_ID
+														);
 														SET @rtn_val 		= 0;
 														SET @msg_txt 		= 'Success1';
 													ELSE
@@ -166,13 +177,13 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 													SIGNAL SQLSTATE '23000';
 												END IF;
 											ELSE
-											/*입찰마감일정이 조기마감되었다면 예외처리한다.*/
+											/*입찰마감일이 종료된 경우 예외처리한다.*/
 												SIGNAL SQLSTATE '23000';
 											END IF;
-										ELSE
-										/*입찰마감일이 종료된 경우 예외처리한다.*/
+                                        ELSE
+                                        /*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 존재하는 경우 예외처리한다.*/
 											SIGNAL SQLSTATE '23000';
-										END IF;
+                                        END IF;
 									ELSE
 									/*배출자로부터 방문거절을 당했다면 예외처리한다.*/
 										SIGNAL SQLSTATE '23000';
@@ -204,7 +215,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 							) VALUES (
 								@COLLECTOR_BIDDING_ID, 
 								@USER_SITE_ID, 
-								IN_DISPOSAL_ID, 
+								IN_DISPOSAL_ORDER_ID, 
 								TRUE, 
 								2, 
 								@REG_DT, 
@@ -215,6 +226,9 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 							);
 							IF ROW_COUNT() = 1 THEN
 							/*데이타베이스 입력에 성공한 경우*/
+								CALL sp_calc_bidders(
+									IN_DISPOSAL_ORDER_ID
+								);
 								SET @rtn_val 		= 0;
 								SET @msg_txt 		= 'Success2';
 							ELSE

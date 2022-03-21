@@ -7,12 +7,12 @@ BEGIN
 
 /*
 Procedure Name 	: sp_disposer_reject_visit
-Input param 	: 2개
+Input param 	: 3개
 Job 			: 배출자가 수거자의 방문신청을 응답(수락/거절)한다.
-Update 			: 2022.01.28
-Version			: 0.0.2
+Update 			: 2022.03.19
+Version			: 0.0.3
 AUTHOR 			: Leo Nam
-				: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.2)
+Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경우 전체 방문가능자수를 계산하여 SITE_WSTE_DISPOSAL_ORDER.PROSPECTIVE_VISITORS를 UPDATE한다.(0.0.3)
 */
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -61,10 +61,20 @@ AUTHOR 			: Leo Nam
 				);
 				IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 				/*사용자에게 권한이 있는 경우 정상처리한다.*/
-					UPDATE COLLECTOR_BIDDING SET RESPONSE_VISIT = IN_RESPONSE, RESPONSE_VISIT_AT = @REG_DT WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					UPDATE COLLECTOR_BIDDING 
+                    SET 
+						RESPONSE_VISIT 		= IN_RESPONSE, 
+                        RESPONSE_VISIT_AT 	= @REG_DT 
+                    WHERE ID = IN_COLLECTOR_BIDDING_ID;
 					/*사용자가 해당 수거자의 방문에 대하여 거절의사를 표시한다.*/
 					IF ROW_COUNT() = 1 THEN
 					/*정보변경에 성공한 경우*/
+						SELECT DISPOSAL_ORDER_ID INTO @DISPOSER_ORDER_ID 
+                        FROM COLLECTOR_BIDDING 
+                        WHERE ID = IN_COLLECTOR_BIDDING_ID;
+						CALL sp_calc_prospective_visitors(
+							@DISPOSER_ORDER_ID
+						);
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE

@@ -96,7 +96,7 @@ Changes			: 사이트에 등록할 수 있는 사용자 제한규정(정책사�
 				@msg_txt
 			);
 			/*등록을 요청하는 사용자의 USER_ID가 이미 등록되어 있는 경우에는 @USER_EXISTS = 1, 그렇지 않은 경우에는 @USER_EXISTS = 0이 됨*/ 		
-			IF @rtn_val = 0 THEN
+			IF IN_USER_ID IS NOT NULL AND @rtn_val = 0 THEN
 			/*CREATOR가 존재하는 경우*/				
 				CALL sp_req_whether_user_can_be_added(
 				/*현재 사이트에 사용자를 추가할 수 있는지 여부를 반환한다.*/
@@ -119,7 +119,7 @@ Changes			: 사이트에 등록할 수 있는 사용자 제한규정(정책사�
 						IN_SITE_ID,
 						@CREATOR_CLASS,
 						@CREATOR_SITE_ID,
-						@TARGET_SITE_ID,
+						@TARGET_COMP_ID,
 						@rtn_val,
 						@msg_txt
 					);
@@ -131,7 +131,7 @@ Changes			: 사이트에 등록할 수 있는 사용자 제한규정(정책사�
 							IN_PWD, 
 							IN_USER_NAME, 
 							IN_PHONE, 
-							@TARGET_SITE_ID, 
+							@TARGET_COMP_ID, 
 							IN_SITE_ID, 
 							IN_CLASS, 
 							IN_DEPARTMENT, 
