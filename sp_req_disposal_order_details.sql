@@ -115,7 +115,7 @@ AUTHOR 			: Leo Nam
 			CUR_STATE, 
 			CUR_STATE_CODE
 		);
-        
+        /*
 		SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(
 				'ID'							, COLLECTOR_BIDDING_ID, 
@@ -135,7 +135,7 @@ AUTHOR 			: Leo Nam
 		INTO @COLLECTOR_INFO 
         FROM V_COLLECTOR_BIDDING_WITH_STATE 
         WHERE 
-			DISPOSER_ORDER_ID 			= CUR_DISPOSER_ORDER_ID; /*AND*/
+			DISPOSER_ORDER_ID 			= CUR_DISPOSER_ORDER_ID; *//*AND*/
             /*DISPOSER_RESPONSE_VISIT 	<> TRUE AND*/						/* 수거자가 배출자게에게 방문거절을 당하지 않은 상태*/
             /*DISPOSER_REJECT_BIDDING 	<> TRUE;*/						/* 수거자가 배출자게에게 입찰거절을 당하지 않은 상태*/
 		/*수거자정보를 JSON형태로 변환한다.*/

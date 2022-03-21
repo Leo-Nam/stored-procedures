@@ -67,38 +67,81 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				/*최종처리결정에 대한 거부권(TRUE:수락, FALSE:거부)을 행사한다.*/
 				IF ROW_COUNT() = 1 THEN
 				/*데이타베이스 입력에 성공한 경우*/
-					UPDATE SITE_WSTE_DISPOSAL_ORDER 
-                    SET 
-						COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION,  
-                        COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT 
-					WHERE ID = @DISPOSAL_ORDER_ID;
-                    IF ROW_COUNT() = 1 THEN
-						IF IN_FINAL_DECISION = TRUE THEN
-						/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
-							UPDATE WSTE_CLCT_TRMT_TRANSACTION
-							SET
-								COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
-								UPDATED_AT 				= @REG_DT
-							WHERE
-								DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
-							IF ROW_COUNT() = 1 THEN
-							/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
-								SET @rtn_val 		= 0;
-								SET @msg_txt 		= 'Success2';
+					SELECT BIDDING_RANK INTO @BIDDING_RANK FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					IF @BIDDING_RANK = 1 THEN
+						UPDATE SITE_WSTE_DISPOSAL_ORDER 
+						SET 
+							COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION,  
+							COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT 
+						WHERE ID = @DISPOSAL_ORDER_ID;
+						IF ROW_COUNT() = 1 THEN
+							IF IN_FINAL_DECISION = TRUE THEN
+							/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
+								UPDATE WSTE_CLCT_TRMT_TRANSACTION
+								SET
+									COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
+									UPDATED_AT 				= @REG_DT
+								WHERE
+									DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
+								IF ROW_COUNT() = 1 THEN
+								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success2';
+								ELSE
+								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
+									SET @rtn_val 		= 24102;
+									SET @msg_txt 		= 'Failed to change job information';
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							ELSE
-							/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
-								SET @rtn_val 		= 24102;
-								SET @msg_txt 		= 'Failed to change job information';
+								SET @rtn_val 		= 0;
+								SET @msg_txt 		= 'Success1';
+							END IF;
+						ELSE
+							SET @rtn_val 		= 24104;
+							SET @msg_txt 		= 'Failed to change emitter record';
+							SIGNAL SQLSTATE '23000';
+						END IF;
+                    ELSE
+						IF @BIDDING_RANK = 2 THEN
+							UPDATE SITE_WSTE_DISPOSAL_ORDER 
+							SET 
+								COLLECTOR_SELECTION_CONFIRMED2 		= IN_FINAL_DECISION,  
+								COLLECTOR_SELECTION_CONFIRMED2_AT 	= @REG_DT 
+							WHERE ID = @DISPOSAL_ORDER_ID;
+							IF ROW_COUNT() = 1 THEN
+								IF IN_FINAL_DECISION = TRUE THEN
+								/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
+									UPDATE WSTE_CLCT_TRMT_TRANSACTION
+									SET
+										COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
+										UPDATED_AT 				= @REG_DT
+									WHERE
+										DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
+									IF ROW_COUNT() = 1 THEN
+									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+										SET @rtn_val 		= 0;
+										SET @msg_txt 		= 'Success2';
+									ELSE
+									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
+										SET @rtn_val 		= 24107;
+										SET @msg_txt 		= 'Failed to change job information';
+										SIGNAL SQLSTATE '23000';
+									END IF;
+								ELSE
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success1';
+								END IF;
+							ELSE
+								SET @rtn_val 		= 24106;
+								SET @msg_txt 		= 'Failed to change emitter record';
 								SIGNAL SQLSTATE '23000';
 							END IF;
 						ELSE
-							SET @rtn_val 		= 0;
-							SET @msg_txt 		= 'Success1';
+							SET @rtn_val 		= 24105;
+							SET @msg_txt 		= 'Failed to change emitter record';
+							SIGNAL SQLSTATE '23000';
 						END IF;
-                    ELSE
-						SET @rtn_val 		= 24104;
-						SET @msg_txt 		= 'Failed to change emitter record';
-						SIGNAL SQLSTATE '23000';
                     END IF;
 				ELSE
 				/*데이타베이스 입력에 실패한 경우*/

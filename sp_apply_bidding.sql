@@ -154,9 +154,10 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 														ID = @COLLECTOR_BIDDING_ID;
 													IF ROW_COUNT() = 1 THEN
 													/*데이타 입력에 성공하였다면*/
-                                                        CALL sp_calc_make_decision_at(
+                                                        CALL sp_calc_max_decision_at(
                                                         /*수거자가 배출자의 낙찰통보에 대하여 최종결심할 수 있는 최대시간을 확정한다.*/
-															@COLLECTOR_BIDDING_ID
+															IN_DISPOSAL_ORDER_ID,
+                                                            @COLLECTOR_BIDDING_ID
                                                         );
 														CALL sp_calc_bidders(
 															IN_DISPOSAL_ORDER_ID
@@ -226,11 +227,24 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 							);
 							IF ROW_COUNT() = 1 THEN
 							/*데이타베이스 입력에 성공한 경우*/
-								CALL sp_calc_bidders(
+								INSERT INTO FINAL_BIDDER_MANAGEMENT (
+									DISPOSER_ORDER_ID,
+                                    COLLECTOR_BIDDING_ID
+                                ) VALUES (
+									@COLLECTOR_BIDDING_ID, 
 									IN_DISPOSAL_ORDER_ID
-								);
-								SET @rtn_val 		= 0;
-								SET @msg_txt 		= 'Success2';
+                                );
+                                IF ROW_COUNT() = 1 THEN
+									CALL sp_calc_bidders(
+										IN_DISPOSAL_ORDER_ID
+									);
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success2';
+                                ELSE
+									SET @rtn_val 		= 23404;
+									SET @msg_txt 		= 'Failed to create final bidder management rocord';
+									SIGNAL SQLSTATE '23000';
+                                END IF;
 							ELSE
 							/*데이타베이스 입력에 실패한 경우*/
 								SET @rtn_val 		= 23402;

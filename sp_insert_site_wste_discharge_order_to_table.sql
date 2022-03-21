@@ -19,6 +19,12 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_to_t
 )
 BEGIN
 
+	CALL sp_req_policy_direction(
+		'max_selection_duration',
+		@max_selection_duration
+	);
+    SET @MAX_SELECT_AT = ADDTIME(@IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
+    SET @MAX_SELECT2_AT = ADDTIME(@IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
 	INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
 		DISPOSER_ID,
 		SITE_ID,
@@ -33,7 +39,10 @@ BEGIN
 		ORDER_CODE,
 		NOTE,
 		CREATED_AT,
-		UPDATED_AT
+		UPDATED_AT,
+		KIKCD_B_CODE,
+		MAX_SELECT_AT,
+		MAX_SELECT2_AT
 	) VALUES(
 		IN_USER_ID,
 		IN_DISPOSER_SITE_ID,
@@ -48,7 +57,10 @@ BEGIN
 		@ORDER_CODE,
 		IN_NOTE,
 		IN_REG_DT,
-		IN_REG_DT
+		IN_REG_DT,
+        IN_KIKCD_B_CODE,
+        @MAX_SELECT_AT,
+        @MAX_SELECT2_AT
 	);
 	
     SELECT LAST_INSERT_ID() INTO @WSTE_DISPOSAL_ORDER_ID;

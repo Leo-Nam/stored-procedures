@@ -61,44 +61,56 @@ Change			: STATUS_HISTORY에 입력하는 기능 추가(0.0.2)
 			
 			IF ROW_COUNT() = 1 THEN
 			/*데이타베이스에 레코드가 성공적으로 입력된 경우*/
-				CALL sp_insert_collector_wste_lists(
-				/*수거자 등이 입력한 입찰정보를 데이타베이스에 저장한다.*/
-					@COLLECTOR_BIDDING_ID,
-					IN_DISPOSER_ORDER_ID,
-					@REG_DT,
-					IN_BIDDING_DETAILS,
-					@rtn_val,
-					@msg_txt
+				INSERT INTO FINAL_BIDDER_MANAGEMENT (
+					DISPOSER_ORDER_ID,
+					COLLECTOR_BIDDING_ID
+				) VALUES (
+					@COLLECTOR_BIDDING_ID, 
+					IN_DISPOSER_ORDER_ID
 				);
-				IF @rtn_val = 0 THEN
-				/*데이타베이스 입력에 성공한 경우*/
-					INSERT INTO STATUS_HISTORY (
-						DISPOSAL_ORDER_ID, 
-						COLLECTOR_ID, 
-						STATUS_CODE, 
-						CREATED_AT, 
-						UPDATED_AT
-					) 
-					VALUES (
-						IN_DISPOSER_ORDER_ID, 
-						IN_SITE_ID, 
-						2, 
-						@REG_DT, 
-						@REG_DT
+				IF ROW_COUNT() = 1 THEN
+					CALL sp_insert_collector_wste_lists(
+					/*수거자 등이 입력한 입찰정보를 데이타베이스에 저장한다.*/
+						@COLLECTOR_BIDDING_ID,
+						IN_DISPOSER_ORDER_ID,
+						@REG_DT,
+						IN_BIDDING_DETAILS,
+						@rtn_val,
+						@msg_txt
 					);
-					IF ROW_COUNT() = 1 THEN
-					/*데이타 입력에 성공하였다면*/
-						SET rtn_val = 0;
-						SET msg_txt = 'The waste bidding process has been completed';
+					IF @rtn_val = 0 THEN
+					/*데이타베이스 입력에 성공한 경우*/
+						INSERT INTO STATUS_HISTORY (
+							DISPOSAL_ORDER_ID, 
+							COLLECTOR_ID, 
+							STATUS_CODE, 
+							CREATED_AT, 
+							UPDATED_AT
+						) 
+						VALUES (
+							IN_DISPOSER_ORDER_ID, 
+							IN_SITE_ID, 
+							2, 
+							@REG_DT, 
+							@REG_DT
+						);
+						IF ROW_COUNT() = 1 THEN
+						/*데이타 입력에 성공하였다면*/
+							SET rtn_val = 0;
+							SET msg_txt = 'The waste bidding process has been completed';
+						ELSE
+						/*데이타 입력에 실패하였다면 예외처리한다.*/
+							SET rtn_val = 23501;
+							SET msg_txt = 'Failed to write history';
+						END IF;
 					ELSE
-					/*데이타 입력에 실패하였다면 예외처리한다.*/
-						SET rtn_val = 23501;
-						SET msg_txt = 'Failed to write history';
+					/*데이타베이스 입력에 실패한 경우*/
+						SET rtn_val = @rtn_val;
+						SET msg_txt = @msg_txt;
 					END IF;
 				ELSE
-				/*데이타베이스 입력에 실패한 경우*/
-					SET rtn_val = @rtn_val;
-					SET msg_txt = @msg_txt;
+					SET rtn_val = 23505;
+					SET msg_txt = 'Failed to create final bidder management rocord';
 				END IF;
 			ELSE
 			/*데이타베이스에 레코드 입력이 실패한 경우*/

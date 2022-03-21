@@ -12,9 +12,9 @@ TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
 Update 			: 2022.03.18
 Version			: 0.0.4
 AUTHOR 			: Leo Nam
-Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경함으로써 입찰을 포기하는 상태로 전환함(0.0.2)
-				: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.3)
+Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.3)
 				: 방문취소가 실행된 경우 전체 방문가능자수를 계산하여 SITE_WSTE_DISPOSAL_ORDER.PROSPECTIVE_VISITORS를 UPDATE한다.(0.0.4)
+				
 */
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION

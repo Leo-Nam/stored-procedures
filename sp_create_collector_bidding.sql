@@ -41,8 +41,20 @@ BEGIN
 		);
 		IF ROW_COUNT() = 1 THEN
 		/*정상적으로 입력완료된 경우*/
-			SET rtn_val = 0;
-			SET msg_txt = 'creation collector_bidding record is successfully';
+			INSERT INTO FINAL_BIDDER_MANAGEMENT (
+				DISPOSER_ORDER_ID,
+				COLLECTOR_BIDDING_ID
+			) VALUES (
+				@COLLECTOR_BIDDING_ID, 
+				IN_DISPOSER_ORDER_ID
+			);
+            IF ROW_COUNT() = 1 THEN
+				SET rtn_val = 0;
+				SET msg_txt = 'success';
+            ELSE
+				SET rtn_val = 25203;
+				SET msg_txt = 'Failed to create final bidder management rocord';
+            END IF;
 		ELSE
 		/*정상적으로 입력되지 않은 경우*/
 			SET rtn_val = 25201;

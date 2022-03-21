@@ -76,7 +76,13 @@ VIEW `chiumdev_2`.`V_COLLECTOR_BIDDING_WITH_STATE` AS
         `chiumdev_2`.`B`.`STATUS_NM_KO` AS `STATE`,
         `chiumdev_2`.`B`.`PID` AS `STATE_PID`,
         `chiumdev_2`.`B`.`STATUS_CATEGORY_ID` AS `STATE_CATEGORY_ID`,
-        `chiumdev_2`.`B`.`STATUS_CATEGORY` AS `STATE_CATEGORY`
+        `chiumdev_2`.`B`.`STATUS_CATEGORY` AS `STATE_CATEGORY`,
+        `chiumdev_2`.`A`.`DISPOSER_SELECTED2` AS `DISPOSER_SELECTED2`,
+        `chiumdev_2`.`A`.`DISPOSER_SELECTED2_AT` AS `DISPOSER_SELECTED2_AT`,
+        `chiumdev_2`.`A`.`COLLECTOR_SELECTION_CONFIRMED2` AS `COLLECTOR_SELECTION_CONFIRMED2`,
+        `chiumdev_2`.`A`.`COLLECTOR_SELECTION_CONFIRMED2_AT` AS `COLLECTOR_SELECTION_CONFIRMED2_AT`,
+        `chiumdev_2`.`A`.`DISPOSER_MAX_SELECT2_AT` AS `DISPOSER_MAX_SELECT2_AT`,
+        `chiumdev_2`.`A`.`DISPOSER_NOTE` AS `DISPOSER_NOTE`
     FROM
         (`chiumdev_2`.`V_COLLECTOR_BIDDING` `A`
         LEFT JOIN `chiumdev_2`.`V_STATUS` `B` ON ((`chiumdev_2`.`A`.`STATE_CODE` = `chiumdev_2`.`B`.`ID`)))

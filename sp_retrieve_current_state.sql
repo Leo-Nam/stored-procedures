@@ -22,6 +22,7 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
     DECLARE CUR_DATE 					DATETIME;	
     DECLARE CUR_STATE					VARCHAR(20);
     DECLARE CUR_STATE_CODE				INT;
+    DECLARE CUR_DISPOSER_NOTE			VARCHAR(255);
     DECLARE TEMP_CURSOR		 			CURSOR FOR 
 	SELECT 
 		COLLECTOR_SITE_ID, 
@@ -58,7 +59,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 			)
         ), 
         STATE, 
-        STATE_CODE
+        STATE_CODE, 
+        DISPOSER_NOTE
     FROM V_COLLECTOR_BIDDING_WITH_STATE
 	WHERE COLLECTOR_SITE_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = IN_USER_ID AND ACTIVE = TRUE);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
@@ -72,7 +74,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 		WSTE_LSIT						JSON,
 		STATUS_AT						DATETIME,
 		STATE							VARCHAR(20),
-		STATE_CODE						INT
+		STATE_CODE						INT,
+		DISPOSER_NOTE					VARCHAR(255)
 	);        
 	
 	OPEN TEMP_CURSOR;	
@@ -85,7 +88,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 			CUR_DISPOSER_ORDER_CODE,
 			CUR_DATE,
 			CUR_STATE,
-			CUR_STATE_CODE;   
+			CUR_STATE_CODE,
+			CUR_DISPOSER_NOTE;   
 		
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -100,7 +104,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 			ORDER_CODE, 
 			STATUS_AT, 
 			STATE, 
-			STATE_CODE
+			STATE_CODE, 
+			DISPOSER_NOTE
 		)
 		VALUES(
 			CUR_COLLECTOR_SITE_ID,
@@ -109,7 +114,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 			CUR_DISPOSER_ORDER_CODE, 
 			CUR_DATE, 
 			CUR_STATE, 
-			CUR_STATE_CODE
+			CUR_STATE_CODE, 
+			CUR_DISPOSER_NOTE
 		);
         
 		SELECT JSON_ARRAYAGG(JSON_OBJECT(
@@ -150,7 +156,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
         'IMG_PATH'					, IMG_PATH, 
         'WSTE_LSIT'					, WSTE_LSIT, 
         'STATE'						, STATE, 
-        'STATE_CODE'				, STATE_CODE
+        'STATE_CODE'				, STATE_CODE, 
+        'DISPOSER_NOTE'				, DISPOSER_NOTE
 	)) 
     INTO @json_data FROM CURRENT_STATE;
     
