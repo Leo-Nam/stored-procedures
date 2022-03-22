@@ -3,6 +3,8 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_site_wste_discharge_order`(
 	IN IN_COLLECTOR_SITE_ID			BIGINT,						/*입렦값 : 기존거래로 등록할 때 등록할 기존 업체 사이트의 고유등록번호(COMP_SITE.ID), 기존업체와의 거래가 아닌 경우에는 NULL 사용*/
 	IN IN_KIKCD_B_CODE				VARCHAR(10),				/*입렦값 : 폐기물 배출지가 소재하는 소재지의 시군구코드(KIKCD_B.B_CODE)*/
 	IN IN_ADDR						VARCHAR(200),				/*입렦값 : 폐기물 배출지가 소재하는 소재지의 시군구 이하 상세주소*/
+	IN IN_LAT						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 위도값*/
+	IN IN_LNG						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 경도값*/
 	IN IN_VISIT_START_AT			DATETIME,					/*입렦값 : 폐기물 배출지에서 요구하는 방문시작일로서 NULL인 경우에는 방문 불필요*/
 	IN IN_VISIT_END_AT				DATETIME,					/*입렦값 : 폐기물 배출지에서 요구하는 방문종료일로서 NULL인 경우에는 방문 불필요*/
 	IN IN_BIDDING_END_AT			DATETIME,					/*입렦값 : 폐기물 처리 용역 입찰 종료일*/
@@ -130,6 +132,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_WSTE_CLASS,
 					IN_PHOTO_LIST,
 					IN_NOTE,
+					IN_LAT,
+					IN_LNG,
 					@REG_DT,
 					@rtn_val,
 					@msg_txt
@@ -169,6 +173,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 						IN_WSTE_CLASS,
 						IN_PHOTO_LIST,
 						IN_NOTE,
+						IN_LAT,
+						IN_LNG,
 						@REG_DT,
 						@rtn_val,
 						@msg_txt

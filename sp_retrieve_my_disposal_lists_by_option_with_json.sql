@@ -261,7 +261,7 @@ AUTHOR 			: Leo Nam
         FROM V_COLLECTOR_BIDDING_WITH_STATE
         WHERE 
 			DISPOSER_ORDER_ID 		= CUR_DISPOSER_ORDER_ID AND
-            STATE_CATEGORY_ID 		>= CUR_STATE_CATEGORY_ID - 1 AND
+            STATE_CATEGORY_ID 		>= CUR_STATE_CATEGORY_ID AND
             STATE_PID				<> 211 AND
             STATE_CODE				<> 211;
 		
@@ -320,7 +320,7 @@ AUTHOR 			: Leo Nam
 			(DISPOSER_ID = IN_USER_ID),            
 			(DISPOSER_SITE_ID IS NOT NULL AND DISPOSER_SITE_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = IN_USER_ID AND ACTIVE = TRUE)));
     
-    IF rtn_count = 0 THEN
+    IF @rtn_count = 0 THEN
 		SET json_data 				= NULL;
 		SET rtn_val 				= 30701;
 		SET msg_txt 				= 'No data found';

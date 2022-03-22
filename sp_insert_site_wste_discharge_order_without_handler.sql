@@ -13,6 +13,8 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_with
 	IN IN_WSTE_CLASS				JSON,						/*입력값 : 폐기물 배출지에서 배출되는 폐기물의 종류 리스트*/
 	IN IN_PHOTO_LIST				JSON,						/*입력값 : 폐기물 배출지에서 배출되는 폐기물의 사진 리스트*/
 	IN IN_NOTE						VARCHAR(255),				/*입력값 : 폐기물 배출시 요청사항*/
+	IN IN_LAT						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 위도값*/
+	IN IN_LNG						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 경도값*/
 	IN IN_REG_DT					DATETIME,					/*입력값 : 등록일자*/
     OUT rtn_val 					INT,						/*출력값 : 처리결과 반환값*/
     OUT msg_txt 					VARCHAR(200)				/*출력값 : 처리결과 문자열*/
@@ -136,6 +138,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 										IN_WSTE_CLASS,
 										IN_PHOTO_LIST,
 										IN_NOTE,
+										IN_LAT,
+										IN_LNG,
 										IN_REG_DT,
 										@rtn_val,
 										@msg_txt
