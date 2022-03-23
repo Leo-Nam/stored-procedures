@@ -73,14 +73,28 @@ AUTHOR 			: Leo Nam
 						
 						IF @COUNT_OF_REQUEST_OF_BIDDING > 0 THEN
 						/*입찰신청한 업체가 1이상 존재하는 경우*/
+							CALL sp_req_policy_direction(
+								'max_selection_duration',
+								@max_selection_duration
+							);
+							SET @MAX_SELECT_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
+							SET @MAX_SELECT2_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
 							UPDATE SITE_WSTE_DISPOSAL_ORDER 
 							SET 
 								BIDDING_EARLY_CLOSING 		= TRUE, 
-								BIDDING_EARLY_CLOSED_AT 	= @REG_DT , 
-								BIDDING_END_AT 				= @REG_DT 
+								BIDDING_EARLY_CLOSED_AT 	= @REG_DT, 
+								BIDDING_END_AT 				= @REG_DT, 
+								MAX_SELECT_AT 				= @MAX_SELECT_AT, 
+								MAX_SELECT2_AT 				= @MAX_SELECT2_AT , 
+								UPDATED_AT 					= @REG_DT 
 							WHERE ID = IN_DISPOSER_ORDER_ID;
 							IF ROW_COUNT() = 1 THEN
 							/*정보가 성공적으로 변경되었다면*/
+								CALL sp_calc_max_decision_at(
+								/*배출자가 입찰을 조기종료함으로써 모든 수거자의 최대결심일자를 변경적용한다.*/
+									IN_DISPOSER_ORDER_ID,
+                                    NULL
+                                );
 								SET @rtn_val = 0;
 								SET @msg_txt = 'Early closing successfully completed';
 							ELSE

@@ -67,26 +67,47 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				/*최종처리결정에 대한 거부권(TRUE:수락, FALSE:거부)을 행사한다.*/
 				IF ROW_COUNT() = 1 THEN
 				/*데이타베이스 입력에 성공한 경우*/
-					SELECT BIDDING_RANK INTO @BIDDING_RANK FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					SELECT BIDDING_RANK, COLLECTOR_ID INTO @BIDDING_RANK, @COLLECTOR_ID FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
 					IF @BIDDING_RANK = 1 THEN
 						UPDATE SITE_WSTE_DISPOSAL_ORDER 
 						SET 
 							COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION,  
-							COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT 
+							COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT,
+                            COLLECTOR_BIDDING_ID				= IN_COLLECT_BIDDING_ID,
+                            SUCCESS_BIDDER						= @COLLECTOR_ID
 						WHERE ID = @DISPOSAL_ORDER_ID;
 						IF ROW_COUNT() = 1 THEN
 							IF IN_FINAL_DECISION = TRUE THEN
 							/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
 								UPDATE WSTE_CLCT_TRMT_TRANSACTION
 								SET
+									COLLECTOR_ID 			= @COLLECTOR_ID,
 									COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
 									UPDATED_AT 				= @REG_DT
 								WHERE
 									DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
 								IF ROW_COUNT() = 1 THEN
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success2';
+									IF IN_FINAL_DECISION = FALSE THEN
+										CALL sp_req_policy_direction(
+										/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일로부터의 기간을 반환받는다(단위:시간)*/
+											'max_selection_duration',
+											@max_selection_duration
+										);
+										SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
+										UPDATE SITE_WSTE_DISPOSAL_ORDER SET COLLECTOR_MAX_DECISION2_AT = @COLLECTOR_MAX_DECISION2_AT WHERE ID = @DISPOSAL_ORDER_ID;
+										IF ROW_COUNT = 1 THEN
+											SET @rtn_val 		= 0;
+											SET @msg_txt 		= 'Success2';
+										ELSE
+											SET @rtn_val 		= 24108;
+											SET @msg_txt 		= 'Failure to change the final decision deadline of the 2nd place successful bidder';
+											SIGNAL SQLSTATE '23000';
+										END IF;
+                                    ELSE
+										SET @rtn_val 		= 0;
+										SET @msg_txt 		= 'Success2';
+                                    END IF;
 								ELSE
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
 									SET @rtn_val 		= 24102;
@@ -107,7 +128,9 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 							UPDATE SITE_WSTE_DISPOSAL_ORDER 
 							SET 
 								COLLECTOR_SELECTION_CONFIRMED2 		= IN_FINAL_DECISION,  
-								COLLECTOR_SELECTION_CONFIRMED2_AT 	= @REG_DT 
+								COLLECTOR_SELECTION_CONFIRMED2_AT 	= @REG_DT,
+								COLLECTOR_BIDDING_ID				= IN_COLLECT_BIDDING_ID,
+								SUCCESS_BIDDER						= @COLLECTOR_ID
 							WHERE ID = @DISPOSAL_ORDER_ID;
 							IF ROW_COUNT() = 1 THEN
 								IF IN_FINAL_DECISION = TRUE THEN

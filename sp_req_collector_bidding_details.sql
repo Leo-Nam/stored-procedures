@@ -58,6 +58,16 @@ AUTHOR 			: Leo Nam
 	WHERE COLLECTOR_BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
     
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		DROP TABLE IF EXISTS CURRENT_STATE;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;				
+    /*트랜잭션 시작*/  
+    
 	CREATE TEMPORARY TABLE IF NOT EXISTS CURRENT_STATE (
 		COLLECTOR_BIDDING_ID			BIGINT,
 		DISPOSER_ORDER_ID				BIGINT,
@@ -171,10 +181,12 @@ AUTHOR 			: Leo Nam
     IF vRowCount = 0 THEN
 		SET @rtn_val = 27901;
 		SET @msg_txt = 'No data found';
+		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
 		SET @msg_txt = 'Success';
-    END IF;
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
+    END IF; 
+    COMMIT;   
 	DROP TABLE IF EXISTS CURRENT_STATE;
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);   
 END

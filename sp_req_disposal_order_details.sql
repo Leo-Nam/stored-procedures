@@ -11,6 +11,7 @@ Update 			: 2022.02.15
 Version			: 0.0.4
 AUTHOR 			: Leo Nam
 */
+    
 
     DECLARE vRowCount 								INT DEFAULT 0;
     DECLARE endOfRow 								TINYINT DEFAULT FALSE;    
@@ -33,6 +34,7 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_WSTE_DISPOSED_DONG_RI				VARCHAR(20);
     DECLARE CUR_WSTE_DISPOSED_KIKCD_B_CODE			VARCHAR(20);
     DECLARE CUR_WSTE_DISPOSED_ADDR					VARCHAR(255);
+    DECLARE CUR_DISPOSER_CREATED_AT					DATETIME;	
     DECLARE TEMP_CURSOR		 						CURSOR FOR 
 	SELECT 
 		DISPOSER_ORDER_ID, 
@@ -61,10 +63,21 @@ AUTHOR 			: Leo Nam
         WSTE_DISPOSED_EUP_MYEON_DONG,
         WSTE_DISPOSED_DONG_RI,
         WSTE_DISPOSED_KIKCD_B_CODE,
-        WSTE_DISPOSED_ADDR
+        WSTE_DISPOSED_ADDR,
+        DISPOSER_CREATED_AT
     FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE
 	WHERE DISPOSER_ORDER_ID = IN_DISPOSER_ORDER_ID;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		DROP TABLE IF EXISTS CURRENT_STATE;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;				
+    /*트랜잭션 시작*/  
     
 	CREATE TEMPORARY TABLE IF NOT EXISTS CURRENT_STATE (
 		DISPOSER_ORDER_ID							BIGINT,
@@ -86,6 +99,7 @@ AUTHOR 			: Leo Nam
 		WSTE_DISPOSED_DONG_RI						VARCHAR(20),
 		WSTE_DISPOSED_KIKCD_B_CODE					VARCHAR(20),
 		WSTE_DISPOSED_ADDR							VARCHAR(255),
+		DISPOSER_CREATED_AT							DATETIME,
 		DISPOSAL_WSTE_LIST							JSON,
 		IMG_LIST									JSON,
 		COLLECTOR_INFO								JSON
@@ -113,7 +127,8 @@ AUTHOR 			: Leo Nam
 			CUR_WSTE_DISPOSED_EUP_MYEON_DONG,
 			CUR_WSTE_DISPOSED_DONG_RI,
 			CUR_WSTE_DISPOSED_KIKCD_B_CODE,
-			CUR_WSTE_DISPOSED_ADDR;     
+			CUR_WSTE_DISPOSED_ADDR,
+			CUR_DISPOSER_CREATED_AT;     
 		
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -140,7 +155,8 @@ AUTHOR 			: Leo Nam
             WSTE_DISPOSED_EUP_MYEON_DONG,
             WSTE_DISPOSED_DONG_RI,
             WSTE_DISPOSED_KIKCD_B_CODE,
-            WSTE_DISPOSED_ADDR
+            WSTE_DISPOSED_ADDR,
+            DISPOSER_CREATED_AT
 		)
 		VALUES(
 			CUR_DISPOSER_ORDER_ID, 
@@ -161,31 +177,38 @@ AUTHOR 			: Leo Nam
 			CUR_WSTE_DISPOSED_EUP_MYEON_DONG,
 			CUR_WSTE_DISPOSED_DONG_RI,
 			CUR_WSTE_DISPOSED_KIKCD_B_CODE,
-			CUR_WSTE_DISPOSED_ADDR
+			CUR_WSTE_DISPOSED_ADDR,
+			CUR_DISPOSER_CREATED_AT
 		);
         
 		SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(
-				'ID'							, COLLECTOR_BIDDING_ID, 
-                'COLLECTOR_SITE_ID'				, COLLECTOR_SITE_ID, 
-                'COLLECTOR_SITE_NM'				, COLLECTOR_SITE_NAME, 
-                'BIZ'							, TRMT_BIZ_NM, 
-                'DIST'							, STRAIGHT_DISTANCE, 
-                'STATE'							, STATE,
-                'STATE_CODE'					, STATE_CODE,
-                'DISPOSER_SITE_ID'				, DISPOSER_SITE_ID,
-                'COLLECTOR_DATE_OF_VISIT'		, COLLECTOR_DATE_OF_VISIT,
-                'COLLECTOR_DATE_OF_BIDDING'		, COLLECTOR_DATE_OF_BIDDING,
-                'COLLECTOR_SELECTED_AT'			, COLLECTOR_SELECTED_AT,
-                'COLLECTOR_MAKE_DECISION_AT'	, COLLECTOR_MAKE_DECISION_AT
+				'ID'							, A.COLLECTOR_BIDDING_ID, 
+                'COLLECTOR_SITE_ID'				, A.COLLECTOR_SITE_ID, 
+                'COLLECTOR_SITE_NM'				, A.COLLECTOR_SITE_NAME, 
+                'BIZ'							, A.TRMT_BIZ_NM, 
+                'DIST'							, A.STRAIGHT_DISTANCE, 
+                'STATE'							, A.STATE,
+                'STATE_CODE'					, A.STATE_CODE,
+                'DISPOSER_SITE_ID'				, A.DISPOSER_SITE_ID,
+                'COLLECTOR_DATE_OF_VISIT'		, A.COLLECTOR_DATE_OF_VISIT,
+                'COLLECTOR_DATE_OF_BIDDING'		, A.COLLECTOR_DATE_OF_BIDDING,
+                'COLLECTOR_SELECTED_AT'			, A.COLLECTOR_SELECTED_AT,
+                'COLLECTOR_MAKE_DECISION_AT'	, A.COLLECTOR_MAKE_DECISION_AT,
+                'COLLECTOR_AVATAR_PATH'			, B.AVATAR_PATH,
+                'COLLECTOR_MANAGER_ID'			, B.ID,
+                'COLLECTOR_CONTACT'				, A.COLLECTOR_CONTACT,
+                'COLLECTOR_MANAGER_PHONE'		, B.PHONE
 			)
 		) 
 		INTO @COLLECTOR_INFO 
-        FROM V_COLLECTOR_BIDDING_WITH_STATE 
+        FROM V_COLLECTOR_BIDDING_WITH_STATE A 
+        INNER JOIN USERS B 
+        ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
         WHERE 
-			DISPOSER_ORDER_ID 			= CUR_DISPOSER_ORDER_ID; /*AND*/
-            /*DISPOSER_RESPONSE_VISIT 	<> TRUE AND*/						/* 수거자가 배출자게에게 방문거절을 당하지 않은 상태*/
-            /*DISPOSER_REJECT_BIDDING 	<> TRUE;*/						/* 수거자가 배출자게에게 입찰거절을 당하지 않은 상태*/
+            B.CLASS						= 201 AND
+            B.ACTIVE					= TRUE AND
+			A.DISPOSER_ORDER_ID 		= CUR_DISPOSER_ORDER_ID;
 		/*수거자정보를 JSON형태로 변환한다.*/
         
 		SELECT JSON_ARRAYAGG(
@@ -214,6 +237,7 @@ AUTHOR 			: Leo Nam
         FROM WSTE_REGISTRATION_PHOTO  
         WHERE DISPOSAL_ORDER_ID 		= CUR_DISPOSER_ORDER_ID;
 		
+        
 		UPDATE CURRENT_STATE 
         SET 
 			COLLECTOR_INFO 				= @COLLECTOR_INFO, 
@@ -246,6 +270,7 @@ AUTHOR 			: Leo Nam
             'WSTE_DISPOSED_DONG_RI'					, WSTE_DISPOSED_DONG_RI, 
             'WSTE_DISPOSED_KIKCD_B_CODE'			, WSTE_DISPOSED_KIKCD_B_CODE, 
             'WSTE_DISPOSED_ADDR'					, WSTE_DISPOSED_ADDR, 
+            'DISPOSER_CREATED_AT'					, DISPOSER_CREATED_AT, 
             'DISPOSAL_WSTE_LIST'					, DISPOSAL_WSTE_LIST, 
             'IMG_LIST'								, IMG_LIST, 
             'COLLECTOR_INFO'						, COLLECTOR_INFO
@@ -256,10 +281,12 @@ AUTHOR 			: Leo Nam
     IF vRowCount = 0 THEN
 		SET @rtn_val 					= 27901;
 		SET @msg_txt 					= 'No data found';
+		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val 					= 0;
 		SET @msg_txt 					= 'Success';
     END IF;
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
+    COMMIT;   
 	DROP TABLE IF EXISTS CURRENT_STATE;
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
 END

@@ -1,0 +1,197 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_get_site_reviews_without_handler`(
+	IN IN_SITE_ID				BIGINT,				/*입력값 : 게시판 소유자(COMP_SITE.ID)*/
+	OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
+	OUT msg_txt 				VARCHAR(200),		/*출력값 : 처리결과 문자열*/
+	OUT avg_rating 				FLOAT,				/*출력값 : 평점평균*/
+	OUT json_data 				json				/*출력값 : 포스팅 리스트*/
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_req_get_site_reviews_without_handler
+Input param 	: 1개
+Job 			: 사이트별 리뷰 리스트를 반환한다.
+Update 			: 2022.03.23
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/		
+
+    DECLARE vReviewCount					INT DEFAULT 0;
+    DECLARE endOfReviewRow 					TINYINT DEFAULT FALSE;  
+    
+    DECLARE CUR_ID		 					BIGINT;
+    DECLARE CUR_CREATOR_ID 					BIGINT;
+    DECLARE CUR_RATING				 		FLOAT;
+    DECLARE CUR_SITE_ID		 				BIGINT;
+    DECLARE CUR_SITE_NAME		 			VARCHAR(255);
+    DECLARE CUR_CONTENTS			 		TEXT;
+    DECLARE CUR_CREATED_AT			 		DATETIME;
+    DECLARE CUR_DISPOSER_ORDER_ID			BIGINT;
+    
+    DECLARE TEMP_REVIEW_CURSOR 					CURSOR FOR 
+    SELECT 
+		POST_ID, 
+		POST_CREATOR_ID, 
+        POST_RATING, 
+        POST_SITE_ID, 
+        POST_SITE_NAME, 
+        POST_CONTENTS, 
+        POST_CREATED_AT, 
+        POST_DISPOSER_ORDER_ID
+	FROM V_POSTS 
+    WHERE 
+        POST_SITE_ID 	= IN_SITE_ID AND 
+        POST_CATEGORY_ID 	= 4  AND 
+        POST_PID 	= 0  AND 
+        POST_ACTIVE		 	= TRUE 
+	ORDER BY POST_UPDATED_AT DESC /*LIMIT IN_OFFSET, IN_ITEMS*/;   
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfReviewRow = TRUE;   
+    
+    SELECT COUNT(POST_ID) INTO @REVIEW_COUNT FROM V_POSTS 
+    WHERE 
+        POST_SITE_ID 	= IN_SITE_ID AND 
+        POST_CATEGORY_ID 	= 4  AND 
+        POST_ACTIVE		 	= TRUE;
+    
+    IF @REVIEW_COUNT > 0 THEN
+		SELECT AVG(POST_RATING) INTO @AVG_RATING FROM V_POSTS 
+		WHERE 
+			POST_SITE_ID 	= IN_SITE_ID AND 
+			POST_CATEGORY_ID 	= 4  AND 
+			POST_ACTIVE		 	= TRUE;
+		
+		SET json_data = NULL;
+		CREATE TEMPORARY TABLE IF NOT EXISTS TEMP_POST_LIST2 (
+			ID 							BIGINT, 
+			CREATOR_ID					BIGINT, 
+			RATING						FLOAT, 
+			SITE_ID						BIGINT, 
+			SITE_NAME 					VARCHAR(255), 
+			CONTENTS 					TEXT, 
+			CREATED_AT 					DATETIME, 
+			AVATAR_PATH 				VARCHAR(255), 
+			DISPOSER_ORDER_ID			BIGINT, 
+			DISPOSER_ORDER_CODE			VARCHAR(10), 
+			USER_NAME					VARCHAR(20), 
+			USER_TYPE					VARCHAR(20), 
+			USER_CURRENT_TYPE_NM		VARCHAR(20),
+			REPLY						JSON
+		);
+		
+		OPEN TEMP_REVIEW_CURSOR;	
+		cloop: LOOP
+			FETCH TEMP_REVIEW_CURSOR 
+			INTO 
+				CUR_ID, 
+				CUR_CREATOR_ID,
+				CUR_RATING, 
+				CUR_SITE_ID, 
+				CUR_SITE_NAME, 
+				CUR_CONTENTS, 
+				CUR_CREATED_AT, 
+				CUR_DISPOSER_ORDER_ID;
+			
+			SET vReviewCount = vReviewCount + 1;
+			IF endOfReviewRow THEN
+				LEAVE cloop;
+			END IF;
+					
+			INSERT INTO 
+				TEMP_POST_LIST2(
+				ID, 
+				CREATOR_ID, 
+				RATING, 
+				SITE_ID, 
+				SITE_NAME, 
+				CONTENTS, 
+				CREATED_AT, 
+				DISPOSER_ORDER_ID
+			) 
+			VALUES(
+				CUR_ID, 
+				CUR_CREATOR_ID, 
+				CUR_RATING, 
+				CUR_SITE_ID, 
+				CUR_SITE_NAME, 
+				CUR_CONTENTS, 
+				CUR_CREATED_AT,
+				CUR_DISPOSER_ORDER_ID
+			);  
+			
+			SELECT AVATAR_PATH, USER_NAME, USER_TYPE, USER_CURRENT_TYPE_NM
+			INTO @AVATAR_PATH, @USER_NAME, @USER_TYPE, @USER_CURRENT_TYPE_NM 
+			FROM V_USERS 
+			WHERE ID = CUR_CREATOR_ID;	
+			
+			SELECT ORDER_CODE INTO @DISPOSER_ORDER_CODE 
+			FROM SITE_WSTE_DISPOSAL_ORDER 
+			WHERE ID = CUR_DISPOSER_ORDER_ID;  
+
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'ID'					, POST_ID, 
+					'SITE_ID'				, POST_SITE_ID, 
+					'SITE_NAME'				, POST_SITE_NAME, 
+					'CREATOR_ID'			, POST_CREATOR_ID, 
+					'CREATOR_NAME'			, POST_CREATOR_NAME, 
+					'SUBJECTS'				, POST_SUBJECTS, 
+					'CONTENTS'				, POST_CONTENTS, 
+					'CATEGORY_ID'			, POST_CATEGORY_ID, 
+					'CATEGORY_NAME'			, POST_CATEGORY_NAME, 
+					'SUB_CATEGORY_ID'		, POST_SUB_CATEGORY_ID, 
+					'SUB_CATEGORY_NAME'		, POST_SUB_CATEGORY_NAME, 
+					'VISITORS'				, POST_VISITORS, 
+					'CREATED_AT'			, POST_CREATED_AT, 
+					'UPDATED_AT'			, POST_UPDATED_AT, 
+					'RATING'				, POST_RATING
+				)
+			) 
+			INTO @REPLY 
+			FROM V_POSTS 
+			WHERE POST_PID = CUR_ID AND
+				POST_ACTIVE = TRUE;   
+			
+			UPDATE TEMP_POST_LIST2 
+			SET 
+				AVATAR_PATH 			= @AVATAR_PATH, 
+				DISPOSER_ORDER_CODE 	= @DISPOSER_ORDER_CODE, 
+				USER_NAME 				= @USER_NAME, 
+				USER_CURRENT_TYPE_NM	= @USER_CURRENT_TYPE_NM, 
+				USER_TYPE				= @USER_TYPE, 
+				REPLY					= @REPLY
+			WHERE ID = CUR_ID;
+			
+
+		END LOOP;   
+		CLOSE TEMP_REVIEW_CURSOR;
+		
+		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'ID'						, ID, 
+			'CREATOR_ID'				, CREATOR_ID, 
+			'RATING'					, RATING, 
+			'SITE_ID'					, SITE_ID, 
+			'SITE_NAME'					, SITE_NAME, 
+			'CONTENTS'					, CONTENTS, 
+			'CREATED_AT'				, CREATED_AT, 
+			'AVATAR_PATH'				, AVATAR_PATH, 
+			'DISPOSER_ORDER_ID'			, DISPOSER_ORDER_ID, 
+			'DISPOSER_ORDER_CODE'		, DISPOSER_ORDER_CODE, 
+			'USER_NAME'					, USER_NAME, 
+			'USER_TYPE'					, USER_TYPE, 
+			'USER_CURRENT_TYPE_NM'		, USER_CURRENT_TYPE_NM, 
+			'REPLY'						, REPLY
+		)) 
+		INTO json_data 
+		FROM TEMP_POST_LIST2;
+		
+		SET avg_rating = @AVG_RATING;
+		SET rtn_val = 0;
+		SET msg_txt = 'Success1';
+		DROP TABLE IF EXISTS TEMP_POST_LIST2;
+    ELSE
+		SET avg_rating = NULL;
+		SET json_data = NULL;
+		SET rtn_val = 0;
+		SET msg_txt = 'Success1';
+    END IF;
+END
