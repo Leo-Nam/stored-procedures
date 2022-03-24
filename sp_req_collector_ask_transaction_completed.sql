@@ -1,15 +1,20 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_ask_transaction_completed`(
-	IN IN_USER_ID							BIGINT,				/*입력값 : 사용자 고유등록번호(USERS.ID)*/
-    IN IN_TRANSACTION_ID					BIGINT				/*입력값 : 트랜잭션 고유등록번호*/
+	IN IN_USER_ID					BIGINT,						/*입렦값 : 폐기물 처리보고서 작성자(USERS.ID)*/
+	IN IN_TRANSACTION_ID			BIGINT,						/*입렦값 : 폐기물 처리작업 코드(WSTE_CLCT_TRMT_TRANSACTION.ID)*/
+	IN IN_WSTE_CODE					VARCHAR(8),					/*입렦값 : 폐기물코드(WSTE_CODE.CODE)*/
+	IN IN_QUANTITY					FLOAT,						/*입렦값 : 폐기물수량*/
+	IN IN_COMPLETED_AT				DATETIME,					/*입렦값 : 폐기물 최종처리일자*/
+	IN IN_PRICE						INT,						/*입렦값 : 폐기물 처리가격*/
+	IN IN_TRMT_METHOD				VARCHAR(4),					/*입렦값 : 폐기물 처리방법(WSTE_TRMT_METHOD.CODE)*/
+	IN IN_IMG_LIST					JSON						/*입렦값 : 폐기물 처리사진*/
 )
 BEGIN
 
 /*
 Procedure Name 	: sp_req_collector_ask_transaction_completed
-Input param 	: 2개
-Job 			: 폐기물 처리자가 폐기물 처리 트랜잭션을 완료했음을 보고한다.
-TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
-Update 			: 2022.01.25
+Input param 	: 8개
+Job 			: 폐기물처리보고서를 작성한다
+Update 			: 2022.03.24
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
@@ -56,8 +61,8 @@ AUTHOR 			: Leo Nam
 				@rtn_val,
 				@msg_txt
             );
-        
-			IF @rtn_val = 0 THEN
+            SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
+            IF @USER_SITE_ID > 0 THEN
 			/*사이트가 정상(개인사용자는 제외됨)적인 경우*/
 				IF @USER_SITE_ID = @COLLECTOR_SITE_ID THEN
 				/*사용자가 수거자 소속의 관리자인 경우*/
@@ -68,18 +73,82 @@ AUTHOR 			: Leo Nam
 					);
 					IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 					/*사용자가 수거자 소속의 권한있는 사용자인 경우*/
-						UPDATE WSTE_CLCT_TRMT_TRANSACTION SET WSTE_CLCT_TRMT_TRANSACTION = @REG_DT WHERE ID = IN_TRANSACTION_ID;
-						/*트랜잭션 레코드의 완료일자를 현재로 변경한다.*/
-						IF ROW_COUNT() = 1 THEN
-						/*레코드 변경에 성공한 경우*/
-							SET @rtn_val = 0;
-							SET @msg_txt = 'Transaction completed successfully';
-						ELSE
-						/*레코드 변경에 실패한 경우 예외처리한다.*/
-							SET @rtn_val = 25401;
-							SET @msg_txt = 'Failed to change database record';
+						SELECT STATE INTO @STATE FROM V_WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
+                        IF @STATE = 221 THEN
+							UPDATE WSTE_CLCT_TRMT_TRANSACTION 
+							SET 
+								COLLECTOR_REPORTED = TRUE,
+								COLLECTOR_REPORTED_AT = @REG_DT
+							WHERE ID = IN_TRANSACTION_ID;
+							IF ROW_COUNT() = 1 THEN
+								INSERT INTO TRANSACTION_REPORT (
+									TRANSACTION_ID,
+									COLLECTOR_SITE_ID,
+									DISPOSER_SITE_ID,
+									COLLECTOR_MANAGER_ID,
+									TRANSACTION_COMPLETED_AT,
+									QUANTITY,
+									PRICE,
+									WSTE_CODE,
+									CREATED_AT,
+									UPDATED_AT
+								) VALUES (
+									IN_TRANSACTION_ID,
+									@COLLECTOR_SITE_ID,
+									@DISPOSER_SITE_ID,
+									IN_USER_ID,
+									@REG_DT,
+									IN_QUANTITY,
+									IN_PRICE,
+									IN_WSTE_CODE,
+									@REG_DT,
+									@REG_DT
+								);
+								IF ROW_COUNT() = 1 THEN   
+									SELECT DISPOSAL_ORDER_ID INTO @DISPOSER_ORDER_ID FROM WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
+									CALL sp_create_site_wste_photo_information(
+										@DISPOSER_ORDER_ID,
+										@REG_DT,
+										'처리',
+										IN_IMG_LIST,
+										@rtn_val,
+										@msg_txt
+									);
+									IF @rtn_val = 0 THEN
+										SELECT JSON_ARRAYAGG(
+											JSON_OBJECT(
+												'TRANSACTION_ID', TRANSACTION_ID, 
+												'COLLECTOR_SITE_ID', COLLECTOR_SITE_ID, 
+												'DISPOSER_SITE_ID', DISPOSER_SITE_ID, 
+												'COLLECTOR_MANAGER_ID', COLLECTOR_MANAGER_ID, 
+												'TRANSACTION_COMPLETED_AT', TRANSACTION_COMPLETED_AT, 
+												'QUANTITY', QUANTITY, 
+												'PRICE', PRICE, 
+												'WSTE_CODE', WSTE_CODE, 
+												'CREATED_AT', CREATED_AT, 
+												'UPDATED_AT', UPDATED_AT
+											)
+										) INTO @json_data ;
+										SET @rtn_val = 0;
+										SET @msg_txt = 'success';
+									ELSE
+										SIGNAL SQLSTATE '23000';
+									END IF;
+								ELSE
+									SET @rtn_val = 25405;
+									SET @msg_txt = 'Failed to change database record';
+									SIGNAL SQLSTATE '23000';
+								END IF;
+							ELSE
+								SET @rtn_val = 25401;
+								SET @msg_txt = 'Failed to change database record';
+								SIGNAL SQLSTATE '23000';
+							END IF;
+                        ELSE
+							SET @rtn_val = 25406;
+							SET @msg_txt = 'The report cannot be submitted';
 							SIGNAL SQLSTATE '23000';
-						END IF;
+                        END IF;
 					ELSE
 					/*사용자가 수거자 소속의 권한있는 사용자가 아닌 경우 예외처리한다.*/
 						SET @rtn_val = 25404;
@@ -106,7 +175,6 @@ AUTHOR 			: Leo Nam
     /*사용자가 존재하지 않는 경우 예외처리한다.*/
 		SIGNAL SQLSTATE '23000';
     END IF;
-    
-	SET @json_data 		= NULL;
+    COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

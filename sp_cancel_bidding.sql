@@ -53,15 +53,8 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 		);
 		IF @rtn_val = 0 THEN
 		/*입찰마감일이 종료되지 않은 경우*/
-			CALL sp_req_site_id_of_user_reg_id(
-            /*사용자가 속한 사이트의 고유등록번호를 반환한다.*/
-				IN_USER_ID,
-                @USER_SITE_ID,
-				@rtn_val,
-				@msg_txt
-            );
-			IF @rtn_val = 0 THEN
-			/*사이트가 정상(개인사용자는 제외됨)적인 경우*/
+            SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
+            IF @USER_SITE_ID IS NOT NULL THEN
 				CALL sp_req_site_already_bid(
 				/*이전에 입찰한 사실이 존재하는지 확인한다.*/
 					@USER_SITE_ID,
@@ -71,32 +64,59 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 				);
 				IF @rtn_val > 0 THEN
 				/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
-					UPDATE COLLECTOR_BIDDING 
-                    SET 
-						CANCEL_BIDDING 		= TRUE, 
-                        CANCEL_BIDDING_AT 	= @REG_DT 
-                    WHERE ID = IN_COLLECT_BIDDING_ID;
-					/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
-					IF ROW_COUNT() = 0 THEN
-					/*데이타베이스 입력에 실패한 경우*/
-						SET @rtn_val 		= 23801;
-						SET @msg_txt 		= 'db error occurred during bid cancellation';
+					SELECT GIVEUP_BIDDING INTO @GIVEUP_BIDDING FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+                    IF @GIVEUP_BIDDING = 0 THEN
+						UPDATE COLLECTOR_BIDDING 
+						SET 
+							CANCEL_BIDDING 		= TRUE, 
+							CANCEL_BIDDING_AT 	= @REG_DT 
+						WHERE ID = IN_COLLECT_BIDDING_ID;
+						/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
+						IF ROW_COUNT() = 0 THEN
+						/*데이타베이스 입력에 실패한 경우*/
+							SET @rtn_val 		= 23801;
+							SET @msg_txt 		= 'db error occurred during bid cancellation';
+							SIGNAL SQLSTATE '23000';
+						ELSE
+						/*데이타베이스 입력에 성공한 경우*/
+							SET @rtn_val 		= 0;
+							SET @msg_txt 		= 'Success111';
+						END IF;
+                    ELSE
+						SET @rtn_val 		= 23804;
+						SET @msg_txt 		= 'already given up the bidding';
 						SIGNAL SQLSTATE '23000';
-					ELSE
-					/*데이타베이스 입력에 성공한 경우*/
-						SET @rtn_val 		= 0;
-						SET @msg_txt 		= 'Success111';
-					END IF;
+                    END IF;
 				ELSE
-				/*사이트가 이전에 입찰한 사실이 없는 경우에는 예외처리함*/
-					SET @rtn_val 		= 23802;
-					SET @msg_txt 		= 'No previous bids have been made';
-					SIGNAL SQLSTATE '23000';
+				/*사이트가 이전에 입찰한 사실이 없는 경우에는 입찰권을 포기하게 함*/
+					SELECT CANCEL_BIDDING INTO @CANCEL_BIDDING FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+                    IF @CANCEL_BIDDING = 0 THEN
+						UPDATE COLLECTOR_BIDDING 
+						SET 
+							GIVEUP_BIDDING 		= TRUE, 
+							GIVEUP_BIDDING_AT 	= @REG_DT 
+						WHERE ID = IN_COLLECT_BIDDING_ID;
+						/*입찰신청권한을 포기한다.*/
+						IF ROW_COUNT() = 0 THEN
+						/*데이타베이스 입력에 실패한 경우*/
+							SET @rtn_val 		= 23802;
+							SET @msg_txt 		= 'db error occurred during bid cancellation';
+							SIGNAL SQLSTATE '23000';
+						ELSE
+						/*데이타베이스 입력에 성공한 경우*/
+							SET @rtn_val 		= 0;
+							SET @msg_txt 		= 'Success111';
+						END IF;
+                    ELSE
+						SET @rtn_val 		= 23805;
+						SET @msg_txt 		= 'already canceled the bidding';
+						SIGNAL SQLSTATE '23000';
+                    END IF;
 				END IF;
-			ELSE
-			/*사이트가 존재하지 않거나 유효하지 않은(개인사용자의 경우) 경우*/
-				SIGNAL SQLSTATE '23000';
-			END IF;
+            ELSE
+				SET @rtn_val 		= 23803;
+				SET @msg_txt 		= 'user site does not exist';
+            END IF;
 		ELSE
 		/*입찰마감일이 종료된 경우 예외처리한다.*/
 			SIGNAL SQLSTATE '23000';
@@ -105,6 +125,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
     /*사용자가 존재하지 않거나 유효하지 않은 경우*/
 		SIGNAL SQLSTATE '23000';
     END IF;
+    COMMIT;
     SET @json_data = NULL;
     CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
 END

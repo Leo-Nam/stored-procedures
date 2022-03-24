@@ -39,6 +39,7 @@ BEGIN
 	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
 	INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
 		DISPOSER_ID,
+		COLLECTOR_ID,
 		SITE_ID,
 		DISPOSER_TYPE,
 		ACTIVE,
@@ -62,6 +63,7 @@ BEGIN
         COLLECTOR_MAX_DECISION2_AT
 	) VALUES(
 		IN_USER_ID,
+		IN_COLLECTOR_SITE_ID,
 		IN_DISPOSER_SITE_ID,
 		IN_DISPOSER_TYPE,
 		TRUE,
@@ -90,13 +92,18 @@ BEGIN
     
 	IF ROW_COUNT() = 1 THEN
 	/*자료 등록작업에 성공한 경우에는 후속작업을 정상진행한다.*/
+		CALL sp_req_policy_direction(
+			'min_disposal_duration',
+			@min_disposal_duration
+		);
+		SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);
 		CALL sp_insert_clct_trmt_transaction(
 		/*폐기물배출작업을 생성한다.*/
 			IN_USER_ID,
 			@WSTE_DISPOSAL_ORDER_ID,
             IN_VISIT_START_AT,
             IN_VISIT_END_AT,
-            IN_OPEN_AT,
+            @ASK_DISPOSAL_END_AT,
             @rtn_val,
             @msg_txt
 		);

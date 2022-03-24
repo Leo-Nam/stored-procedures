@@ -198,7 +198,8 @@ AUTHOR 			: Leo Nam
                 'COLLECTOR_AVATAR_PATH'			, B.AVATAR_PATH,
                 'COLLECTOR_MANAGER_ID'			, B.ID,
                 'COLLECTOR_CONTACT'				, A.COLLECTOR_CONTACT,
-                'COLLECTOR_MANAGER_PHONE'		, B.PHONE
+                'COLLECTOR_MANAGER_PHONE'		, B.PHONE,
+                'TRMT_BIZ_NM'					, A.TRMT_BIZ_NM
 			)
 		) 
 		INTO @COLLECTOR_INFO 

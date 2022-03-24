@@ -136,31 +136,32 @@ AUTHOR 			: Leo Nam
         IF @USER_COMP_ID > 0 THEN
 			SELECT JSON_ARRAYAGG(
 				JSON_OBJECT(
-					'ID', 							ID, 
-					'COMP_ID', 						COMP_ID, 
-					'KIKCD_B_CODE', 				KIKCD_B_CODE, 
-					'ADDR', 						ADDR, 
-					'CONTACT', 						CONTACT, 
-					'LAT', 							LAT, 
-					'LNG', 							LNG, 
-					'SITE_NAME', 					SITE_NAME, 
-					'TRMT_BIZ_CODE', 				TRMT_BIZ_CODE,
-					'CREATOR_ID', 					CREATOR_ID,
-					'HEAD_OFFICE', 					HEAD_OFFICE,
-					'PERMIT_REG_CODE', 				PERMIT_REG_CODE,
-					'PERMIT_REG_IMG_PATH', 			PERMIT_REG_IMG_PATH,
-					'CS_MANAGER_ID', 				CS_MANAGER_ID,
-					'CONFIRMED', 					CONFIRMED,
-					'CONFIRMED_AT', 				CONFIRMED_AT,
-					'CREATED_AT', 					CREATED_AT,
-					'UPDATED_AT', 					UPDATED_AT,
-					'PUSH_ENABLED', 				PUSH_ENABLED,
-					'NOTICE_ENABLED', 				NOTICE_ENABLED
+					'ID', 							A.ID, 
+					'COMP_ID', 						A.COMP_ID, 
+					'KIKCD_B_CODE', 				A.KIKCD_B_CODE, 
+					'ADDR', 						A.ADDR, 
+					'CONTACT', 						A.CONTACT, 
+					'LAT', 							A.LAT, 
+					'LNG', 							A.LNG, 
+					'SITE_NAME', 					A.SITE_NAME, 
+					'TRMT_BIZ_CODE', 				A.TRMT_BIZ_CODE,
+					'CREATOR_ID', 					A.CREATOR_ID,
+					'HEAD_OFFICE', 					A.HEAD_OFFICE,
+					'PERMIT_REG_CODE', 				A.PERMIT_REG_CODE,
+					'PERMIT_REG_IMG_PATH', 			A.PERMIT_REG_IMG_PATH,
+					'CS_MANAGER_ID', 				A.CS_MANAGER_ID,
+					'CONFIRMED', 					A.CONFIRMED,
+					'CONFIRMED_AT', 				A.CONFIRMED_AT,
+					'CREATED_AT', 					A.CREATED_AT,
+					'UPDATED_AT', 					A.UPDATED_AT,
+					'PUSH_ENABLED', 				A.PUSH_ENABLED,
+					'NOTICE_ENABLED', 				A.NOTICE_ENABLED,
+					'TRMT_BIZ_NM',	 				B.NAME
 				) 
 			)
 			INTO @site_detail 
-			FROM COMP_SITE 
-			WHERE ID = @USER_SITE_ID;
+			FROM COMP_SITE A LEFT JOIN WSTE_TRMT_BIZ B ON A.TRMT_BIZ_CODE = B.CODE
+			WHERE A.ID = @USER_SITE_ID;
         ELSE
 			SET @site_detail = NULL;
         END IF;

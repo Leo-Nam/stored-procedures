@@ -3747,7 +3747,7 @@ CALL sp_req_get_my_reviews(
 */
 
 
-
+/*
 
 SET @USER_ID = 76;
 SET @COMP_ID = 56;
@@ -3757,7 +3757,7 @@ CALL sp_delete_company(
 	@USER_ID,
     @COMP_ID
 );
-
+*/
 
 /*
 SET @USER_ID = 76;
@@ -3778,3 +3778,532 @@ SELECT
     @rtn_val,
     @msg_txt;
 */
+
+/*
+CALL sp_calc_bidding_rank_all(@BIDDERS, @FIRST_, @SECOND_);
+SELECT @BIDDERS, @FIRST_, @SECOND_;
+*/
+
+
+/*
+UPDATE SITE_WSTE_DISPOSAL_ORDER SET SELECTED = 0 WHERE SELECTED IS NULL;
+*/
+
+
+/*
+CALL sp_calc_make_decision_at_all();
+*/
+
+
+/*
+INSERT INTO FINAL_BIDDER_MANAGEMENT(
+	DISPOSER_ORDER_ID,
+    COLLECTOR_BIDDING_ID,
+    BIDDING_RANK,
+    SELECTED,
+    SELECTED_AT,
+    MAKE_DECISION,
+    MAKE_DECISION_AT,
+    MAX_DECISION_AT
+    ) SELECT 
+    DISPOSAL_ORDER_ID,
+    ID,
+    BIDDING_RANK,
+    SELECTED,
+    SELECTED_AT,
+    MAKE_DECISION,
+    MAKE_DECISION_AT,
+    MAX_DECISION_AT
+    FROM COLLECTOR_BIDDING
+*/
+
+/*
+UPDATE FINAL_BIDDER_MANAGEMENT A
+LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSER_ORDER_ID = B.ID
+SET A.MAX_SELECT_AT = B.MAX_SELECT_AT;
+*/
+
+/*
+call sp_calc_max_select_at_all();
+*/
+
+/*
+CALL sp_req_disposal_order_details(305);
+*/
+
+
+
+/*
+CALL sp_retrieve_current_state(58)
+*/
+
+
+
+/*
+SET @USER_ID=196;
+CALL sp_retrieve_my_disposal_lists(@USER_ID);
+*/
+
+/*
+SET @USER_ID=28;
+
+CALL sp_retrieve_existing_transactions(
+	@USER_ID
+);
+*/
+/*
+	SELECT 
+		DISPOSER_ORDER_ID, 
+		DISPOSER_ID, 
+		COLLECTOR_ID, 
+        COLLECTOR_SITE_NAME, 
+        DISPOSER_CLOSE_AT
+    FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE A
+	JOIN USERS B
+    ON IF(B.AFFILIATED_SITE = 0, A.DISPOSER_ID = B.ID, A.DISPOSER_SITE_ID = B.AFFILIATED_SITE)
+	WHERE 
+		B.ID = @USER_ID AND
+        B.ACTIVE = TRUE AND
+        A.DISPOSER_CLOSE_AT > NOW();
+*/
+
+
+
+/*
+SET @USER_ID = 203;
+SET @DISPOSER_ORDER_ID = 303;
+SET @BIDDING_DETAILS = '[{"WSTE_CODE":"51", "UNIT":"Kg", "UNIT_PRICE": 7, "VOLUME": "1", "TRMT_CODE": "1"}, {"WSTE_CODE":"51-01", "UNIT":"Kg", "UNIT_PRICE": 45, "VOLUME": "1", "TRMT_CODE": "2"}]';
+SET @TRMT_METHOD = '1001';
+SET @BID_AMOUNT= 25580;
+call sp_apply_bidding(
+    @USER_ID,
+    @DISPOSER_ORDER_ID,
+    @BID_AMOUNT,
+    @TRMT_METHOD,
+    @BIDDING_DETAILS
+);
+*/
+
+
+/*
+SET @USER_ID=195;
+
+CALL sp_req_prev_transaction_site_lists(
+	@USER_ID
+);
+*/
+/*
+	SELECT 
+		A.DISPOSER_ORDER_ID, 
+		A.DISPOSER_ID, 
+		A.DISPOSER_SITE_ID, 
+		A.COLLECTOR_SITE_ID, 
+		A.COLLECTOR_BIDDING_ID, 
+        A.DISPOSER_OPEN_AT, 
+        A.DISPOSER_CLOSE_AT,
+        A.STATE_CODE, 
+        A.STATE
+    FROM V_COLLECTOR_BIDDING_WITH_STATE A LEFT JOIN USERS B 
+    ON IF(B.AFFILIATED_SITE = 0, A.DISPOSER_ID = B.ID, A.DISPOSER_SITE_ID = B.AFFILIATED_SITE)
+	WHERE 
+		(A.STATE_CODE = 212 OR A.STATE_CODE = 218 OR A.STATE_PID = 212 OR A.STATE_PID = 218) AND 
+		A.DISPOSER_SITE_ID IS NOT NULL AND 
+        A.DISPOSER_SITE_ID = B.AFFILIATED_SITE AND
+        B.ID = @USER_ID AND 
+        B.ACTIVE = TRUE AND
+        A.COLLECTOR_MAKE_DECISION = TRUE AND
+        A.COLLECTOR_SELECTED = TRUE;
+*/
+
+
+
+/*
+SET @USER_ID = 91;
+SET @COLLECTOR_SITE_ID = 69;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+SET @VISIT_START_AT = NULL;
+SET @VISIT_END_AT = NULL;
+SET @BIDDING_END_AT = '2022-03-05';
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "note_new999";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@LNG,
+	@LAT,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);
+*/
+
+
+
+/*
+SET @USER_ID = 91;
+SET @COLLECTOR_SITE_ID = 69;
+SET @DISPOSER_SITE_ID = 58;
+SET @DISPOSER_TYPE = 'company';
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @VISIT_START_AT = NULL;
+SET @VISIT_END_AT = NULL;
+SET @BIDDING_END_AT = '2022-03-05';
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "note_new999";
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+CALL sp_req_current_time(@REG_DT);
+
+CALL sp_insert_site_wste_discharge_order_to_table(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@DISPOSER_SITE_ID,
+	@DISPOSER_TYPE,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE,
+	@LNG,
+	@LAT,
+	@REG_DT,
+	@rtn_val,
+	@msg_txt
+);
+
+SELECT @rtn_val,
+	@msg_txt
+    
+*/
+
+/*
+SET @USER_ID = 91;
+SET @COLLECTOR_SITE_ID = 69;
+SET @DISPOSER_SITE_ID = 58;
+SET @DISPOSER_TYPE = 'company';
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @VISIT_START_AT = NULL;
+SET @VISIT_END_AT = NULL;
+SET @BIDDING_END_AT = '2022-03-05';
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "note_new999";
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+CALL sp_req_current_time(@REG_DT);
+
+CALL sp_insert_site_wste_discharge_order_without_handler(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@DISPOSER_SITE_ID,
+	@DISPOSER_TYPE,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE,
+	@LAT,
+	@LNG,
+	@REG_DT,
+	@rtn_val,
+	@msg_txt
+);
+
+SELECT @rtn_val,
+	@msg_txt
+*/
+
+
+/*
+SET @USER_ID = 206;
+SET @COLLECT_BIDDING_ID = 147;
+SET @FINAL_DECISION = 0;
+CALL sp_collector_make_final_decision_on_bidding(
+	@USER_ID,
+	@COLLECT_BIDDING_ID,
+	@FINAL_DECISION
+);
+*/
+
+
+/*
+SET @SIDO = '4200000000';
+CALL sp_req_sigungu(
+	@SIDO
+);
+*/
+
+/*
+	CALL sp_req_policy_direction(
+		'max_selection_duration',
+		@max_selection_duration
+	);
+
+    CALL sp_req_current_time(@REG_DT);
+SET @MAX_SELECT_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
+    SET @MAX_SELECT2_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
+    
+SELECT @REG_DT, @MAX_SELECT_AT, @MAX_SELECT2_AT;
+*/
+
+
+/*
+call sp_calc_collector_max_decision_at_all();
+*/
+
+/*
+SET @USER_ID=202;
+CALL sp_retrieve_my_disposal_lists(@USER_ID);
+*/
+
+/*
+CALL sp_req_disposal_order_details(309);
+*/
+
+/*
+CALL sp_req_collector_bidding_details(4);
+*/
+
+
+/*
+SET @USER_ID = 13;
+SET @SITE_ID = 2;
+SET @IMG_PATH = '12345';
+call sp_upload_license(
+	@USER_ID,
+    @SITE_ID,
+    @IMG_PATH
+);
+*/
+/*
+CALL sp_retrieve_existing_transactions(28);
+*/
+
+
+/*
+SET @USER_ID = 18;
+
+CALL sp_req_user_detail(
+	@USER_ID
+);
+*/
+/*
+SET @SITE_ID=7;
+
+CALL sp_req_get_site_reviews_without_handler(
+	@SITE_ID,
+    @rtn_val,
+    @msg_txt,
+    @avg_rating,
+    @json_data
+);
+select @SITE_ID,
+    @rtn_val,
+    @msg_txt,
+    @avg_rating,
+    @json_data
+*/
+    
+/*    
+SELECT 
+		POST_ID, 
+		POST_CREATOR_ID, 
+        POST_RATING, 
+        POST_SITE_ID, 
+        POST_SITE_NAME, 
+        POST_CONTENTS, 
+        POST_CREATED_AT, 
+        POST_DISPOSER_ORDER_ID
+	FROM V_POSTS 
+    WHERE 
+        POST_SITE_ID 	= @SITE_ID AND 
+        POST_CATEGORY_ID 	= 4  AND 
+        POST_ACTIVE		 	= TRUE 
+*/
+
+/*
+CALL sp_req_prev_transaction_details(
+188,166
+);
+*/
+
+
+/*
+CALL sp_cancel_bidding(122, 69);
+*/
+
+
+
+/*
+CALL sp_retrieve_existing_transactions(28);
+*/
+
+/*
+SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'SITE_ID'					, C.COMP_SITE_ID, 
+            'SITE_NAME'					, C.COMP_SITE_NAME, 
+            'ADDR'						, C.COMP_SITE_ADDR, 
+            'B_CODE'					, C.COMP_SITE_KIKCD_B_CODE, 
+            'SI_DO'						, C.COMP_SITE_SI_DO, 
+            'SI_GUN_GU'					, C.COMP_SITE_SI_GUN_GU, 
+            'EUP_MYEON_DONG'			, C.COMP_SITE_EUP_MYEON_DONG, 
+            'DONG_RI'					, C.COMP_SITE_DONG_RI, 
+            'AVATAR_PATH'				, B.AVATAR_PATH
+		)) 
+        INTO @COLLECTOR_INFO
+        FROM V_COLLECTOR_BIDDING A 
+        LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
+        LEFT JOIN V_COMP_SITE C ON A.COLLECTOR_SITE_ID = C.COMP_SITE_ID
+        WHERE A.SUCCESS_BIDDER = 176 AND 
+        A.COLLECTOR_SITE_ID = A.SUCCESS_BIDDER AND
+        B.CLASS = 201;
+*/
+
+/*
+
+CALL sp_collector_make_final_decision_on_bidding(204,155,1);
+*/
+
+/*
+SET @USER_ID = 100;
+call sp_check_if_license_exists(100);
+*/
+
+
+/*
+SET @USER_ID = 204;
+SET @TRANSACTION_ID = 300;
+SET @RESPONSE = 1;
+
+call sp_collector_response_to_discharged_end_at(
+	@USER_ID,
+    @TRANSACTION_ID,
+    @RESPONSE
+);
+*/
+/*
+CALL sp_req_collector_id_of_transaction(
+	@TRANSACTION_ID,
+    @OUT_SITE_ID,
+    @rtn_val,
+    @msg_txt    
+);
+
+SELECT 
+	@TRANSACTION_ID,
+    @OUT_SITE_ID,
+    @rtn_val,
+    @msg_txt    
+*/
+/*
+CALL sp_req_business_area(50);
+*/
+
+/*
+CALL sp_calc_clct_trmt_vist_schedule_all();
+*/
+
+
+/*
+CALL sp_req_current_time(@REG_DT);
+
+SET @USER_ID = 28;
+SET @TRANSACTION_ID = 1;
+SET @WSTE_CODE = '01-03-99';
+SET @QUANTITY = 3500;
+SET @PRICE = 52000000;
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+
+CALL sp_req_collector_ask_transaction_completed(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@REG_DT,
+	@PRICE,
+	@TRMT_METHOD,
+	@IMG_LIST
+);
+*/
+
+
+/*
+SET @USER_ID = 192;
+SET @COLLECT_BIDDING_ID = 184;
+call sp_cancel_bidding(
+	@USER_ID,
+    @COLLECT_BIDDING_ID
+);
+*/
+
+/*
+UPDATE COLLECTOR_BIDDING SET GIVEUP_BIDDING = FALSE;
+*/
+
+/*
+SET @USER_ID = 28;
+SET @DISPOSER_ORDER_ID = 10;
+SET @TRANSACTION_ID = 1;
+SET @END_AT = '2022-03-30';
+*/
+/*
+CALL sp_req_site_id_of_transaction_id(
+	@TRANSACTION_ID,
+	@DISPOSER_SITE_ID,
+	@COLLECTOR_SITE_ID
+);
+SELECT 
+	@DISPOSER_SITE_ID,
+	@COLLECTOR_SITE_ID;
+*/
+/*
+CALL sp_disposer_change_discharged_end_at(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @TRANSACTION_ID,
+    @END_AT
+);
+*/
+
+
+
+SET @USER_ID = 13;
+SET @SITE_ID = 2;
+SET @IMG_PATH = '12345';
+call sp_upload_license(
+	@USER_ID,
+    @SITE_ID,
+    @IMG_PATH
+);

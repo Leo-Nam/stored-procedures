@@ -43,33 +43,21 @@ AUTHOR 			: Leo Nam
 			@msg_txt
         );
         IF @rtn_val = 0 THEN
-			CALL sp_req_is_site_collector(
-			/*사이트가 수집운반 등의 폐기물 처리권한이 있는지 검사한다.*/
-				@USER_SITE_ID,
-				@rtn_val,
-				@msg_txt
-			);
-            IF @rtn_val = 0 THEN
-				IF @USER_SITE_ID = IN_SITE_ID THEN
-					UPDATE COMP_SITE SET PERMIT_REG_IMG_PATH = IN_LICENSE_PATH, UPDATED_AT = @REG_DT WHERE ID = IN_SITE_ID;
-					IF ROW_COUNT() = 1 THEN
-						SET @rtn_val 		= 0;
-						SET @msg_txt 		= 'Success';
-					ELSE
-						SET @rtn_val 		= 34501;
-						SET @msg_txt 		= 'Failed to save the License image path';
-						SIGNAL SQLSTATE '23000';
-					END IF;
+			IF @USER_SITE_ID = IN_SITE_ID THEN
+				UPDATE COMP_SITE SET PERMIT_REG_IMG_PATH = IN_LICENSE_PATH, UPDATED_AT = @REG_DT WHERE ID = IN_SITE_ID;
+				IF ROW_COUNT() = 1 THEN
+					SET @rtn_val 		= 0;
+					SET @msg_txt 		= 'Success';
 				ELSE
-					SET @rtn_val 		= 34502;
-					SET @msg_txt 		= 'User is not part of the site';
+					SET @rtn_val 		= 34501;
+					SET @msg_txt 		= 'Failed to save the License image path';
 					SIGNAL SQLSTATE '23000';
 				END IF;
-            ELSE
-				SET @rtn_val 		= 34503;
-				SET @msg_txt 		= 'Collector-only service';
+			ELSE
+				SET @rtn_val 		= 34502;
+				SET @msg_txt 		= 'User is not part of the site';
 				SIGNAL SQLSTATE '23000';
-            END IF;
+			END IF;
         ELSE
 			SIGNAL SQLSTATE '23000';
         END IF;
