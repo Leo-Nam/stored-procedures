@@ -51,10 +51,14 @@ Change			: JWT 입력변수 삭제(0.0.3) / 폐기물 종류 정보(IN_WSTE_CLS)
 			@rtn_val,
 			@msg_txt
         );
-        /*IN_USER_ID가 이미 등록되어 있는 사용자인지 체크한다. 등록되어 있는 경우에는 @USER_EXISTS = 1, 그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
+        /*IN_USER_ID가 이미 등록되어 있는 사용자인지 체크한다. 
+        등록되어 있는 경우에는 @USER_EXISTS = 1, 
+        그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
         
         IF @rtn_val = 0 THEN
-        /*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+        /*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 
+        member.admin인 경우에는 사업자 생성권한을 부여하고 
+        그렇지 않은 경우에는 예외처리한다.*/
 			CALL sp_req_comp_id_of_site(
             /*사이트 아이디로 사업자 고유등록번호를 반환한다.*/
 				IN_SITE_ID,
@@ -72,12 +76,15 @@ Change			: JWT 입력변수 삭제(0.0.3) / 폐기물 종류 정보(IN_WSTE_CLS)
 			/*@REGISTRATION_RIGHT로 사업자 등록을 요청하는 사용자의 권한을 구분한다.*/
 			
 			IF @REGISTRATION_RIGHT IN (1, 2, 3, 5) THEN
-			/*등록을 요청하는 사용자(IN_USER_ID)가 시스템 관리자(1, 2)인 경우, 모회사의 관리자가 자회사의 정보를 입력하는 경우(3), 자신이 속한 사업에 대한 정보를 입력하는 경우(5)로서 정상처리 진행한다.*/
+			/*등록을 요청하는 사용자(IN_USER_ID)가 시스템 관리자(1, 2)인 경우, 
+            모회사의 관리자가 자회사의 정보를 입력하는 경우(3), 
+            자신이 속한 사업에 대한 정보를 입력하는 경우(5)로서 정상처리 진행한다.*/
 				UPDATE COMP_SITE 
                 /*사이트에 허가증 정보를 반영하여 변경적용한다.*/
                 SET 
 					PERMIT_REG_CODE 			= IN_PERMIT_REG_CODE, 
-					PERMIT_REG_IMG_PATH 		= IN_PERMIT_REG_IMG_PATH
+					PERMIT_REG_IMG_PATH 		= IN_PERMIT_REG_IMG_PATH, 
+					UPDATED_AT			 		= @REG_DT
                 WHERE ID = IN_SITE_ID;
 			
 				IF ROW_COUNT() = 1 THEN
@@ -105,8 +112,10 @@ Change			: JWT 입력변수 삭제(0.0.3) / 폐기물 종류 정보(IN_WSTE_CLS)
 					SIGNAL SQLSTATE '23000';
 				END IF;
 			ELSE
-			/*@P_COMP_ID로 반환되는 값이 0인 경우에는 IN_USER_ID가 관리자(member.admin:201)로서의 권한이 없는 상황이기때문에 사업자 생성로직을 중단한 후 예외처리해야 한다.*/
-            /*사업자를 생성하는 로직에는 관리자 정보가 필수이기때문에 치움의 sys.admin이 스스로 회원사로 가입할 사업자를 생성할 수 없다.*/
+			/*@P_COMP_ID로 반환되는 값이 0인 경우에는 IN_USER_ID가 관리자(member.admin:201)로서의 
+            권한이 없는 상황이기때문에 사업자 생성로직을 중단한 후 예외처리해야 한다.*/
+            /*사업자를 생성하는 로직에는 관리자 정보가 필수이기때문에 
+            치움의 sys.admin이 스스로 회원사로 가입할 사업자를 생성할 수 없다.*/
 				SET @rtn_val 		= 21902;
 				SET @msg_txt 		= 'user not authorized to modify site information';
 				SIGNAL SQLSTATE '23000';

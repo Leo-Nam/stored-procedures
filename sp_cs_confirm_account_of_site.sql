@@ -33,9 +33,12 @@ AUTHOR 			: Leo Nam
 			CS_MANAGER_ID = @CS_COMPANY_MANAGER_ID,
 			CONFIRMED = 0,
 			/*시스템에 의한 담당자 배정이므로 CONFIRMED는 0으로 셋팅한다.*/
-			/*이 부분은 배정된 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
+			/*이 부분은 배정된 담당자의 실질 확인 후 담당자가 발생시키는 
+            이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
 			CONFIRMED_AT = NULL,
-			/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
+			/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 
+            담당자의 실질 확인 후 담당자가 발생시키는 
+            이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
 			UPDATED_AT = IN_REG_DT
 		WHERE ID = IN_SITE_ID;
 		
@@ -65,9 +68,12 @@ AUTHOR 			: Leo Nam
 			CS_MANAGER_ID = @CS_MANAGER_ID,
 			CONFIRMED = 0,
 			/*시스템에 의한 담당자 배정이므로 CONFIRMED는 0으로 셋팅한다.*/
-			/*이 부분은 배정된 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
+			/*이 부분은 배정된 담당자의 실질 확인 후 
+            담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
 			CONFIRMED_AT = NULL,
-			/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
+			/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 
+            담당자의 실질 확인 후 담당자가 발생시키는 
+            이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
 			UPDATED_AT = IN_REG_DT
 		WHERE ID = @COMP_ID;
 		
@@ -83,9 +89,12 @@ AUTHOR 			: Leo Nam
 				CS_MANAGER_ID = @CS_MANAGER_ID,
 				CONFIRMED = 0,
 				/*시스템에 의한 담당자 배정이므로 CONFIRMED는 0으로 셋팅한다.*/
-				/*이 부분은 배정된 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
+				/*이 부분은 배정된 담당자의 실질 확인 후 
+                담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 1로 셋팅될 수 있다.*/
 				CONFIRMED_AT = NULL,
-				/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 담당자의 실질 확인 후 담당자가 발생시키는 이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
+				/*CONFIRMED_AT의 값 또한 NULL로 셋팅하게 되지만 
+                담당자의 실질 확인 후 담당자가 발생시키는 
+                이벤트(sp_cs_comfirm_account_manually)에 의하여 날짜가 셋팅될 수 있다.*/
 				UPDATED_AT = IN_REG_DT
 			WHERE ID = IN_SITE_ID;                
 		

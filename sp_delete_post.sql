@@ -23,7 +23,7 @@ AUTHOR 			: Leo Nam
     /*트랜잭션 시작*/  
     
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
+    
 	CALL sp_req_user_exists_by_id(
 		IN_USER_ID, 
 		TRUE, 
@@ -43,7 +43,8 @@ AUTHOR 			: Leo Nam
 		/*사용자가 포스트에 대한 작성자인 경우 정상처리한다.*/
 			UPDATE POSTS 
 			SET 
-				ACTIVE 				= FALSE
+				ACTIVE 				= FALSE,
+                UPDATED_AT			= @REG_DT
 			WHERE ID 				= IN_POST_ID;
 			/*변경사항을 적용한다.*/
 			

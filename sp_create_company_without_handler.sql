@@ -35,22 +35,24 @@ Version			: 0.0.4
 AUTHOR 			: Leo Nam
 Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.4)
 */
-
-    DECLARE CHK_COUNT 		INT;				/*처리결과에 대한 체크 결과를 저장하는 변수 선언*/
-    DECLARE LOG_POLICY		VARCHAR(50);		/*트랜잭션 전체(INSERT, UPDATE, DELETE, DROP)에 대한 트랜잭션 발생시 로그(sys_log)할지 여부를 저장하는 변수 선언*/
-    DECLARE JOB_TXT			VARCHAR(100);		/*변경사항에 대한 내용을 저장할 변수 선언*/
     
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
- /*   IF IN_AGREE_TERMS = TRUE THEN*/
+    SET IN_AGREE_TERMS = TRUE;		/*야관에 동의한것으로 가정함(임시-BackEnd 요청사항)*/
+    IF IN_AGREE_TERMS = TRUE THEN
     /*약관에 동의한 경우 정상처리한다.*/
+/*
 		CALL sp_req_use_same_company_reg_id(
 			IN_BIZ_REG_CODE, 
 			@rtn_val, 
 			@msg_txt
 		);
-		/*체크할 사업자등록번호로 등록된 사업자가 존재하는지 체크한 후 존재한다면 1, 그렇지 않으면 0을 반환하게 됨*/
+*/
+		SET @rtn_val = 0;	/*사업자등록증 이중등록체크 부분 일시정지(FrontEnd 요청사항: 2022.03.07)*/
+		/*체크할 사업자등록번호로 등록된 사업자가 존재하는지 체크한 후 
+        존재한다면 1, 
+        그렇지 않으면 0을 반환하게 됨*/
 		
 		IF @rtn_val = 0 THEN
 		/*같은 사업자등록번호를 가진 사업자가 존재하지 않는 경우에는 정상처리 진행한다.*/ 
@@ -61,12 +63,18 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				@rtn_val, 
 				@msg_txt
 			);
-			/*IN_USER_REG_ID가 이미 등록되어 있는 사용자인지 체크한다. 등록되어 있는 경우에는 @USER_EXISTS = 1, 그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
-			/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+			/*IN_USER_REG_ID가 이미 등록되어 있는 사용자인지 체크한다. 
+            등록되어 있는 경우에는 @USER_EXISTS = 1, 
+            그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
+			/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 
+            member.admin인 경우에는 사업자 생성권한을 부여하고 
+            그렇지 않은 경우에는 예외처리한다.*/
 			/*등록되어 있지 않은 경우에는 신규사업자 생성으로 간주하고 정상처리 진행한다.*/
 			
 			IF @rtn_val = 0 THEN
-			/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+			/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 
+            member.admin인 경우에는 사업자 생성권한을 부여하고 
+            그렇지 않은 경우에는 예외처리한다.*/
 				CALL sp_req_user_regid_by_user_id(
 					IN_USER_REG_ID,
                     OUT_USER_ID
@@ -148,6 +156,7 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				END IF;
 			ELSE
 			/*등록되어 있지 않은 경우에는 신규사업자 생성으로 간주하고 정상처리 진행한다.*/
+/*
 				CALL sp_req_use_same_phone(
 					IN_PHONE, 
 					0, 
@@ -155,6 +164,8 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 					@rtn_val, 
 					@msg_txt
 				);
+*/
+				SET @rtn_val = 0;
 				/*등록하려는 핸드폰이 이미 등록되어 있다면 @CHK_COUNT=1, 아니면 @CHK_COUNT=0*/
 				IF @rtn_val = 0 THEN
 				/*등록하려는 핸드폰이 등록되어 있지 않은 경우*/
@@ -227,7 +238,11 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 							IF @rtn_val = 0 THEN
 							/*사이트가 정상적으로 개설된 경우*/
 								SET OUT_SITE_ID = @SITE_REG_ID;
-								UPDATE USERS SET AFFILIATED_SITE = @SITE_REG_ID WHERE ID = @USER_MAX_ID;
+								UPDATE USERS 
+                                SET 
+									AFFILIATED_SITE 	= @SITE_REG_ID,
+                                    UPDATED_AT			= @REG_DT
+                                WHERE ID = @USER_MAX_ID;
 								/*신규사용자의 소속 사이트(AFFILIATED_SITE)를 현재 생성된 사이트로 업데이트 한다.*/
 								
 								IF ROW_COUNT() = 1 THEN
@@ -267,9 +282,9 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			SET rtn_val = @rtn_val;
 			SET msg_txt = @msg_txt; 
 		END IF;
-/*    ELSE*/
+    ELSE
     /*약관에 동의하지 않은 경우 예외처리한다.*/ 
-/*		SET rtn_val = 20001;
+		SET rtn_val = 20001;
 		SET msg_txt = 'not agree to the terms';
-    END IF;*/
+    END IF;
 END

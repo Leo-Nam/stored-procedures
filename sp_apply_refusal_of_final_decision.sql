@@ -61,7 +61,8 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				UPDATE SITE_WSTE_DISPOSAL_ORDER 
                 SET 
 					COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION, 
-                    COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT 
+                    COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT , 
+                    UPDATED_AT						 	= @REG_DT 
 				WHERE ID = @DISPOSAL_ORDER_ID;
                 IF ROW_COUNT() = 1 THEN
 					IF IN_FINAL_DECISION = TRUE THEN

@@ -254,7 +254,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 		END IF;
     ELSE
 	/*방문신청날짜가 현재날짜보다 하루이상 과거의 날짜인 경우에는 예외처리한다.*/
-		SET @rtn_val 		= 23110;
+		SET @rtn_val 		= 23111;
 		SET @msg_txt 		= 'Impossible to apply for a visit on a date before the present';
 		SIGNAL SQLSTATE '23000';
 	END IF;

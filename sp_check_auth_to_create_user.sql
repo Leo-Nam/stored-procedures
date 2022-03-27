@@ -33,10 +33,22 @@ BEGIN
 				);    
 				IF @rtn_val = 0 THEN
 				/*생성하고자 하는 사용자의 CLASS가 유효한 경우 정상처리한다.*/
-					SELECT COMP_ID INTO @CREATOR_COMP_ID FROM COMP_SITE WHERE ID = IN_CREATOR_SITE_ID;
-					SELECT COMP_ID INTO @TARGET_COMP_ID FROM COMP_SITE WHERE ID = IN_TARGET_SITE_ID;
-					SELECT P_COMP_ID INTO @TARGET_COMP_PID FROM COMPANY WHERE ID = @TARGET_COMP_ID;
-					SELECT HEAD_OFFICE INTO @CREATOR_SITE_HEAD_OFFICE FROM COMP_SITE WHERE ID = IN_CREATOR_SITE_ID;
+					SELECT COMP_ID INTO @CREATOR_COMP_ID 
+                    FROM COMP_SITE 
+                    WHERE ID = IN_CREATOR_SITE_ID;
+                    
+					SELECT COMP_ID INTO @TARGET_COMP_ID 
+                    FROM COMP_SITE 
+                    WHERE ID = IN_TARGET_SITE_ID;
+                    
+					SELECT P_COMP_ID INTO @TARGET_COMP_PID 
+                    FROM COMPANY 
+                    WHERE ID = @TARGET_COMP_ID;
+                    
+					SELECT HEAD_OFFICE INTO @CREATOR_SITE_HEAD_OFFICE 
+                    FROM COMP_SITE 
+                    WHERE ID = IN_CREATOR_SITE_ID;
+                    
                     SET OUT_TARGET_COMP_ID = @TARGET_COMP_ID;
 					
 					IF IN_CREATOR_CLASS = 101 THEN

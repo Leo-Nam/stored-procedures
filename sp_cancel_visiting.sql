@@ -52,22 +52,33 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 		);
 		IF @rtn_val = 26601 THEN
 		/*방문마감일이 종료되지 않은 경우*/
-			SELECT COUNT(ID) INTO @ITEM_COUNT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID AND DATE_OF_VISIT IS NOT NULL;
+			SELECT COUNT(ID) INTO @ITEM_COUNT 
+            FROM COLLECTOR_BIDDING 
+            WHERE 
+				ID 				= IN_COLLECT_BIDDING_ID AND 
+                DATE_OF_VISIT 	IS NOT NULL;
             /*수거자가 방문신청을 한 사실이 있는지 확인하여 그 결과를 @TEMP_COUNT에 반환한다*/
             IF @ITEM_COUNT = 1 THEN
             /*수거자가 방문신청을 한 사실이 존재하는 경우 정상처리한다.*/
-				SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID AND CANCEL_VISIT = TRUE;
+				SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED 
+                FROM COLLECTOR_BIDDING 
+                WHERE 
+					ID 				= IN_COLLECT_BIDDING_ID AND 
+                    CANCEL_VISIT 	= TRUE;
 				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 있는지 확인하여 그 결과를 @IS_ALREADY_CANCELED 반환한다. 방문취소한 사실이 존재하는 경우 1, 그렇지 않으면 0*/
                 IF @IS_ALREADY_CANCELED = 0 THEN
 				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하지 않는 경우 정상처리한다.*/
-					SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECT_BIDDING_ID;
+					SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT 
+                    FROM COLLECTOR_BIDDING 
+                    WHERE ID = IN_COLLECT_BIDDING_ID;
                     /*배출자가 수거자의 방문신청에 대한 수락 또는 거절의사를 확인하여 그 결과를 @EMITTOR_RESPONSE_FOR_VISIT에 반환한다.*/
                     IF @EMITTOR_RESPONSE_FOR_VISIT IS NULL THEN
                     /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시하지 않은 대기상태인 경우*/
 						UPDATE COLLECTOR_BIDDING 
 						SET 
 							CANCEL_VISIT 		= TRUE, 
-							CANCEL_VISIT_AT 	= @REG_DT 
+							CANCEL_VISIT_AT 	= @REG_DT, 
+							UPDATED_AT		 	= @REG_DT 
 						WHERE ID = IN_COLLECT_BIDDING_ID;
 						/*방문신청을 취소상태(비활성상태)로 변경한다.*/
 						IF ROW_COUNT() = 1 THEN
@@ -75,11 +86,15 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 							SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
 							FROM COLLECTOR_BIDDING 
 							WHERE 
-								DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID AND 
-								DATE_OF_VISIT 		IS NOT NULL AND
-								CANCEL_VISIT 		= FALSE AND
-								RESPONSE_VISIT 		= TRUE;
-							UPDATE SITE_WSTE_DISPOSAL_ORDER SET PROSPECTIVE_VISITORS = @PROSPECTIVE_VISITORS WHERE ID = @DISPOSAL_ORDER_ID;
+								DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
+								DATE_OF_VISIT 			IS NOT NULL AND
+								CANCEL_VISIT 			= FALSE AND
+								RESPONSE_VISIT 			= TRUE;
+							UPDATE SITE_WSTE_DISPOSAL_ORDER 
+                            SET 
+								PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS, 
+								UPDATED_AT		 		= @REG_DT  
+                            WHERE ID = @DISPOSAL_ORDER_ID;
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success';
 						ELSE
@@ -94,8 +109,9 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 						/*배출자가 수거자의 방문신청에 대하여 거절의사를 밝힌 경우가 아닌 경우에는 정상처리한다.*/
 							UPDATE COLLECTOR_BIDDING 
 							SET 
-								CANCEL_VISIT 		= TRUE, 
-								CANCEL_VISIT_AT 	= @REG_DT 
+								CANCEL_VISIT 			= TRUE, 
+								CANCEL_VISIT_AT 		= @REG_DT, 
+								UPDATED_AT		 		= @REG_DT   
 							WHERE ID = IN_COLLECT_BIDDING_ID;
 							/*방문신청을 취소상태(비활성상태)로 변경한다.*/
 							IF ROW_COUNT() = 1 THEN
@@ -103,11 +119,15 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
 								FROM COLLECTOR_BIDDING 
 								WHERE 
-									DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID AND 
-									DATE_OF_VISIT 		IS NOT NULL AND
-									CANCEL_VISIT 		= FALSE AND
-									RESPONSE_VISIT 		= TRUE;
-								UPDATE SITE_WSTE_DISPOSAL_ORDER SET PROSPECTIVE_VISITORS = @PROSPECTIVE_VISITORS WHERE ID = @DISPOSAL_ORDER_ID;
+									DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
+									DATE_OF_VISIT 			IS NOT NULL AND
+									CANCEL_VISIT 			= FALSE AND
+									RESPONSE_VISIT 			= TRUE;
+								UPDATE SITE_WSTE_DISPOSAL_ORDER 
+                                SET 
+									PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS , 
+									UPDATED_AT		 		= @REG_DT
+                                WHERE ID = @DISPOSAL_ORDER_ID;
 								SET @rtn_val 		= 0;
 								SET @msg_txt 		= 'Success';
 							ELSE

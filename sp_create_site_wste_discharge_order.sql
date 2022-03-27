@@ -81,7 +81,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				'bidding_end_date_after_the_visit_early_closing',
 				@bidding_end_date_after_the_visit_early_closing
 			);
-			SET @BIDDING_END_AT = ADDTIME(@REF_DATE, CONCAT(CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), ':00:00'));
+			SET @BIDDING_END_AT = ADDTIME(
+									@REF_DATE, 
+                                    CONCAT(
+										CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), 
+                                        ':00:00'
+									)
+								);
 		ELSE
 			SET @BIDDING_END_AT = IN_BIDDING_END_AT;
         END IF;

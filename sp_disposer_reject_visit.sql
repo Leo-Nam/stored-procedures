@@ -23,7 +23,6 @@ AUTHOR 			: Leo Nam
     /*트랜잭션 시작*/  
 	
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	CALL sp_req_user_exists_by_id(
     /*DISPOSER가 존재하면서 활성화된 상태인지 검사한다.*/
@@ -55,7 +54,12 @@ AUTHOR 			: Leo Nam
             );
             IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 			/*사용자에게 권한이 있는 경우 정상처리한다.*/
-				UPDATE COLLECTOR_BIDDING SET REJECT_VISIT = TRUE, REJECT_VISIT_AT = @REG_DT WHERE ID = IN_COLLECTOR_BIDDING_ID;
+				UPDATE COLLECTOR_BIDDING 
+                SET 
+					REJECT_VISIT 		= TRUE, 
+                    REJECT_VISIT_AT 	= @REG_DT, 
+                    UPDATED_AT 			= @REG_DT 
+                WHERE ID 				= IN_COLLECTOR_BIDDING_ID;
                 /*사용자가 해당 수거자의 방문에 대하여 거절의사를 표시한다.*/
                 IF ROW_COUNT() = 1 THEN
                 /*정보변경에 성공한 경우*/

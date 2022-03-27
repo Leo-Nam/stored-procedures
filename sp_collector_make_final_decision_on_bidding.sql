@@ -60,22 +60,26 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			/*사이트가 배출자로부터 최종 낙찰자로 선정된 경우*/
 				UPDATE COLLECTOR_BIDDING 
 				SET 
-					MAKE_DECISION = IN_FINAL_DECISION, 
-					MAKE_DECISION_AT = @REG_DT,
-					UPDATED_AT = @REG_DT  
+					MAKE_DECISION 		= IN_FINAL_DECISION, 
+					MAKE_DECISION_AT 	= @REG_DT,
+					UPDATED_AT 			= @REG_DT  
 				WHERE ID = IN_COLLECT_BIDDING_ID;
 				/*최종처리결정에 대한 거부권(TRUE:수락, FALSE:거부)을 행사한다.*/
 				IF ROW_COUNT() = 1 THEN
 				/*데이타베이스 입력에 성공한 경우*/
-					SELECT BIDDING_RANK, COLLECTOR_ID INTO @BIDDING_RANK, @COLLECTOR_ID FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					SELECT BIDDING_RANK, COLLECTOR_ID INTO @BIDDING_RANK, @COLLECTOR_ID 
+                    FROM COLLECTOR_BIDDING 
+                    WHERE ID = IN_COLLECTOR_BIDDING_ID;
+                    
 					IF @BIDDING_RANK = 1 THEN
 						UPDATE SITE_WSTE_DISPOSAL_ORDER 
 						SET 
 							COLLECTOR_SELECTION_CONFIRMED 		= IN_FINAL_DECISION,  
 							COLLECTOR_SELECTION_CONFIRMED_AT 	= @REG_DT,
                             COLLECTOR_BIDDING_ID				= IN_COLLECT_BIDDING_ID,
-                            SUCCESS_BIDDER						= @COLLECTOR_ID
-						WHERE ID = @DISPOSAL_ORDER_ID;
+                            SUCCESS_BIDDER						= @COLLECTOR_ID,
+							UPDATED_AT 							= @REG_DT
+						WHERE ID 								= @DISPOSAL_ORDER_ID;
 						IF ROW_COUNT() = 1 THEN
 							IF IN_FINAL_DECISION = TRUE THEN
 							/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
@@ -84,8 +88,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									COLLECTOR_ID 			= @COLLECTOR_ID,
 									COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
 									UPDATED_AT 				= @REG_DT
-								WHERE
-									DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
+								WHERE DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID;
 								IF ROW_COUNT() = 1 THEN
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
 									IF IN_FINAL_DECISION = FALSE THEN
@@ -94,8 +97,18 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 											'max_selection_duration',
 											@max_selection_duration
 										);
-										SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@REG_DT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
-										UPDATE SITE_WSTE_DISPOSAL_ORDER SET COLLECTOR_MAX_DECISION2_AT = @COLLECTOR_MAX_DECISION2_AT WHERE ID = @DISPOSAL_ORDER_ID;
+										SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(
+																			@REG_DT, 
+                                                                            CONCAT(
+																				CAST(@max_selection_duration AS UNSIGNED), 
+                                                                                ':00:00'
+																			)
+																		);
+										UPDATE SITE_WSTE_DISPOSAL_ORDER 
+                                        SET 
+											COLLECTOR_MAX_DECISION2_AT 	= @COLLECTOR_MAX_DECISION2_AT ,
+											UPDATED_AT 					= @REG_DT
+                                        WHERE ID 						= @DISPOSAL_ORDER_ID;
 										IF ROW_COUNT = 1 THEN
 											SET @rtn_val 		= 0;
 											SET @msg_txt 		= 'Success2';
@@ -130,8 +143,9 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								COLLECTOR_SELECTION_CONFIRMED2 		= IN_FINAL_DECISION,  
 								COLLECTOR_SELECTION_CONFIRMED2_AT 	= @REG_DT,
 								COLLECTOR_BIDDING_ID				= IN_COLLECT_BIDDING_ID,
-								SUCCESS_BIDDER						= @COLLECTOR_ID
-							WHERE ID = @DISPOSAL_ORDER_ID;
+								SUCCESS_BIDDER						= @COLLECTOR_ID,
+								UPDATED_AT 							= @REG_DT
+							WHERE ID 								= @DISPOSAL_ORDER_ID;
 							IF ROW_COUNT() = 1 THEN
 								IF IN_FINAL_DECISION = TRUE THEN
 								/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
@@ -139,8 +153,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									SET
 										COLLECTOR_BIDDING_ID 	= IN_COLLECT_BIDDING_ID,
 										UPDATED_AT 				= @REG_DT
-									WHERE
-										DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID;
+									WHERE DISPOSAL_ORDER_ID 	= @DISPOSAL_ORDER_ID;
 									IF ROW_COUNT() = 1 THEN
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
 										SET @rtn_val 		= 0;

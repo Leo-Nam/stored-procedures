@@ -19,8 +19,6 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 				: 로깅 기능 삭제(유보)(0.0.3)
 */
 
-    DECLARE JOB_TXT			VARCHAR(100);		/*변경사항에 대한 내용을 저장할 변수 선언*/
-
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
@@ -37,13 +35,18 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 		@rtn_val,
 		@msg_txt
 	);
-	/*IN_USER_ID가 이미 등록되어 있는 사용자인지 체크한다. 등록되어 있는 경우에는 @USER_EXISTS = 1, 그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
-	/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+	/*IN_USER_ID가 이미 등록되어 있는 사용자인지 체크한다. 
+    등록되어 있는 경우에는 @USER_EXISTS = 1, 
+    그렇지 않은 경우에는 @USER_EXISTS = 0을 반환한다.*/
+	/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 
+    member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
 	/*등록되어 있지 않은 경우에는 신규사업자 생성으로 간주하고 정상처리 진행한다.*/
 	
 	IF @rtn_val = 0 THEN
-	/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
-		/*체크할 사업자등록번호로 등록된 사업자가 존재하는지 체크한 후 존재한다면 1, 그렇지 않으면 0을 반환하게 됨*/
+	/*이미 등록되어 있는 사용자인 경우에는 관리자(member.admin)인지 검사한 후 
+    member.admin인 경우에는 사업자 생성권한을 부여하고 그렇지 않은 경우에는 예외처리한다.*/
+		/*체크할 사업자등록번호로 등록된 사업자가 존재하는지 체크한 후 
+        존재한다면 1, 그렇지 않으면 0을 반환하게 됨*/
 		CALL sp_req_company_validation(
 			IN_COMP_ID, 
 			@rtn_val, 
@@ -71,7 +74,8 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 				);
 				/*사업자의 모기업 사업자 아이디를 구하여 @PARENT_COMP_ID에 저장한다.*/
 				IF @PARENT_COMP_ID = 0 THEN
-				/*모기업 사업자가 없는 경우(@PARENT_COMP_ID = 0)는 다른 사업자에 의하여 생성된 사업자가 아니므로 sys.admin에 의하여 삭제가 가능함*/
+				/*모기업 사업자가 없는 경우(@PARENT_COMP_ID = 0)는 
+                다른 사업자에 의하여 생성된 사업자가 아니므로 sys.admin에 의하여 삭제가 가능함*/
 				/*다른 사업자에 의하여 생성된 사업자는 시스템에 의하여 삭제가 불가능하다.*/
 					CALL sp_delete_company_without_handler(
 					/*사업자정보를 삭제하는 절차를 진행한다.*/
@@ -85,7 +89,10 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 						SIGNAL SQLSTATE '23000';
 					END IF;
 				ELSE
-				/*모기업 사업자가 있는 경우(@PARENT_COMP_ID <> 0)는 다른 사업자에 의하여 생성된 사업자이므로 sys.admin에 의하여 삭제가 불가능하며 해당 사업자를 생성한 모기업 사업자의 관리자에 의하여만 삭제가 가능함. 예외처리함.*/
+				/*모기업 사업자가 있는 경우(@PARENT_COMP_ID <> 0)는 
+                다른 사업자에 의하여 생성된 사업자이므로 sys.admin에 의하여 
+                삭제가 불가능하며 해당 사업자를 생성한 모기업 사업자의 관리자에 의하여만 
+                삭제가 가능함. 예외처리함.*/
 					SET @rtn_val = 20601;
 					SET @msg_txt = 'Subsidiaries cannot be deleted by the system administrator';
 					SIGNAL SQLSTATE '23000';
@@ -114,7 +121,7 @@ Change			: 사업자 삭제에 대한 기능을 Nested Procedure(sp_delete_compa
 					END IF;
 				ELSE
 					SET @rtn_val = 20602;
-					SET @msg_txt = 'Users do not have the right to delete company information';
+					SET @msg_txt = CONCAT('Users do not have the right to delete company information', @msg_txt);
 					SIGNAL SQLSTATE '23000';
 				END IF;
 			END IF;

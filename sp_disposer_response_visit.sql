@@ -25,7 +25,6 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
     /*트랜잭션 시작*/  
 	
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	CALL sp_req_user_exists_by_id(
     /*DISPOSER가 존재하면서 활성화된 상태인지 검사한다.*/
@@ -64,7 +63,8 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 					UPDATE COLLECTOR_BIDDING 
                     SET 
 						RESPONSE_VISIT 		= IN_RESPONSE, 
-                        RESPONSE_VISIT_AT 	= @REG_DT 
+                        RESPONSE_VISIT_AT 	= @REG_DT , 
+                        UPDATED_AT		 	= @REG_DT 
                     WHERE ID = IN_COLLECTOR_BIDDING_ID;
 					/*사용자가 해당 수거자의 방문에 대하여 거절의사를 표시한다.*/
 					IF ROW_COUNT() = 1 THEN

@@ -21,11 +21,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				: 폐기물 배출자의 타입을 프론트에서 입력받는 방식을 삭제하고 DB에서 구분을 하는 방식으로 전환(0.0.4)
 				: 기존거래업체와의 재거래를 위한 컬럼 추가로 인한 로직 변경(0.0.5)
 */
-
-	DECLARE REGISTRATION_JOB_CAN_GO TINYINT DEFAULT FALSE;
     
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	CALL sp_req_user_exists_by_id(
     /*사용자가 존재하면서 활성화된 상태인지 검사한다.*/
@@ -38,7 +35,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     IF @rtn_val = 0 THEN
     /*사용자가 유효한 경우에는 정상처리한다.*/
 		CALL sp_req_user_affiliation_by_user_id(
-        /*수거자가 개인회원인지 사업자 회원인지 구분한다. 개인이면 0, 사업자의 관리자이면 사이트의 고유등록번호를 반환한다.*/
+        /*수거자가 개인회원인지 사업자 회원인지 구분한다. 
+        개인이면 0, 사업자의 관리자이면 사이트의 고유등록번호를 반환한다.*/
 			IN_USER_ID,
             @BELONG_TO
         );

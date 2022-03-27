@@ -9,7 +9,10 @@ BEGIN
 			SET rtn_val = 0;
 			SET msg_txt = 'success';	
         ELSE
-			SELECT COUNT(ID) INTO @SITE_EXISTS FROM COMP_SITE WHERE ID = IN_SITE_ID;
+			SELECT COUNT(ID) INTO @SITE_EXISTS 
+            FROM COMP_SITE 
+            WHERE ID = IN_SITE_ID;
+            
 			IF @SITE_EXISTS = 0 THEN 
 				SET rtn_val = 31701;
 				SET msg_txt = 'Site ID does not exist';		

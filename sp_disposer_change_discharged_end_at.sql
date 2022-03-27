@@ -52,10 +52,14 @@ AUTHOR 			: Leo Nam
 			END IF;
 		ELSE
 		/*사업자사용자인 경우*/
-			SELECT SITE_ID INTO @DISPOSER_SITE_ID FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
+			SELECT SITE_ID INTO @DISPOSER_SITE_ID 
+            FROM SITE_WSTE_DISPOSAL_ORDER 
+            WHERE ID = IN_DISPOSER_ORDER_ID;
 			IF @USER_SITE_ID = @DISPOSER_SITE_ID THEN
 			/*사용자가 폐기물배출사이트의 소속인 경우에는 정상처리한다.*/
-				SELECT CLASS INTO @USER_CLASS FROM USERS WHERE ID = IN_USER_ID;
+				SELECT CLASS INTO @USER_CLASS 
+                FROM USERS 
+                WHERE ID = IN_USER_ID;
 				IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 				/*사용자에게 권한이 있는 경우에는 정상처리한다.*/
 					CALL sp_disposer_change_discharged_end_at_without_handler(

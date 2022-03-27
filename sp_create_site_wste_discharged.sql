@@ -33,7 +33,7 @@ Change			: 입력값 IN_SITE_WSTE_REG_ID를 IN_DISPOSER_ORDER_ID로 변경함(0.
     /*JSON 데이타에서 사용하는 KEY와 VALUE 타입*/
 		WSTE_CLASS_CODE 		INT 							PATH "$.WSTE_CLASS_CODE",
 		WSTE_APPEARANCE			INT			 					PATH "$.WSTE_APPEARANCE",
-		UNIT 					ENUM('Kg','m3','식')				PATH "$.UNIT",
+		UNIT 					ENUM('Kg','m3','식','전체견적가')	PATH "$.UNIT",
 		QUANTITY 				FLOAT							PATH "$.QUANTITY"
 	)) AS WSTE_LIST;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
@@ -66,7 +66,7 @@ Change			: 입력값 IN_SITE_WSTE_REG_ID를 IN_DISPOSER_ORDER_ID로 변경함(0.
             CUR_WSTE_CLASS_CODE, 
             CUR_WSTE_APPEARANCE, 
             CUR_QUANTITY, 
-            IF(CUR_QUANTITY IS NULL, 'Kg', CUR_UNIT), 
+            IF(CUR_UNIT = '전체견적가', '식', CUR_UNIT), 
             REG_DT, 
             REG_DT
 		);
