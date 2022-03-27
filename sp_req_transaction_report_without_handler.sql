@@ -1,0 +1,167 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_transaction_report_without_handler`(
+	IN IN_TRANSACTION_REPORT_ID		BIGINT,
+    OUT rtn_val						INT,
+    OUT msg_txt						VARCHAR(200),
+    OUT json_data					JSON
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_req_transaction_report_without_handler
+Input param 	: 1개
+Job 			: 트랜잭션 리포트를 반환한다1
+Update 			: 2022.03.25
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/   
+    
+	CREATE TEMPORARY TABLE IF NOT EXISTS TRANSACTION_REPORT_TEMP (
+		ID									BIGINT,
+		TRANSACTION_ID						BIGINT,
+		COLLECTOR_SITE_ID					BIGINT,    
+		COLLECTOR_MANAGER_ID				BIGINT,
+		DISPOSER_SITE_ID					BIGINT,
+		AVATAR_PATH							VARCHAR(255),
+		SITE_NAME							VARCHAR(255),
+		QUANTITY							FLOAT,
+		UNIT								VARCHAR(20),
+		PRICE								INT,
+		TRMT_METHOD							VARCHAR(4),
+		TRMT_METHOD_NM						VARCHAR(30),
+		DISPOSER_ORDER_ID					BIGINT,
+        B_CODE								VARCHAR(10),
+		SI_DO								VARCHAR(20),
+		SI_GUN_GU							VARCHAR(20),
+		EUP_MYEON_DONG						VARCHAR(20),
+		DONG_RI								VARCHAR(20),
+        ADDR								VARCHAR(200),
+        LAT									DECIMAL(12,9),
+        LNG									DECIMAL(12,9),
+        ASK_END_AT							DATETIME,
+		WSTE_CODE							VARCHAR(8),
+		WSTE_NAME							VARCHAR(255),
+		WSTE_LIST							JSON,
+		IMG_LIST							JSON
+	);        
+	
+	
+	INSERT INTO 
+	TRANSACTION_REPORT_TEMP(
+		ID,
+		TRANSACTION_ID,
+		COLLECTOR_SITE_ID,
+		COLLECTOR_MANAGER_ID,
+		DISPOSER_SITE_ID,
+		AVATAR_PATH,
+		SITE_NAME,
+		QUANTITY,
+		UNIT,
+		PRICE,
+		TRMT_METHOD,
+		TRMT_METHOD_NM,
+		DISPOSER_ORDER_ID,
+        B_CODE,
+        SI_DO,
+        SI_GUN_GU,
+        EUP_MYEON_DONG,
+        DONG_RI,
+        ADDR,
+        LAT,
+        LNG,
+        ASK_END_AT,
+        WSTE_CODE,
+        WSTE_NAME
+	)
+	SELECT 
+		A.ID, 
+        A.TRANSACTION_ID, 
+        A.COLLECTOR_SITE_ID,   
+        A.DISPOSER_SITE_ID,        
+        A.COLLECTOR_MANAGER_ID,
+        C.AVATAR_PATH,
+        B.SITE_NAME,  
+        A.QUANTITY,    
+        A.UNIT,    
+        A.PRICE,    
+        A.TRMT_METHOD,    
+        E.NAME,  
+        D.DISPOSAL_ORDER_ID,  
+        F.KIKCD_B_CODE,  
+        G.SI_DO,   
+        G.SI_GUN_GU,   
+        G.EUP_MYEON_DONG,   
+        G.DONG_RI,  
+        F.ADDR,  
+        F.LAT,  
+        F.LNG,  
+        D.COLLECT_ASK_END_AT,  
+        D.WSTE_CODE,  
+        H.NAME
+    FROM TRANSACTION_REPORT A 
+    LEFT JOIN COMP_SITE B ON A.COLLECTOR_SITE_ID = B.ID
+    LEFT JOIN V_USERS C ON A.COLLECTOR_SITE_ID = C.AFFILIATED_SITE
+    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.TRANSACTION_ID = D.ID
+    LEFT JOIN WSTE_TRMT_METHOD E ON A.TRMT_METHOD = E.CODE
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER F ON A.DISPOSER_ORDER_ID = F.ID
+    LEFT JOIN KIKCD_B G ON F.KIKCD_B_CODE = G.B_CODE
+    LEFT JOIN WSTE_CODE H ON D.WSTE_CODE = H.CODE
+	WHERE A.ID = IN_TRANSACTION_REPORT_ID AND C.CLASS = 201;
+    
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'DISPOSAL_ORDER_ID'		, B.DISPOSAL_ORDER_ID, 
+			'FILE_NAME'				, B.FILE_NAME, 
+			'IMG_PATH'				, B.IMG_PATH, 
+			'FILE_SIZE'				, B.FILE_SIZE, 
+			'ACTIVE'				, B.ACTIVE,
+			'CLASS_CODE'			, B.CLASS_CODE,
+			'CREATED_AT'			, B.CREATED_AT,
+			'UPDATED_AT'			, B.UPDATED_AT,
+			'TRANSACTION_ID'		, B.TRANSACTION_ID
+		)
+	) 
+	INTO @IMG_LIST 
+	FROM TRANSACTION_REPORT A LEFT JOIN WSTE_REGISTRATION_PHOTO B ON A.TRANSACTION_ID = B.TRANSACTION_ID
+	WHERE A.ID = IN_TRANSACTION_REPORT_ID;    
+	
+	UPDATE TRANSACTION_REPORT_TEMP 
+	SET 
+		IMG_LIST 	= @IMG_LIST
+	WHERE ID 		= IN_TRANSACTION_REPORT_ID;
+	/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
+	
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'ID'								, ID, 
+			'TRANSACTION_ID'					, TRANSACTION_ID, 
+			'COLLECTOR_SITE_ID'					, COLLECTOR_SITE_ID, 
+			'COLLECTOR_MANAGER_ID'				, COLLECTOR_MANAGER_ID, 
+			'DISPOSER_SITE_ID'					, DISPOSER_SITE_ID, 
+			'AVATAR_PATH'						, AVATAR_PATH, 
+			'SITE_NAME'							, SITE_NAME, 
+			'QUANTITY'							, QUANTITY, 
+			'UNIT'								, UNIT, 
+			'PRICE'								, PRICE, 
+			'TRMT_METHOD'						, TRMT_METHOD, 
+			'TRMT_METHOD_NM'					, TRMT_METHOD_NM, 
+			'DISPOSER_ORDER_ID'					, DISPOSER_ORDER_ID, 
+			'B_CODE'							, B_CODE, 
+			'SI_DO'								, SI_DO, 
+			'SI_GUN_GU'							, SI_GUN_GU, 
+			'EUP_MYEON_DONG'					, EUP_MYEON_DONG, 
+			'DONG_RI'							, DONG_RI, 
+			'ADDR'								, ADDR, 
+			'LAT'								, LAT, 
+			'LNG'								, LNG, 
+			'ASK_END_AT'						, ASK_END_AT, 
+			'WSTE_CODE'							, WSTE_CODE, 
+			'WSTE_NAME'							, WSTE_NAME, 
+			'IMG_LIST'							, IMG_LIST
+		)
+	) 
+    INTO json_data 
+    FROM TRANSACTION_REPORT_TEMP;
+    SET rtn_val = 0;
+    SET msg_txt = 'success1';
+	DROP TABLE IF EXISTS TRANSACTION_REPORT_TEMP;
+END

@@ -1,7 +1,8 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_select_collector`(
 	IN IN_USER_ID					BIGINT,
 	IN IN_COLLECTOR_BIDDING_ID		BIGINT,
-	IN IN_DISPOSER_ORDER_ID			BIGINT
+	IN IN_DISPOSER_ORDER_ID			BIGINT,
+	IN IN_DISCHARGED_END_AT			DATETIME
 )
 BEGIN
 
@@ -72,55 +73,74 @@ AUTHOR 			: Leo Nam
                         /*배출자의 폐기물 입찰에 등록한 수거자의 입찰정보인 경우 정상처리한다.*/
 							IF @WINNER = TRUE THEN
                             /*수거자가 최종낙찰자격을 갖추었다면 정상처리한다.*/
-								UPDATE COLLECTOR_BIDDING SET SELECTED = TRUE, SELECTED_AT = @REG_DT WHERE ID = IN_COLLECTOR_BIDDING_ID;
-								IF ROW_COUNT() = 1 THEN
-								/*정보가 성공적으로 변경되었다면*/
-									SELECT BIDDING_RANK INTO @BIDDING_RANK FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
-									IF @BIDDING_RANK <= 2 THEN
-										UPDATE SITE_WSTE_DISPOSAL_ORDER SET SELECTED = IN_COLLECTOR_BIDDING_ID, SELECTED_AT = @REG_DT WHERE ID = IN_DISPOSER_ORDER_ID;
-										IF ROW_COUNT() = 1 THEN
-											CALL sp_req_policy_direction(
-											/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일로부터의 기간을 반환받는다(단위:시간)*/
-												'max_decision_duration',
-												@max_decision_duration
-											);
-											SELECT SELECTED_AT INTO @SELECTED_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
-											UPDATE COLLECTOR_BIDDING SET MAX_DECISION_AT = ADDTIME(@SELECTED_AT, CONCAT(CAST(@max_decision_duration AS UNSIGNED), ':00:00')) WHERE ID = IN_COLLECTOR_BIDDING_ID;
-											/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일에 합산하여 MAX_DECISION_AT을 결정한다.*/
-											IF ROW_COUNT() = 1 THEN
-												SET @rtn_val = 0;
-												SET @msg_txt = 'success';
-											ELSE
-												SET @rtn_val = 24608;
-												SET @msg_txt = 'Failed to determine the maximum successful bid acceptance date of the collector';
-												SIGNAL SQLSTATE '23000';
-											END IF;
-										ELSE
-											SET @rtn_val = 24604;
-											SET @msg_txt = 'Failure to record collector selection information';
-											SIGNAL SQLSTATE '23000';
-										END IF;
-									ELSE
-										SET @rtn_val = 24609;
-										SET @msg_txt = 'Not applicable to successful bidders with less than 2nd place';
-										SIGNAL SQLSTATE '23000';
-									END IF;
-								ELSE
-								/*정보변경에 실패했다면 예외처리한다.*/
-									SET @rtn_val = 24601;
-									SET @msg_txt = 'Failed to select final collector';
+								CALL sp_req_select_collector_without_handler(
+                                    IN_COLLECTOR_BIDDING_ID,
+									IN_DISPOSER_ORDER_ID,
+									IN_DISCHARGED_END_AT,
+                                    @REG_DT,
+                                    1,
+									@rtn_val,
+									@msg_txt
+                                );
+                                IF @rtn_val > 0 THEN
 									SIGNAL SQLSTATE '23000';
-								END IF;
+                                END IF;
                             ELSE
                             /*수거자가 최종낙찰자격을 갖추지 못한경우에는 예외처리한다.*/
-								SET @rtn_val = 24607;
-								SET @msg_txt = 'Collector is ineligible for successful bid selection';
-								SIGNAL SQLSTATE '23000';
+							SELECT BIDDING_RANK INTO @BIDDING_RANK FROM COLLECTOR_BIDDING WHERE ID = IN_COLLECTOR_BIDDING_ID;
+								IF @BIDDING_RANK = 2 THEN
+									SELECT SELECTED INTO @FIRST_PLACE_WINNER_ID FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
+									SELECT MAKE_DECISION, MAX_DECISION_AT INTO @FIRST_PLACE_WINNER_MAKE_DECISION, @FIRST_PLACE_WINNER_MAX_DECISION_AT FROM COLLECTOR_BIDDING WHERE ID = @FIRST_PLACE_WINNER_ID;
+									IF @FIRST_PLACE_WINNER_MAKE_DECISION = TRUE THEN
+										SET @rtn_val = 24604;
+										SET @msg_txt = '1st place bidder has already been selected';
+										SIGNAL SQLSTATE '23000';
+									ELSE
+										IF @FIRST_PLACE_WINNER_MAKE_DECISION IS NULL THEN
+											IF @FIRST_PLACE_WINNER_MAX_DECISION_AT <= NOW() THEN
+											/*1순위가 낙찰자 수락 또는 거절의 의사표시를 하지 않고 최대시간에 도달한 상태로서 조건부 가능한 상태*/
+												CALL sp_req_select_collector_without_handler(
+													IN_COLLECTOR_BIDDING_ID,
+													IN_DISPOSER_ORDER_ID,
+													IN_DISCHARGED_END_AT,
+													@REG_DT,
+													@BIDDING_RANK,
+													@rtn_val,
+													@msg_txt
+												);
+												IF @rtn_val > 0 THEN
+													SIGNAL SQLSTATE '23000';
+												END IF;
+											ELSE
+											/*1순위가 아직 결정할 시간이 존재하는 경우로서 불가능*/
+												SET @rtn_val = 24601;
+												SET @msg_txt = '1st place still has a choice';
+											END IF;
+										ELSE
+										/*1순위가 낙찰자를 포기한 경우로서 항상 가능*/
+											CALL sp_req_select_collector_without_handler(
+												IN_COLLECTOR_BIDDING_ID,
+												IN_DISPOSER_ORDER_ID,
+												@REG_DT,
+												@BIDDING_RANK,
+												@rtn_val,
+												@msg_txt
+											);
+											IF @rtn_val > 0 THEN
+												SIGNAL SQLSTATE '23000';
+											END IF;
+										END IF;
+									END IF;
+								ELSE
+									SET @rtn_val = 24606;
+									SET @msg_txt = 'No 2nd placed bidder';
+									SIGNAL SQLSTATE '23000';
+								END IF;
                             END IF;
                         ELSE
                         /*배출자의 폐기물 입찰에 등록한 수거자의 입찰정보가 아닌 경우 예외처리한다.*/
-							SET @rtn_val = 24606;
-							SET @msg_txt = 'Inconsistency in the bidding information of the collector';
+							SET @rtn_val = 24607;
+							SET @msg_txt = 'The collection company you want to select is an unbidden company';
 							SIGNAL SQLSTATE '23000';
                         END IF;
                     ELSE

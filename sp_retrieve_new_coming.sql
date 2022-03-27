@@ -13,44 +13,93 @@ AUTHOR 			: Leo Nam
 Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)을 추가함으로써 이 칼럼의 값이 NULL인 경우에만 신규입찰이 되며 NULL이 아닌것은 기존거래로서 기존 업체의 나의 활동에 자동으로 등록됨(0.0.2)
 */
 
-    DECLARE vRowCount 					INT DEFAULT 0;
-    DECLARE endOfRow 					TINYINT DEFAULT FALSE;    
-    DECLARE CUR_DISPOSER_ORDER_ID 		BIGINT;
-    DECLARE CUR_DISPOSER_ORDER_CODE 	VARCHAR(10);
-    DECLARE CUR_DATE 					DATETIME;	
-    DECLARE WSTE_CODE_CURSOR 			CURSOR FOR 
+    DECLARE vRowCount 							INT DEFAULT 0;
+    DECLARE endOfRow 							TINYINT DEFAULT FALSE;    
+    DECLARE CUR_DISPOSER_ORDER_ID 				BIGINT;
+    DECLARE CUR_DISPOSER_ORDER_CODE 			VARCHAR(10);
+    DECLARE CUR_DISPOSER_VISIT_START_AT			DATETIME;	
+    DECLARE CUR_DISPOSER_VISIT_END_AT			DATETIME;	
+    DECLARE CUR_DISPOSER_BIDDING_END_AT			DATETIME;	
+    DECLARE CUR_WSTE_DISPOSED_KIKCD_B_CODE		VARCHAR(10);	
+    DECLARE CUR_WSTE_DISPOSED_ADDR				VARCHAR(255);	
+    DECLARE CUR_DISPOSER_CREATED_AT				DATETIME;	
+    DECLARE CUR_WSTE_DISPOSED_SI_DO				VARCHAR(20);	
+    DECLARE CUR_WSTE_DISPOSED_SI_GUN_GU			VARCHAR(20);	
+    DECLARE CUR_WSTE_DISPOSED_EUP_MYEON_DONG	VARCHAR(20);	
+    DECLARE CUR_WSTE_DISPOSED_DONG_RI			VARCHAR(20);	
+    DECLARE WSTE_CODE_CURSOR 					CURSOR FOR 
 	SELECT 
-		DISPOSER_ORDER_ID, 
-        DISPOSER_ORDER_CODE, 
-        IF(
-			DISPOSER_VISIT_END_AT IS NULL, 
-            DISPOSER_BIDDING_END_AT, 
-            DISPOSER_VISIT_END_AT
-		) AS DISPLAY_DATE
-    FROM V_SITE_WSTE_DISPOSAL_ORDER
+		A.DISPOSER_ORDER_ID, 
+        A.DISPOSER_ORDER_CODE, 
+        A.DISPOSER_VISIT_START_AT,
+        A.DISPOSER_VISIT_END_AT,
+        A.DISPOSER_BIDDING_END_AT,
+        A.WSTE_DISPOSED_KIKCD_B_CODE,
+        A.WSTE_DISPOSED_ADDR,
+        A.DISPOSER_CREATED_AT,
+        B.SI_DO,
+        B.SI_GUN_GU,
+        B.EUP_MYEON_DONG,
+        B.DONG_RI
+    FROM V_SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN KIKCD_B B ON A.WSTE_DISPOSED_KIKCD_B_CODE = B.B_CODE
     WHERE 
-		COLLECTOR_ID IS NULL AND 				/*0.0.2에서 새롭게 추가한 부분*/
-		LEFT(DISPOSER_SITE_KIKCD_B_CODE, 5) IN (SELECT LEFT(A.KIKCD_B_CODE, 5) 
-	FROM BUSINESS_AREA A 
-    LEFT JOIN USERS B ON A.SITE_ID = B.AFFILIATED_SITE 
-    WHERE B.ID = IN_USER_ID);    
+		A.COLLECTOR_ID IS NULL AND 				/*0.0.2에서 새롭게 추가한 부분*/
+        IF(A.DISPOSER_VISIT_END_AT IS NOT NULL, 
+			DISPOSER_VISIT_END_AT >= NOW(), 
+            DISPOSER_BIDDING_END_AT >= NOW()
+        ) AND 
+		LEFT(A.WSTE_DISPOSED_KIKCD_B_CODE, 5) IN (
+			SELECT LEFT(C.KIKCD_B_CODE, 5) 
+			FROM BUSINESS_AREA C 
+			LEFT JOIN USERS D ON C.SITE_ID = D.AFFILIATED_SITE 
+			WHERE D.ID = IN_USER_ID
+		);    
+        
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;							
+    /*트랜잭션 시작*/  
         
 	CREATE TEMPORARY TABLE IF NOT EXISTS NEW_COMING (
-		DISPOSAL_ORDER_ID				BIGINT,
-		ORDER_CODE						VARCHAR(10),
+		DISPOSER_ORDER_ID				BIGINT,
+		DISPOSER_ORDER_CODE				VARCHAR(10),
+        VISIT_START_AT					DATETIME,
+        VISIT_END_AT					DATETIME,
+        BIDDING_END_AT					DATETIME,
+        WSTE_B_CODE						VARCHAR(10),
+        WSTE_ADDR						VARCHAR(255),
+        CREATED_AT						DATETIME,
+        WSTE_SI_DO						VARCHAR(20),
+        WSTE_SI_GUN_GU					VARCHAR(20),
+        WSTE_EUP_MYEON_DONG				VARCHAR(20),
+        WSTE_DONG_RI					VARCHAR(20),
 		IMG_PATH						JSON,
-		WSTE_LIST						JSON,
-		DISPLAY_DATE					DATETIME
+		WSTE_LIST						JSON
 	);
     
 	OPEN WSTE_CODE_CURSOR;	
 	cloop: LOOP
 		FETCH WSTE_CODE_CURSOR 
-        INTO 
+        INTO  
 			CUR_DISPOSER_ORDER_ID,
 			CUR_DISPOSER_ORDER_CODE,
-			CUR_DATE;   
+			CUR_DISPOSER_VISIT_START_AT,
+			CUR_DISPOSER_VISIT_END_AT,
+			CUR_DISPOSER_BIDDING_END_AT,
+			CUR_WSTE_DISPOSED_KIKCD_B_CODE,
+			CUR_WSTE_DISPOSED_ADDR,
+			CUR_DISPOSER_CREATED_AT,
+			CUR_WSTE_DISPOSED_SI_DO,
+			CUR_WSTE_DISPOSED_SI_GUN_GU,
+			CUR_WSTE_DISPOSED_EUP_MYEON_DONG,
+			CUR_WSTE_DISPOSED_DONG_RI;
         
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -59,14 +108,32 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
         
 		INSERT INTO 
         NEW_COMING(
-			DISPOSAL_ORDER_ID, 
-            ORDER_CODE, 
-            DISPLAY_DATE
+			DISPOSER_ORDER_ID, 
+            DISPOSER_ORDER_CODE, 
+            VISIT_START_AT, 
+            VISIT_END_AT, 
+            BIDDING_END_AT, 
+            WSTE_B_CODE, 
+            WSTE_ADDR, 
+            CREATED_AT, 
+            WSTE_SI_DO, 
+            WSTE_SI_GUN_GU, 
+            WSTE_EUP_MYEON_DONG, 
+            WSTE_DONG_RI
 		)
         VALUES(
-			CUR_DISPOSER_ORDER_ID, 
-            CUR_DISPOSER_ORDER_CODE, 
-            CUR_DATE
+			CUR_DISPOSER_ORDER_ID,
+			CUR_DISPOSER_ORDER_CODE,
+			CUR_DISPOSER_VISIT_START_AT,
+			CUR_DISPOSER_VISIT_END_AT,
+			CUR_DISPOSER_BIDDING_END_AT,
+			CUR_WSTE_DISPOSED_KIKCD_B_CODE,
+			CUR_WSTE_DISPOSED_ADDR,
+			CUR_DISPOSER_CREATED_AT,
+			CUR_WSTE_DISPOSED_SI_DO,
+			CUR_WSTE_DISPOSED_SI_GUN_GU,
+			CUR_WSTE_DISPOSED_EUP_MYEON_DONG,
+			CUR_WSTE_DISPOSED_DONG_RI
 		);
         SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(
@@ -94,7 +161,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
         SET 
 			IMG_PATH 			= @IMG_PATH, 
             WSTE_LIST 			= @WSTE_LIST 
-		WHERE DISPOSAL_ORDER_ID = CUR_DISPOSER_ORDER_ID;
+		WHERE DISPOSER_ORDER_ID = CUR_DISPOSER_ORDER_ID;
         /*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/        
         
 	END LOOP;   
@@ -102,9 +169,20 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
 	
 	SELECT JSON_ARRAYAGG(
 		JSON_OBJECT(
-			'DISPOSAL_ORDER_ID'	, DISPOSAL_ORDER_ID, 
-            'ORDER_CODE'		, ORDER_CODE, 
-            'DISPLAY_DATE'		, DISPLAY_DATE
+			'DISPOSER_ORDER_ID'			, DISPOSER_ORDER_ID, 
+            'DISPOSER_ORDER_CODE'		, DISPOSER_ORDER_CODE, 
+            'VISIT_START_AT'			, VISIT_START_AT, 
+            'VISIT_END_AT'				, VISIT_END_AT, 
+            'BIDDING_END_AT'			, BIDDING_END_AT, 
+            'WSTE_B_CODE'				, WSTE_B_CODE, 
+            'WSTE_ADDR'					, WSTE_ADDR, 
+            'CREATED_AT'				, CREATED_AT, 
+            'WSTE_SI_DO'				, WSTE_SI_DO, 
+            'WSTE_SI_GUN_GU'			, WSTE_SI_GUN_GU, 
+            'WSTE_EUP_MYEON_DONG'		, WSTE_EUP_MYEON_DONG, 
+            'WSTE_DONG_RI'				, WSTE_DONG_RI, 
+            'IMG_PATH'					, IMG_PATH, 
+            'WSTE_LIST'					, WSTE_LIST
 		)
 	) 
     INTO @json_data 
@@ -113,10 +191,12 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
     IF vRowCount = 0 THEN
 		SET @rtn_val = 28601;
 		SET @msg_txt = 'No data found';
+		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
-		SET @msg_txt = 'Success';
+		SET @msg_txt = 'Success11';
     END IF;
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
     DROP TABLE IF EXISTS NEW_COMING;
+    COMMIT;
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

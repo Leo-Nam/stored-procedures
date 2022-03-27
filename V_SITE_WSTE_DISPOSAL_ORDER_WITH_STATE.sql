@@ -58,7 +58,9 @@ VIEW `chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE` AS
         `chiumdev_2`.`B`.`STATUS_CATEGORY_ID` AS `STATE_CATEGORY_ID`,
         `chiumdev_2`.`B`.`STATUS_CATEGORY` AS `STATE_CATEGORY`,
         `chiumdev_2`.`A`.`NOTE` AS `NOTE`,
-        `chiumdev_2`.`A`.`COLLECTOR_BIDDING_ID` AS `COLLECTOR_BIDDING_ID`
+        `chiumdev_2`.`A`.`COLLECTOR_BIDDING_ID` AS `COLLECTOR_BIDDING_ID`,
+        `chiumdev_2`.`A`.`TRANSACTION_ID` AS `TRANSACTION_ID`,
+        `chiumdev_2`.`A`.`EX_TRANSACTION_COLLECTOR_SITE_ID` AS `EX_TRANSACTION_COLLECTOR_SITE_ID`
     FROM
         (`chiumdev_2`.`V_SITE_WSTE_DISPOSAL_ORDER` `A`
         LEFT JOIN `chiumdev_2`.`V_STATUS` `B` ON ((`chiumdev_2`.`A`.`STATE_CODE` = `chiumdev_2`.`B`.`ID`)))

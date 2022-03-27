@@ -105,6 +105,7 @@ AUTHOR 			: Leo Nam
 		PROSPECTIVE_VISITORS				INT,
 		BIDDERS								INT,
 		NOTE								VARCHAR(255),
+        DISPLAY_DATE						DATETIME,
 		IMG_PATH							JSON,
 		WSTE_LIST							JSON,
 		BIDDING_LIST						JSON
@@ -265,11 +266,65 @@ AUTHOR 			: Leo Nam
             STATE_PID				<> 211 AND
             STATE_CODE				<> 211;
 		
+        SELECT 
+        CASE
+			WHEN CUR_STATE_CATEGORY_ID = 2
+				THEN (
+					SELECT 
+						IF(VISIT_START_AT IS NOT NULL, 
+							IF(VISIT_START_AT <= NOW(), 
+								VISIT_END_AT, 
+								VISIT_START_AT
+							),
+							VISIT_END_AT
+						) 
+					FROM SITE_WSTE_DISPOSAL_ORDER 
+					WHERE ID = CUR_DISPOSER_ORDER_ID
+				)
+			WHEN CUR_STATE_CATEGORY_ID = 3
+				THEN (
+					SELECT BIDDING_END_AT
+					FROM SITE_WSTE_DISPOSAL_ORDER 
+					WHERE ID = CUR_DISPOSER_ORDER_ID
+				)
+			WHEN CUR_STATE_CATEGORY_ID = 4
+				THEN (
+					SELECT 
+						IF(MAX_SELECT_AT <= NOW(), 
+							MAX_SELECT2_AT,
+							MAX_SELECT_AT
+						) 
+					FROM SITE_WSTE_DISPOSAL_ORDER 
+					WHERE ID = CUR_DISPOSER_ORDER_ID
+				)
+			WHEN CUR_STATE_CATEGORY_ID = 5
+				THEN (
+					SELECT 
+						IF(A.COLLECT_ASK_END_AT <= NOW(), 
+							B.CLOSE_AT,
+							A.COLLECT_ASK_END_AT
+						) 
+					FROM WSTE_CLCT_TRMT_TRANSACTION A LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+					WHERE A.ID = CUR_DISPOSER_ORDER_ID
+				)
+			WHEN CUR_STATE_CATEGORY_ID = 6
+				THEN CUR_DISPOSER_CLOSE_AT
+            ELSE NULL
+        END INTO @DISPLAY_DATE;
+        
+		CALL sp_req_policy_direction(
+		/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일로부터의 기간을 반환받는다(단위:시간)*/
+			'min_disposal_duration',
+			@MIN_DISPOSAL_DURATION
+		);        
+		
 		UPDATE DISPOSAL_ORDER 
         SET 
 			IMG_PATH 				= @IMG_PATH, 
             WSTE_LIST 				= @WSTE_LIST, 
-            BIDDING_LIST 			= @BIDDING_LIST 
+            BIDDING_LIST 			= @BIDDING_LIST,
+            DISPLAY_DATE			= @DISPLAY_DATE,
+            MIN_DISPOSAL_DURATION	= @MIN_DISPOSAL_DURATION
         WHERE DISPOSER_ORDER_ID 	= CUR_DISPOSER_ORDER_ID;
 		/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
         
@@ -303,6 +358,8 @@ AUTHOR 			: Leo Nam
             'PROSPECTIVE_VISITORS'				, PROSPECTIVE_VISITORS, 
             'BIDDERS'							, BIDDERS, 
             'NOTE'								, NOTE, 
+            'DISPLAY_DATE'						, DISPLAY_DATE, 
+            'MIN_DISPOSAL_DURATION'				, MIN_DISPOSAL_DURATION, 
             'IMG_PATH'							, IMG_PATH, 
             'WSTE_LIST'							, WSTE_LIST, 
             'BIDDING_LIST'						, BIDDING_LIST

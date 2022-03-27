@@ -1,5 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_site_wste_photo_information`(
 	IN IN_DISPOSER_ORDER_ID				BIGINT,
+	IN IN_TRANSACTION_ID				BIGINT,
 	IN IN_REG_DT						DATETIME,
 	IN IN_CLASS_CODE					ENUM('입찰','처리'),
 	IN IN_JSON_DATA						JSON,
@@ -61,7 +62,8 @@ Change			: SITE_WSTE_REG_ID를 IN_DISPOSER_ORDER_ID로 변경(0.0.2)
             ACTIVE,
             CLASS_CODE,
             CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            TRANSACTION_ID
 		)
         VALUES(
 			IN_DISPOSER_ORDER_ID, 
@@ -71,7 +73,8 @@ Change			: SITE_WSTE_REG_ID를 IN_DISPOSER_ORDER_ID로 변경(0.0.2)
             TRUE, 
             IN_CLASS_CODE, 
             IN_REG_DT, 
-            IN_REG_DT
+            IN_REG_DT,
+            IN_TRANSACTION_ID
 		);
         
         IF ROW_COUNT() = 0 THEN

@@ -25,18 +25,17 @@ BEGIN
 		'max_selection_duration',
 		@max_selection_duration
 	);
-/*    
-	배출자가 최종 낙찰예정이 되는 수거자를 선택할 수 있는 권한이 없도록 조치함으로써 아래 코딩을 주석처리하고 
-    @MAX_SELECT_AT과 @MAX_SELECT2_AT을 IN_BIDDING_END_AT과 같은 값으로 처리함
+     
     SET @MAX_SELECT_AT = ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
     SET @MAX_SELECT2_AT = ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
 	SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(@MAX_SELECT_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
 	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
-*/
+/*
     SET @MAX_SELECT_AT = IN_BIDDING_END_AT;
     SET @MAX_SELECT2_AT = IN_BIDDING_END_AT;
 	SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(@MAX_SELECT_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
 	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
+*/
 	INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
 		DISPOSER_ID,
 		COLLECTOR_ID,
@@ -83,8 +82,8 @@ BEGIN
         IN_LAT,
         IN_LNG,
         IN_ADDR,
-        @MAX_SELECT_AT,
-        @MAX_SELECT2_AT
+        @COLLECTOR_MAX_DECISION_AT,
+        @COLLECTOR_MAX_DECISION2_AT
 	);
 	
     SELECT LAST_INSERT_ID() INTO @WSTE_DISPOSAL_ORDER_ID;
@@ -96,7 +95,8 @@ BEGIN
 			'min_disposal_duration',
 			@min_disposal_duration
 		);
-		SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);
+		/*SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);*/
+		SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
 		CALL sp_insert_clct_trmt_transaction(
 		/*폐기물배출작업을 생성한다.*/
 			IN_USER_ID,
@@ -123,6 +123,7 @@ BEGIN
 				CALL sp_create_site_wste_photo_information(
 				/*폐기물 사진을 등록한다.*/
 					@WSTE_DISPOSAL_ORDER_ID,
+                    NULL,
 					IN_REG_DT,
 					'입찰',
 					IN_PHOTO_LIST,

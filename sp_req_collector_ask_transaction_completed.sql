@@ -54,13 +54,6 @@ AUTHOR 			: Leo Nam
                 @DISPOSER_SITE_ID,
                 @COLLECTOR_SITE_ID
             );
-            CALL sp_req_site_id_of_user_reg_id(
-            /*사용자가 소속하고 있는 사이트의 등록번호를 반환한다.*/
-				IN_USER_ID,
-                @USER_SITE_ID,
-				@rtn_val,
-				@msg_txt
-            );
             SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
             IF @USER_SITE_ID > 0 THEN
 			/*사이트가 정상(개인사용자는 제외됨)적인 경우*/
@@ -73,7 +66,7 @@ AUTHOR 			: Leo Nam
 					);
 					IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 					/*사용자가 수거자 소속의 권한있는 사용자인 경우*/
-						SELECT STATE INTO @STATE FROM V_WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
+						SELECT STATE, DISPOSER_ORDER_ID INTO @STATE, @DISPOSER_ORDER_ID FROM V_WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
                         IF @STATE = 221 THEN
 							UPDATE WSTE_CLCT_TRMT_TRANSACTION 
 							SET 
@@ -91,7 +84,8 @@ AUTHOR 			: Leo Nam
 									PRICE,
 									WSTE_CODE,
 									CREATED_AT,
-									UPDATED_AT
+									UPDATED_AT,
+									DISPOSER_ORDER_ID
 								) VALUES (
 									IN_TRANSACTION_ID,
 									@COLLECTOR_SITE_ID,
@@ -102,12 +96,14 @@ AUTHOR 			: Leo Nam
 									IN_PRICE,
 									IN_WSTE_CODE,
 									@REG_DT,
-									@REG_DT
+									@REG_DT,
+									@DISPOSER_ORDER_ID
 								);
 								IF ROW_COUNT() = 1 THEN   
 									SELECT DISPOSAL_ORDER_ID INTO @DISPOSER_ORDER_ID FROM WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
 									CALL sp_create_site_wste_photo_information(
 										@DISPOSER_ORDER_ID,
+                                        IN_TRANSACTION_ID,
 										@REG_DT,
 										'처리',
 										IN_IMG_LIST,

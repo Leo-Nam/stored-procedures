@@ -44,8 +44,17 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
     
     IF ROW_COUNT() = 1 THEN
     /*레코드 생성에 성공한 경우*/
-		SET rtn_val = 0;
-		SET msg_txt = 'succeeded in creating a Waste Discharge job';
+		SELECT MAX(ID) INTO @TRANSACTION_ID FROM WSTE_CLCT_TRMT_TRANSACTION;
+		UPDATE SITE_WSTE_DISPOSAL_ORDER
+        SET TRANSACTION_ID = @TRANSACTION_ID
+        WHERE ID = IN_DISPOSER_ORDER_ID;
+        IF ROW_COUNT() = 1 THEN
+			SET rtn_val = 0;
+			SET msg_txt = 'success';
+        ELSE
+			SET rtn_val = 25302;
+			SET msg_txt = 'faild to update transaction id';
+        END IF;
     ELSE
     /*레코드 생성에 실패한 경우 예외처리한다.*/
 		SET rtn_val = 25301;
