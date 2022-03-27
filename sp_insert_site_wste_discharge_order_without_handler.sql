@@ -57,6 +57,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     WHERE 
 		YEAR(IN_REG_DT) 	= YEAR(CREATED_AT) AND 
         MONTH(IN_REG_DT) 	= MONTH(CREATED_AT);
+        
 	IF @MONTH_COUNT < 10 THEN
 		SET @ORDER_CODE = CONCAT(@YEAR_MONTH, '-0000', @MONTH_COUNT);
     ELSE
@@ -234,6 +235,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_WSTE_CLASS,
 					IN_PHOTO_LIST,
 					IN_NOTE,
+					IN_LAT,
+					IN_LNG,
 					IN_REG_DT,
 					@rtn_val,
 					@msg_txt

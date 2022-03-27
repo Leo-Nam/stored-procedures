@@ -22,7 +22,6 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
 */
 
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	INSERT INTO WSTE_CLCT_TRMT_TRANSACTION (
 		DISPOSAL_ORDER_ID,
@@ -44,10 +43,14 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
     
     IF ROW_COUNT() = 1 THEN
     /*레코드 생성에 성공한 경우*/
-		SELECT MAX(ID) INTO @TRANSACTION_ID FROM WSTE_CLCT_TRMT_TRANSACTION;
+		SELECT MAX(ID) INTO @TRANSACTION_ID 
+        FROM WSTE_CLCT_TRMT_TRANSACTION;
+        
 		UPDATE SITE_WSTE_DISPOSAL_ORDER
-        SET TRANSACTION_ID = @TRANSACTION_ID
-        WHERE ID = IN_DISPOSER_ORDER_ID;
+        SET 
+			TRANSACTION_ID 	= @TRANSACTION_ID,
+            UPDATED_AT 		= @REG_DT
+        WHERE ID 			= IN_DISPOSER_ORDER_ID;
         IF ROW_COUNT() = 1 THEN
 			SET rtn_val = 0;
 			SET msg_txt = 'success';

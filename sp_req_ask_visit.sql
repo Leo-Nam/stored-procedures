@@ -22,9 +22,9 @@ Change			: REG_DT를 외부에서 입력자료로 받음
 	SELECT COUNT(ID) INTO @CHK_COUNT 
     FROM ASK_VISIT_SITE
     WHERE 
-		DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND
-		ASKER_ID = IN_USER_ID AND
-        ACTIVE = TRUE;
+		DISPOSAL_ORDER_ID 	= IN_DISPOSER_ORDER_ID AND
+		ASKER_ID 			= IN_USER_ID AND
+        ACTIVE 				= TRUE;
 	/*방문신청을 하는자가 기존에 방문신청을 한 사실 있는지 확인한다.*/
         
 	IF @CHK_COUNT > 0 THEN

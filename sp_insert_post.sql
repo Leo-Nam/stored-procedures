@@ -55,7 +55,12 @@ BEGIN
 			);
 			
 			IF IN_CATEGORY = 3 AND @USER_CLASS < 200 AND IN_PID > 0 THEN
-				UPDATE POSTS SET STATUS = TRUE WHERE ID = IN_PID;
+				UPDATE POSTS 
+                SET 
+					STATUS 		= TRUE,
+                    UPDATED_AT 	= @REG_DT
+                WHERE ID 		= IN_PID;
+                
 				IF ROW_COUNT() = 1 THEN
 					SET rtn_val = 0;
 					SET msg_txt = 'Success';

@@ -26,10 +26,37 @@ BEGIN
 		@max_selection_duration
 	);
      
-    SET @MAX_SELECT_AT = ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
-    SET @MAX_SELECT2_AT = ADDTIME(IN_BIDDING_END_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
-	SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(@MAX_SELECT_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
-	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
+    SET @MAX_SELECT_AT = ADDTIME(
+							IN_BIDDING_END_AT, 
+                            CONCAT(
+								CAST(@max_selection_duration AS UNSIGNED), 
+                                ':00:00'
+							)
+						);
+                        
+    SET @MAX_SELECT2_AT = ADDTIME(
+							IN_BIDDING_END_AT, 
+                            CONCAT(
+								CAST(@max_selection_duration AS UNSIGNED)*2, 
+                                ':00:00'
+							)
+						);
+                        
+	SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(
+										@MAX_SELECT_AT, 
+                                        CONCAT(
+											CAST(@max_selection_duration AS UNSIGNED), 
+                                            ':00:00'
+                                        )
+									);
+                                    
+	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(
+										@MAX_SELECT2_AT, 
+                                        CONCAT(
+											CAST(@max_selection_duration AS UNSIGNED), 
+                                            ':00:00'
+                                        )
+									);
 /*
     SET @MAX_SELECT_AT = IN_BIDDING_END_AT;
     SET @MAX_SELECT2_AT = IN_BIDDING_END_AT;
