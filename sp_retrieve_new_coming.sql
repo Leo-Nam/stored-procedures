@@ -44,7 +44,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
     FROM V_SITE_WSTE_DISPOSAL_ORDER A 
     LEFT JOIN KIKCD_B B ON A.WSTE_DISPOSED_KIKCD_B_CODE = B.B_CODE
     WHERE 
-		A.COLLECTOR_ID IS NULL AND 				/*0.0.2에서 새롭게 추가한 부분*/
+		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 				/*0.0.2에서 새롭게 추가한 부분*/
         IF(A.DISPOSER_VISIT_END_AT IS NOT NULL, 
 			DISPOSER_VISIT_END_AT >= NOW(), 
             DISPOSER_BIDDING_END_AT >= NOW()
@@ -53,7 +53,9 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
 			SELECT LEFT(C.KIKCD_B_CODE, 5) 
 			FROM BUSINESS_AREA C 
 			LEFT JOIN USERS D ON C.SITE_ID = D.AFFILIATED_SITE 
-			WHERE D.ID = IN_USER_ID
+			WHERE 
+				D.ID = IN_USER_ID AND
+                C.ACTIVE = TRUE
 		);    
         
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;

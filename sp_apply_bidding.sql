@@ -31,7 +31,6 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
     /*트랜잭션 시작*/  
 	
     CALL sp_req_current_time(@REG_DT);
-    /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	CALL sp_req_user_exists_by_id(
 		IN_USER_ID, 

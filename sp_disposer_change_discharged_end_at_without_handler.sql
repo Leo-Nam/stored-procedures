@@ -40,12 +40,11 @@ BEGIN
 					WHERE ID = IN_COLLECTOR_BIDDING_ID;  
 					
 					IF @BIDDING_RANK = 1 THEN
-						UPDATE SITE_WSTE_DISPOSAL_ORDER
-						SET 
-							SELECTED 		= IN_COLLECTOR_BIDDING_ID,
-							SELECTED_AT 	= @REG_DT,
-							UPDATED_AT 		= @REG_DT
-						WHERE ID 			= IN_DISPOSER_ORDER_ID;
+						CALL sp_setup_first_place_schedule(
+							IN_DISPOSER_ORDER_ID,
+							rtn_val,
+							msg_txt
+						);
 					ELSE
 						IF @BIDDING_RANK = 2 THEN
 							SELECT SELECTED INTO @FIRST_SELECTED
@@ -63,37 +62,18 @@ BEGIN
 										SET rtn_val 		= 35208;
 										SET msg_txt 		= 'The bid has already been awarded to the 1st place bidder';
 									ELSE
-										UPDATE SITE_WSTE_DISPOSAL_ORDER
-										SET 
-											SELECTED2 		= IN_COLLECTOR_BIDDING_ID,
-											SELECTED2_AT 	= @REG_DT,
-											UPDATED_AT		= @REG_DT
-										WHERE ID 			= IN_DISPOSER_ORDER_ID;
+										CALL sp_setup_second_place_schedule(
+											IN_DISPOSER_ORDER_ID,
+											rtn_val,
+											msg_txt
+										);
 									END IF;
 								ELSE
-									SELECT COLLECTOR_MAX_DECISION_AT 
-									INTO @COLLECTOR_MAX_DECISION_AT
-									FROM SITE_WSTE_DISPOSAL_ORDER
-									WHERE ID = IN_DISPOSER_ORDER_ID;
-									
-									IF @COLLECTOR_MAX_DECISION_AT <= NOW() THEN
-										UPDATE SITE_WSTE_DISPOSAL_ORDER
-										SET 
-											SELECTED2 		= IN_COLLECTOR_BIDDING_ID,
-											SELECTED2_AT 	= @REG_DT,
-											UPDATED_AT		= @REG_DT
-										WHERE ID 			= IN_DISPOSER_ORDER_ID;
-                                        IF ROW_COUNT() = 1 THEN
-											SET rtn_val 		= 0;
-											SET msg_txt 		= 'success';
-                                        ELSE
-											SET rtn_val 		= 35207;
-											SET msg_txt 		= 'failed to update record';
-                                        END IF;
-									ELSE
-										SET rtn_val 		= 35206;
-										SET msg_txt 		= 'No. 1 site has rights';
-									END IF;
+									CALL sp_setup_second_place_schedule(
+										IN_DISPOSER_ORDER_ID,
+                                        rtn_val,
+                                        msg_txt
+                                    );
 								END IF;
 							ELSE
 								SET rtn_val 		= 35205;

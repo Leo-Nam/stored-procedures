@@ -214,17 +214,36 @@ AUTHOR 			: Leo Nam
 			WHEN CUR_STATE_CATEGORY_ID = 4
 				THEN (
 					SELECT 
-						IF(MAX_SELECT_AT <= NOW(), 
-							IF(BIDDERS > 1, 
+						IF(BIDDERS > 1, 
+							IF(COLLECTOR_SELECTION_CONFIRMED2 = TRUE,
+								MAX_SELECT_AT,
+								UPDATED_AT
+							),
+							IF(COLLECTOR_SELECTION_CONFIRMED = TRUE,
 								MAX_SELECT2_AT,
-								MAX_SELECT_AT
-							) ,
-							MAX_SELECT_AT
-						) 
+								UPDATED_AT
+							)
+						)
 					FROM SITE_WSTE_DISPOSAL_ORDER 
 					WHERE ID = CUR_DISPOSER_ORDER_ID
 				)
 			WHEN CUR_STATE_CATEGORY_ID = 5
+				THEN (
+					SELECT 
+						IF(BIDDERS > 1, 
+							IF(COLLECTOR_SELECTION_CONFIRMED2 = TRUE,
+								MAX_SELECT_AT,
+								UPDATED_AT
+							),
+							IF(COLLECTOR_SELECTION_CONFIRMED = TRUE,
+								MAX_SELECT2_AT,
+								UPDATED_AT
+							)
+						)
+					FROM SITE_WSTE_DISPOSAL_ORDER 
+					WHERE ID = CUR_DISPOSER_ORDER_ID
+				)
+			WHEN CUR_STATE_CATEGORY_ID = 6
 				THEN (
 					SELECT 
 						IF(A.COLLECT_ASK_END_AT <= NOW(), 
@@ -236,12 +255,12 @@ AUTHOR 			: Leo Nam
                     ON A.DISPOSAL_ORDER_ID = B.ID
 					WHERE A.ID = CUR_DISPOSER_ORDER_ID
 				)
-			WHEN CUR_STATE_CATEGORY_ID = 6
+			WHEN CUR_STATE_CATEGORY_ID = 7
 				THEN CUR_DISPOSER_CLOSE_AT
             ELSE NULL
         END INTO @DISPLAY_DATE;
 		
-		UPDATE CURRENT_STATE_TEMP 
+		UPDATE CURRENT_STATE_BY_OPTION 
         SET 
 			IMG_PATH 			= @IMG_PATH, 
             WSTE_LSIT 			= @WSTE_LSIT, 
@@ -275,7 +294,7 @@ AUTHOR 			: Leo Nam
         'DISPOSER_LAT'				, DISPOSER_LAT, 
         'DISPOSER_LNG'				, DISPOSER_LNG
 	)) 
-    INTO @json_data FROM CURRENT_STATE_TEMP;
+    INTO @json_data FROM CURRENT_STATE_BY_OPTION;
     
     IF vRowCount = 0 THEN
 		SET @rtn_val = 29001;

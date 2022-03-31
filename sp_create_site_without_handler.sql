@@ -76,7 +76,7 @@ AUTHOR 			: Leo Nam
 		VALUES (
 			@MAX_SITE_ID, 
 			CONCAT(LEFT(IN_KIKCD_B_CODE, 5), '00000'), 
-			1, 
+			2, 		/*디폴트: 2, 무료: 1, 유료: 0*/
 			@REG_DT
 		);
         IF ROW_COUNT() = 1 THEN

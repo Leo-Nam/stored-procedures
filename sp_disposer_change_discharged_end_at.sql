@@ -14,6 +14,14 @@ Update 			: 2022.03.25
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */		
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;							
+    /*트랜잭션 시작*/  
     
 	CALL sp_req_user_exists_by_id(
     /*DISPOSER가 존재하면서 활성화된 상태인지 검사한다.*/
@@ -49,6 +57,7 @@ AUTHOR 			: Leo Nam
 			/*사용자가 배출등록자와 동일하지 않은 경우 예외처리한다.*/
 				SET @rtn_val 		= 34903;
 				SET @msg_txt 		= 'Users are not waste discharger';
+				SIGNAL SQLSTATE '23000';
 			END IF;
 		ELSE
 		/*사업자사용자인 경우*/
@@ -73,14 +82,17 @@ AUTHOR 			: Leo Nam
 				/*사용자에게 권한이 없는 경우에는 예외처리한다.*/
 					SET @rtn_val 		= 34902;
 					SET @msg_txt 		= 'User not authorized';
+					SIGNAL SQLSTATE '23000';
 				END IF;
 			ELSE
 			/*사용자가 폐기물배출사이트의 소속이 아닌 경우에는 예외처리한다.*/
 				SET @rtn_val 		= 34901;
 				SET @msg_txt 		= 'Users does not belong to the site';
+				SIGNAL SQLSTATE '23000';
 			END IF;
 		END IF;	
     END IF; 
 	SET @json_data 		= NULL;
+    COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);	
 END
