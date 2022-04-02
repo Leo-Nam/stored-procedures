@@ -1,4 +1,4 @@
-CREATE PROCEDURE `sp_get_disposal_wste_lists` (
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_disposal_wste_lists`(
 	IN IN_DISPOSER_ORDER_ID				BIGINT,
     OUT OUT_DISPOSER_WSTE_LIST			JSON
 )
