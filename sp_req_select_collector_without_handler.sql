@@ -19,16 +19,14 @@ BEGIN
     SET @MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_decision_duration AS UNSIGNED), ':00:00'));
 */    
     IF IN_RANK = 1 THEN
-/*    
+    
 		UPDATE SITE_WSTE_DISPOSAL_ORDER 
 		SET 
 			SELECTED = IN_COLLECTOR_BIDDING_ID, 
             SELECTED_AT = @SELECTED_AT,
-            MAX_DECISION_AT = @MAX_DECISION_AT,
-            MAX_SELECT2_AT = @MAX_SELECT_AT,
             UPDATED_AT = @SELECTED_AT
         WHERE ID = IN_DISPOSER_ORDER_ID;
-*/    
+    
 		CALL sp_setup_first_place_schedule(
 			IN_DISPOSER_ORDER_ID,
 			@SELECTED_AT,
@@ -36,23 +34,23 @@ BEGIN
 			msg_txt
 		);    
     ELSE
-/*    
+    
 		UPDATE SITE_WSTE_DISPOSAL_ORDER 
         SET 
 			SELECTED2 = IN_COLLECTOR_BIDDING_ID, 
             SELECTED2_AT = @SELECTED_AT,
-            MAX_DECISION2_AT = @MAX_DECISION_AT,
             UPDATED_AT = @SELECTED_AT
         WHERE ID = IN_DISPOSER_ORDER_ID;
-*/        
+        
 		CALL sp_setup_second_place_schedule(
 			IN_DISPOSER_ORDER_ID,
 			@SELECTED_AT,
 			rtn_val,
 			msg_txt
-		);    
+		);   
+        
     END IF;
-	IF ROW_COUNT() = 1 THEN
+	IF rtn_val = 0 THEN
 		UPDATE COLLECTOR_BIDDING 
 		SET 
 			SELECTED = TRUE, 

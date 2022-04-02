@@ -105,9 +105,8 @@ AUTHOR 			: Leo Nam
 			CALL sp_req_get_posts_without_handler(
 				IN_SITE_ID,
 				4,
-				1,
-				0,
-				10,
+/*				0,
+				10,*/
 				@rtn_val,
 				@msg_txt,
 				@review_list

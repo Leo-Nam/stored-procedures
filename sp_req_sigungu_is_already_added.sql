@@ -22,7 +22,8 @@ Change			: OUT 데이타를 반환코드와 결과문자열로 나누는 방식�
     FROM BUSINESS_AREA 
     WHERE 
 		SITE_ID = IN_SITE_ID AND 
-        KIKCD_B_CODE = IN_SIGUNGU_CODE;
+        KIKCD_B_CODE = IN_SIGUNGU_CODE AND
+        ACTIVE = TRUE;
 	
     IF @CHK_COUNT = 0 THEN
 		SET rtn_val = 0;

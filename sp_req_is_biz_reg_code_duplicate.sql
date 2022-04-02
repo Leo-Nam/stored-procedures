@@ -27,8 +27,8 @@ Change			: 처리결과 코드 및 문자열 반환기능 추가(0.0.2)
 	FROM COMPANY 
 	WHERE BIZ_REG_CODE = IN_BIZ_REG_CODE;
     
-	IF @IS_DUPLICATED = 1 THEN
-		SELECT ID 
+	IF @IS_DUPLICATED >= 1 THEN
+/*		SELECT ID 
         INTO @ID 
         FROM COMPANY 
         WHERE BIZ_REG_CODE = IN_BIZ_REG_CODE;
@@ -37,6 +37,8 @@ Change			: 처리결과 코드 및 문자열 반환기능 추가(0.0.2)
 			'ID', @ID,
 			'BIZ_REG_CODE', IN_BIZ_REG_CODE
 		)) INTO @json_data;
+*/
+		SET @json_data 		= NULL;
 		SET @rtn_val 		= 21601;
 		SET @msg_txt 		= 'Business registration code already exists';
 	ELSE

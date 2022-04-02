@@ -1,6 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_get_my_question_without_handler`(
 	IN IN_USER_ID				BIGINT,				/*입력값 : 사용자 아이디(USERS.ID)*/
-	IN IN_SITE_ID				BIGINT,				/*입력값 : 게시판 소유자(COMP_SITE.ID)*/
     OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 				VARCHAR(200),		/*출력값 : 처리결과 문자열*/
     OUT json_data 				json				/*출력값 : 포스팅 리스트*/
@@ -9,11 +8,12 @@ BEGIN
 
 /*
 Procedure Name 	: sp_req_get_my_question_without_handler
-Input param 	: 2개
+Input param 	: 1개
 Job 			: 문의사항 작성자가 자신이 작성한 문의사항 리스트를 반환한다
-Update 			: 2022.02.16
-Version			: 0.0.1
+Update 			: 2022.03.17
+Version			: 0.0.2
 AUTHOR 			: Leo Nam
+Changes			: 조건으로 사용하는 site_id는 삭제함(0.0.2)
 */		
 
     DECLARE vRowCount 						INT DEFAULT 0;
@@ -48,7 +48,6 @@ AUTHOR 			: Leo Nam
     WHERE 
 		POST_PID 			= 0 AND 
         POST_CREATOR_ID 	= IN_USER_ID AND 
-        POST_SITE_ID 		= IN_SITE_ID  AND 
         POST_CATEGORY_ID	= 3 AND 
         POST_ACTIVE		 	= TRUE 
 	ORDER BY POST_UPDATED_AT DESC /*LIMIT IN_OFFSET, IN_ITEMS*/;   

@@ -18,7 +18,7 @@ AUTHOR 			: Leo Nam
     IF @COUNT_BIDDING > 0 THEN
     /*수거자가 입찰한 기록이 존재하는 경우 정상처리한다.*/
 		SET rtn_val = 0;
-		SET msg_txt = 'Bidding records exist'; 
+		SET msg_txt = 'success'; 
     ELSE
     /*수거자가 입찰한 기록이 존재하지 않는 경우 예외처리한다.*/
 		SET rtn_val = 31301;
