@@ -25,7 +25,7 @@ AUTHOR 			: Leo Nam
     
     IF @CHK_COUNT = 1 THEN
 		SET rtn_val = 0;
-		SET msg_txt = 0;
+		SET msg_txt = 'success';
     ELSE
 		SET rtn_val = 27401;
 		SET msg_txt = 'User does not have business administrator(201) privileges';

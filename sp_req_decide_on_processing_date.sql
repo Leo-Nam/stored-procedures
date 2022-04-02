@@ -91,7 +91,7 @@ AUTHOR 			: Leo Nam
     /*사용자가 유효하지 않은 경우에는 예외처리한다.*/
 		SIGNAL SQLSTATE '23000';
     END IF;
-    
+    COMMIT;
 	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
