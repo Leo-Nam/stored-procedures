@@ -22,7 +22,7 @@ BEGIN
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
 			LEAVE cloop;
-		END IF;		
+		END IF;	
     
 		UPDATE COLLECTOR_BIDDING 
 		SET BIDDING_RANK = NULL 
@@ -63,7 +63,9 @@ BEGIN
 		
 		SELECT COUNT(ID) INTO @BIDDERS 
 		FROM COLLECTOR_BIDDING 
-		WHERE BIDDING_RANK IS NOT NULL;
+		WHERE 
+			BIDDING_RANK IS NOT NULL AND
+			DISPOSAL_ORDER_ID 	= CUR_ID;
 		/*COLLECTOR_BIDDING의 전체 레코드에서 순위가 정해진 모든 레코드의 수를 구하여 @BIDDERS에 반환한다.*/
 		
 		UPDATE SITE_WSTE_DISPOSAL_ORDER
@@ -72,7 +74,8 @@ BEGIN
 		/*새로이 갱신된 @BIDDERS값을 SITE_WSTE_DISPOSAL_ORDER의 BIDDERS에 저장한다.*/        
     
 		IF @BIDDERS > 0 THEN
-		/*투찰자가 1이상 존재하는 경우*/
+		/*투찰자가 1이상 존재하는 경우*/	
+			SELECT CONCAT(CUR_ID, ':', @BIDDERS);
 			IF @BIDDERS = 1 THEN
 			/*적합투찰자인 BIDDER가 1인 경우*/
 				SELECT ID INTO @FIRST_PLACE 

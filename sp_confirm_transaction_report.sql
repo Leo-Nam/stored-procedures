@@ -35,9 +35,11 @@ AUTHOR 			: Leo Nam
     
     IF @rtn_val = 0 THEN
     /*사용자가 유효한 경우에는 정상처리한다.*/
-		SELECT DISPOSER_SITE_ID INTO @DISPOSER_SITE_ID
-        FROM TRANSACTION_REPORT A
-        WHERE ID = IN_REPORT_ID;
+		CALL sp_req_site_id_of_disposal_order_id(
+        /*DISPOSAL ORDER 의 배출자 사이트 아이디를 구한다.*/
+			IN_DISPOSER_ORDER_ID,
+            @DISPOSER_SITE_ID
+        );
         
         SELECT AFFILIATED_SITE INTO @USER_SITE_ID
         FROM USERS
@@ -87,9 +89,14 @@ AUTHOR 			: Leo Nam
                                     CONFIRMED			= IN_RESPONSE
 								WHERE ID = @TRANSACTION_ID;
 								IF ROW_COUNT() = 1 THEN
+									CALL sp_get_transaction_report(
+										IN_REPORT_ID,
+										@json_data
+									);
 									SET @rtn_val = 0;
 									SET @msg_txt = 'success';
                                 ELSE
+									SET @json_data = NULL;
 									SET @rtn_val = 36005;
 									SET @msg_txt = 'Transaction Closing Failed';
 									SIGNAL SQLSTATE '23000';
@@ -128,6 +135,5 @@ AUTHOR 			: Leo Nam
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
