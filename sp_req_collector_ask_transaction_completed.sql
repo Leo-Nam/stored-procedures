@@ -1,18 +1,19 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_ask_transaction_completed`(
-	IN IN_USER_ID					BIGINT,						/*입렦값 : 폐기물 처리보고서 작성자(USERS.ID)*/
-	IN IN_TRANSACTION_ID			BIGINT,						/*입렦값 : 폐기물 처리작업 코드(WSTE_CLCT_TRMT_TRANSACTION.ID)*/
-	IN IN_WSTE_CODE					VARCHAR(8),					/*입렦값 : 폐기물코드(WSTE_CODE.CODE)*/
-	IN IN_QUANTITY					FLOAT,						/*입렦값 : 폐기물수량*/
-	IN IN_COMPLETED_AT				DATETIME,					/*입렦값 : 폐기물 최종처리일자*/
-	IN IN_PRICE						INT,						/*입렦값 : 폐기물 처리가격*/
-	IN IN_TRMT_METHOD				VARCHAR(4),					/*입렦값 : 폐기물 처리방법(WSTE_TRMT_METHOD.CODE)*/
-	IN IN_IMG_LIST					JSON						/*입렦값 : 폐기물 처리사진*/
+	IN IN_USER_ID					BIGINT,								/*입렦값 : 폐기물 처리보고서 작성자(USERS.ID)*/
+	IN IN_TRANSACTION_ID			BIGINT,								/*입렦값 : 폐기물 처리작업 코드(WSTE_CLCT_TRMT_TRANSACTION.ID)*/
+	IN IN_WSTE_CODE					VARCHAR(8),							/*입렦값 : 폐기물코드(WSTE_CODE.CODE)*/
+	IN IN_QUANTITY					FLOAT,								/*입렦값 : 폐기물수량*/
+	IN IN_COMPLETED_AT				DATETIME,							/*입렦값 : 폐기물 최종처리일자*/
+	IN IN_PRICE						INT,								/*입렦값 : 폐기물 처리가격*/
+	IN IN_UNIT						ENUM('Kg','m3','식','전체견적가'),		/*입렦값 : 폐기물 처리단위*/
+	IN IN_TRMT_METHOD				VARCHAR(4),							/*입렦값 : 폐기물 처리방법(WSTE_TRMT_METHOD.CODE)*/
+	IN IN_IMG_LIST					JSON								/*입렦값 : 폐기물 처리사진*/
 )
 BEGIN
 
 /*
 Procedure Name 	: sp_req_collector_ask_transaction_completed
-Input param 	: 8개
+Input param 	: 9개
 Job 			: 폐기물처리보고서를 작성한다
 Update 			: 2022.03.24
 Version			: 0.0.1
@@ -54,7 +55,10 @@ AUTHOR 			: Leo Nam
                 @DISPOSER_SITE_ID,
                 @COLLECTOR_SITE_ID
             );
-            SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
+            SELECT AFFILIATED_SITE 
+            INTO @USER_SITE_ID 
+            FROM USERS 
+            WHERE ID = IN_USER_ID;
             IF @USER_SITE_ID > 0 THEN
 			/*사이트가 정상(개인사용자는 제외됨)적인 경우*/
 				IF @USER_SITE_ID = @COLLECTOR_SITE_ID THEN
@@ -66,7 +70,10 @@ AUTHOR 			: Leo Nam
 					);
 					IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 					/*사용자가 수거자 소속의 권한있는 사용자인 경우*/
-						SELECT STATE, DISPOSER_ORDER_ID INTO @STATE, @DISPOSER_ORDER_ID FROM V_WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
+						SELECT TRANSACTION_STATE_CODE, DISPOSAL_ORDER_ID 
+                        INTO @STATE, @DISPOSER_ORDER_ID 
+                        FROM V_TRANSACTION_STATE
+                        WHERE TRANSACTION_ID = IN_TRANSACTION_ID;
                         IF @STATE = 221 THEN
 							UPDATE WSTE_CLCT_TRMT_TRANSACTION 
 							SET 
@@ -81,26 +88,33 @@ AUTHOR 			: Leo Nam
 									COLLECTOR_MANAGER_ID,
 									TRANSACTION_COMPLETED_AT,
 									QUANTITY,
+									UNIT,
 									PRICE,
 									WSTE_CODE,
 									CREATED_AT,
 									UPDATED_AT,
-									DISPOSER_ORDER_ID
+									DISPOSER_ORDER_ID,
+                                    TRMT_METHOD
 								) VALUES (
 									IN_TRANSACTION_ID,
 									@COLLECTOR_SITE_ID,
 									@DISPOSER_SITE_ID,
 									IN_USER_ID,
-									@REG_DT,
+									IN_COMPLETED_AT,
 									IN_QUANTITY,
+									IN_UNIT,
 									IN_PRICE,
 									IN_WSTE_CODE,
 									@REG_DT,
 									@REG_DT,
-									@DISPOSER_ORDER_ID
+									@DISPOSER_ORDER_ID,
+                                    IN_TRMT_METHOD
 								);
 								IF ROW_COUNT() = 1 THEN   
-									SELECT DISPOSAL_ORDER_ID INTO @DISPOSER_ORDER_ID FROM WSTE_CLCT_TRMT_TRANSACTION WHERE ID = IN_TRANSACTION_ID;
+									SELECT DISPOSAL_ORDER_ID 
+                                    INTO @DISPOSER_ORDER_ID 
+                                    FROM WSTE_CLCT_TRMT_TRANSACTION 
+                                    WHERE ID = IN_TRANSACTION_ID;
 									CALL sp_create_site_wste_photo_information(
 										@DISPOSER_ORDER_ID,
                                         IN_TRANSACTION_ID,
@@ -111,22 +125,9 @@ AUTHOR 			: Leo Nam
 										@msg_txt
 									);
 									IF @rtn_val = 0 THEN
-										SELECT JSON_ARRAYAGG(
-											JSON_OBJECT(
-												'TRANSACTION_ID', TRANSACTION_ID, 
-												'COLLECTOR_SITE_ID', COLLECTOR_SITE_ID, 
-												'DISPOSER_SITE_ID', DISPOSER_SITE_ID, 
-												'COLLECTOR_MANAGER_ID', COLLECTOR_MANAGER_ID, 
-												'TRANSACTION_COMPLETED_AT', TRANSACTION_COMPLETED_AT, 
-												'QUANTITY', QUANTITY, 
-												'PRICE', PRICE, 
-												'WSTE_CODE', WSTE_CODE, 
-												'CREATED_AT', CREATED_AT, 
-												'UPDATED_AT', UPDATED_AT
-											)
-										) INTO @json_data ;
+										SET @json_data = NULL;
 										SET @rtn_val = 0;
-										SET @msg_txt = 'success';
+										SET @msg_txt = 'success98765432111';
 									ELSE
 										SIGNAL SQLSTATE '23000';
 									END IF;
@@ -142,7 +143,7 @@ AUTHOR 			: Leo Nam
 							END IF;
                         ELSE
 							SET @rtn_val = 25406;
-							SET @msg_txt = 'The report cannot be submitted';
+							SET @msg_txt = 'The report cannot be submitted1';
 							SIGNAL SQLSTATE '23000';
                         END IF;
 					ELSE

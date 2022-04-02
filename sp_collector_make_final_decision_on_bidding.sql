@@ -15,6 +15,14 @@ Version			: 0.0.2
 AUTHOR 			: Leo Nam
 Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시저에 공통으로 적용(0.0.2)
 */
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;							
+    /*트랜잭션 시작*/  
     CALL sp_req_current_time(@REG_DT);
     
 	CALL sp_req_user_exists_by_id(
@@ -219,5 +227,6 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 		SET @json_data 		= NULL;
 		SIGNAL SQLSTATE '23000';
     END IF;
+    COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

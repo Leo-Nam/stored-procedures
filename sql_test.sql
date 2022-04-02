@@ -4439,8 +4439,597 @@ SELECT
 UPDATE SITE_WSTE_DISPOSAL_ORDER A, (SELECT ID, DISPOSAL_ORDER_ID FROM WSTE_CLCT_TRMT_TRANSACTION) B SET A.TRANSACTION_ID = B.ID WHERE A.ID = B.DISPOSAL_ORDER_ID;
 */
 
-
+/*
 SET @USER_ID = 11;
 CALL sp_retrieve_new_coming(
 	@USER_ID
 );
+*/
+/*
+SET @USER_ID = 28;
+SET @DISPOSER_ORDER_ID = 10;
+SET @COLLECTOR_BIDDING_ID = 4;
+SET @DISCHARGED_AT = '2022-04-05';
+CALL sp_disposer_change_discharged_end_at(
+	@USER_ID,
+    @DISPOSER_ORDER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @DISCHARGED_AT
+);
+*/
+/*
+SET @USER_ID = 190;
+SET @STATE = 211;
+
+SELECT 
+		COLLECTOR_BIDDING_ID, 
+		DISPOSER_ORDER_ID, 
+        DISPOSER_ORDER_CODE, 
+        STATE, 
+        STATE_CODE, 
+        STATE_CATEGORY, 
+        STATE_CATEGORY_ID
+    FROM V_COLLECTOR_BIDDING_WITH_STATE
+	WHERE 
+		STATE_CODE = @STATE AND 
+        COLLECTOR_SITE_ID IN (
+			SELECT AFFILIATED_SITE 
+            FROM USERS 
+            WHERE 
+				ID = @USER_ID AND 
+                ACTIVE = TRUE
+        );
+*/
+/*
+CALL sp_retrieve_current_state_by_option(
+	@USER_ID,
+    @STATE
+);
+*/
+/*
+CALL sp_req_disposal_order_details_2(355);
+*/
+
+/*
+SELECT 
+		A.DISPOSER_ORDER_ID, 
+        A.DISPOSER_ORDER_CODE, 
+        A.DISPOSER_VISIT_START_AT,
+        A.DISPOSER_VISIT_END_AT,
+        A.DISPOSER_BIDDING_END_AT,
+        A.WSTE_DISPOSED_KIKCD_B_CODE,
+        A.WSTE_DISPOSED_ADDR,
+        A.DISPOSER_CREATED_AT,
+        B.SI_DO,
+        B.SI_GUN_GU,
+        B.EUP_MYEON_DONG,
+        B.DONG_RI
+    FROM V_SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN KIKCD_B B ON A.WSTE_DISPOSED_KIKCD_B_CODE = B.B_CODE
+    WHERE 
+		A.COLLECTOR_ID IS NULL AND 				/*0.0.2에서 새롭게 추가한 부분*/
+/*        
+        IF(A.DISPOSER_VISIT_END_AT IS NOT NULL, 
+			DISPOSER_VISIT_END_AT >= NOW(), 
+            DISPOSER_BIDDING_END_AT >= NOW()
+        ) AND 
+		LEFT(A.WSTE_DISPOSED_KIKCD_B_CODE, 5) IN (
+			SELECT LEFT(C.KIKCD_B_CODE, 5) 
+			FROM BUSINESS_AREA C 
+			LEFT JOIN USERS D ON C.SITE_ID = D.AFFILIATED_SITE 
+			WHERE D.ID = 221
+		);    
+*/
+/*
+call sp_calc_bidding_rank_all();
+*/
+
+/*
+CALL sp_retrieve_current_state(28);
+*/
+
+
+/*
+call sp_req_close_bidding_early(119, 290);
+*/
+
+/*
+SELECT B.BIDDING_END_AT INTO @BIDDING_END_AT 
+    FROM COLLECTOR_BIDDING A INNER JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID 
+    WHERE A.ID = IN_COLLECTOR_BIDDING_ID;
+*/
+
+/*
+SET @USER_ID = 188;
+SET @COLLECTOR_BIDDING_ID = 231;
+SET @ORDER_ID = 369;
+SET @ASK_END_AT = '2022-2022-03-29';
+
+CALL sp_req_select_collector(
+	@USER_ID,
+	@COLLECTOR_BIDDING_ID,
+	@ORDER_ID,
+	@ASK_END_AT
+);
+*/
+
+/*
+CALL sp_req_select_collector_without_handler(
+	@COLLECTOR_BIDDING_ID,
+	@ORDER_ID,
+	@ASK_END_AT,
+	@REG_DT,
+	1,
+	@rtn_val,
+	@msg_txt
+);
+
+SELECT 
+	@COLLECTOR_BIDDING_ID,
+	@ORDER_ID,
+	@ASK_END_AT,
+	@REG_DT,
+	@rtn_val,
+	@msg_txt
+*/
+
+/*
+CALL sp_get_company(14);
+*/
+/*
+SELECT *
+        FROM COMPANY PARENT LEFT JOIN COMPANY CHILD ON PARENT.ID = CHILD.P_COMP_ID
+        WHERE CHILD.ID = 14;
+*/
+
+/*
+SELECT 
+		A.DISPOSER_ORDER_ID, 
+        A.DISPOSER_ORDER_CODE, 
+        A.DISPOSER_VISIT_START_AT,
+        A.DISPOSER_VISIT_END_AT,
+        A.DISPOSER_BIDDING_END_AT,
+        A.WSTE_DISPOSED_KIKCD_B_CODE,
+        A.WSTE_DISPOSED_ADDR,
+        A.DISPOSER_CREATED_AT,
+        B.SI_DO,
+        B.SI_GUN_GU,
+        B.EUP_MYEON_DONG,
+        B.DONG_RI
+    FROM V_SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN KIKCD_B B ON A.WSTE_DISPOSED_KIKCD_B_CODE = B.B_CODE
+    WHERE 
+		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 
+        IF(A.DISPOSER_VISIT_END_AT IS NOT NULL, 
+			DISPOSER_VISIT_END_AT >= NOW(), 
+            DISPOSER_BIDDING_END_AT >= NOW()
+        ) AND 
+		LEFT(A.WSTE_DISPOSED_KIKCD_B_CODE, 5) IN (
+			SELECT LEFT(C.KIKCD_B_CODE, 5) 
+			FROM BUSINESS_AREA C 
+			LEFT JOIN USERS D ON C.SITE_ID = D.AFFILIATED_SITE 
+			WHERE D.ID = 190
+		);    
+*/        
+
+/*
+SET @USER_ID = 190;
+SET @STATE = 239;
+CALL sp_retrieve_current_state_by_option(
+	@USER_ID,
+    @STATE
+);
+*/
+
+/*
+CALL sp_req_current_time(@REG_DT);
+SET @USER_ID = 189;
+SET @ORDER_ID = 400;
+CALL sp_req_close_visit_early_without_handler(
+	@USER_ID,
+    @ORDER_ID,
+    @REG_DT,
+    @rtn_val,
+    @msg_txt,
+    @json_data
+);
+
+SELECT @USER_ID,
+    @ORDER_ID,
+    @REG_DT,
+    @rtn_val,
+    @msg_txt,
+    @json_data;
+    */
+    
+    
+/*    
+SET @USER_ID = 189;
+SET @COLLECTOR_BIDDING_ID = 267;
+SET @DISPOSAL_ORDER_ID = 400;
+SET @ASK_END_AT = '2022-04-06';
+*/
+
+/*
+call sp_req_select_collector(
+	@USER_ID,
+	@COLLECTOR_BIDDING_ID,
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT
+);
+*/
+/*
+SELECT DISPOSAL_ORDER_ID, WINNER 
+INTO @COLLECTOR_DISPOSAL_ORDER_ID, @WINNER 
+FROM COLLECTOR_BIDDING 
+WHERE ID = @COLLECTOR_BIDDING_ID;
+
+SELECT @COLLECTOR_DISPOSAL_ORDER_ID, @WINNER ;
+*/
+
+/*
+CALL sp_req_select_collector_without_handler(
+	@COLLECTOR_BIDDING_ID,
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT,
+	@REG_DT,
+	1,
+	@rtn_val,
+	@msg_txt
+);
+
+SELECT 
+	@COLLECTOR_BIDDING_ID,
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT,
+	@REG_DT,
+	@rtn_val,
+	@msg_txt
+    
+*/
+
+/*
+CALL sp_setup_first_place_schedule(
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT,
+	@rtn_val,
+	@msg_txt
+);    
+SELECT 
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT,
+	@rtn_val,
+	@msg_txt
+*/
+
+
+/*
+SET @USER_ID = 206;
+SET @COLLECT_BIDDING_ID = 147;
+SET @FINAL_DECISION = 0;
+CALL sp_collector_make_final_decision_on_bidding(
+	@USER_ID,
+	@COLLECT_BIDDING_ID,
+	@FINAL_DECISION
+);
+*/
+/*
+SELECT 
+		A.DISPOSER_ORDER_ID, 
+		A.DISPOSER_ID, 
+		A.COLLECTOR_ID, 
+		A.COLLECTOR_BIDDING_ID, 
+        A.DISPOSER_OPEN_AT, 
+        A.DISPOSER_CLOSE_AT, 
+        A.DISPOSER_SITE_ID, 
+        B.AVATAR_PATH
+    FROM V_SITE_WSTE_DISPOSAL_ORDER_WITH_STATE A
+	LEFT JOIN USERS B ON IF(B.AFFILIATED_SITE = 0, A.DISPOSER_ID = B.ID, A.DISPOSER_SITE_ID = B.AFFILIATED_SITE)
+	WHERE 
+		B.ID = 189 AND
+        B.ACTIVE = TRUE AND
+        A.DISPOSER_CLOSE_AT > NOW() AND
+        A.STATE_CATEGORY_ID = 5;
+*/
+
+/*
+CALL sp_retrieve_existing_transactions(198);
+*/
+
+/*
+SELECT * FROM V_COLLECTOR_BIDDING_WITH_STATE A 
+        LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
+        LEFT JOIN V_COMP_SITE C ON A.COLLECTOR_SITE_ID = C.COMP_SITE_ID
+        WHERE  
+        A.COLLECTOR_SITE_ID = A.SUCCESS_BIDDER AND
+        B.CLASS = 201;
+*/
+
+
+/*
+UPDATE USERS SET AVATAR_PATH = 'https://chium.s3.ap-northeast-2.amazonaws.com/real/59f5f03b-4b6e-4138-b411-69403d298a4f.jpeg';
+*/
+
+/*
+CALL sp_set_display_time(400, 5, @DISPLAY_TIME);
+SELECT @DISPLAY_TIME;
+*/
+
+/*
+SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'TRANSACTION_ID'			, TRANSACTION_ID, 
+		'DISPOSAL_ORDER_ID'			, DISPOSER_ORDER_ID, 
+		'COLLECT_ASK_END_AT'		, COLLECT_ASK_END_AT, 
+		'COLLECTING_TRUCK_ID'		, COLLECTING_TRUCK_ID, 
+		'TRUCK_DRIVER_ID'			, TRUCK_DRIVER_ID, 
+		'TRUCK_START_AT'			, TRUCK_START_AT, 
+		'COLLECT_END_AT'			, COLLECT_END_AT, 
+		'CONTRACT_ID'				, CONTRACT_ID, 
+		'DATE_OF_VISIT'				, DATE_OF_VISIT, 
+		'VISIT_START_AT'			, VISIT_START_AT, 
+		'VISIT_END_AT'				, VISIT_END_AT, 
+		'IN_PROGRESS'				, IN_PROGRESS
+	)) 
+	INTO @STATE_INFO
+	FROM V_WSTE_CLCT_TRMT_TRANSACTION_WITH_STATE
+    WHERE  
+		DISPOSER_ORDER_ID = 305 AND
+        IN_PROGRESS = TRUE; 
+SELECT @STATE_INFO;
+*/
+
+/*
+CALL sp_calc_clct_trmt_vist_schedule_all();
+*/
+
+
+/*
+SET @USER_ID = 166;
+SET @COLLECT_BIDDING_ID = 49;
+SET @FINAL_DECISION = 1;
+CALL sp_collector_make_final_decision_on_bidding(
+	@USER_ID,
+	@COLLECT_BIDDING_ID,
+	@FINAL_DECISION
+);
+*/
+
+/*
+SET @USER_ID=77;
+SET @CATEGORY=101;
+CALL sp_retrieve_my_disposal_lists_by_option(@USER_ID, @CATEGORY);
+*/
+
+/*
+SELECT 
+		A.ID, 
+		A.ORDER_CODE, 
+		A.DISPOSER_ID, 
+		A.COLLECTOR_ID, 
+		A.COLLECTOR_BIDDING_ID, 
+        A.OPEN_AT, 
+        A.CLOSE_AT, 
+        A.SITE_ID, 
+        B.AVATAR_PATH
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+	LEFT JOIN USERS B ON IF(B.AFFILIATED_SITE = 0, A.DISPOSER_ID = B.ID, A.SITE_ID = B.AFFILIATED_SITE)
+	LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION C ON A.ID = C.DISPOSAL_ORDER_ID
+	LEFT JOIN V_ORDER_STATE_NAME D ON A.ID = D.DISPOSER_ORDER_ID
+	WHERE 
+		B.ID = 201 AND
+        B.ACTIVE = TRUE AND
+        A.CLOSE_AT > NOW() AND
+        D.STATE_CATEGORY_ID = 6;
+*/
+
+/*
+SELECT B.SITE_NAME INTO @COLLECTOR_SITE_NAME
+        FROM COLLECTOR_BIDDING A
+        LEFT JOIN COMP_SITE B ON A.COLLECTOR_ID = B.ID
+        WHERE A.ID = 291;       
+SELECT     @COLLECTOR_SITE_NAME; 
+*/   
+
+
+/*
+CALL sp_req_current_time(@REG_DT);
+
+SET @USER_ID = 190;
+SET @TRANSACTION_ID = 394;
+SET @WSTE_CODE = '51';
+SET @QUANTITY = 3500;
+SET @PRICE = 52000000;
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/real/59f5f03b-4b6e-4138-b411-69403d298a4f.jpeg", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/real/59f5f03b-4b6e-4138-b411-69403d298a4f.jpeg", "FILE_SIZE": 4.35}]';
+
+CALL sp_req_collector_ask_transaction_completed(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@REG_DT,
+	@PRICE,
+	@TRMT_METHOD,
+	@IMG_LIST
+);
+*/
+/*
+SET @TRANSACTION_ID = 394;
+CALL sp_req_site_id_of_transaction_id(
+	@TRANSACTION_ID,
+    @DISPOER_SITE_ID,
+    @COLLECTOR_SITE_ID
+);
+
+SELECT 
+	@TRANSACTION_ID,
+    @DISPOER_SITE_ID,
+    @COLLECTOR_SITE_ID
+*/
+
+/*
+SET @IN_TRANSACTION_ID = 394;
+SET @IN_STATE = FALSE ;
+
+CALL sp_req_processing_status(
+	@IN_TRANSACTION_ID,
+	@IN_STATE
+);
+*/
+
+/*
+	SELECT 
+		ID, 
+        COLLECTOR_SITE_ID,
+        DISPOSAL_ORDER_ID,
+        COLLECTOR_BIDDING_ID
+        
+    FROM WSTE_CLCT_TRMT_TRANSACTION
+	WHERE 
+		ID = @IN_TRANSACTION_ID AND 
+        ISNULL(CONFIRMED_AT) = IF(@IN_STATE = FALSE, FALSE, TRUE);
+*/
+/*
+SELECT DISPOSER_SITE_ID, COLLECTOR_SITE_ID, COLLECTOR_BIDDING_ID 
+    INTO @DISPOER_SITE_ID, @COLLECTOR_SITE_ID, @COLLECTOR_BIDDING_ID
+    FROM V_WSTE_CLCT_TRMT_TRANSACTION 
+    WHERE TRANSACTION_ID = 394;
+SELECT @DISPOER_SITE_ID, @COLLECTOR_SITE_ID, @COLLECTOR_BIDDING_ID;
+*/
+
+
+/*
+SELECT 
+		A.COLLECTOR_ID, 
+        A.ID, 
+        A.DISPOSAL_ORDER_ID,
+        B.STATE_CODE,
+        B.STATE,
+        B.STATE_PID,
+        B.STATE_CATEGORY_ID,
+        B.STATE_CATEGORY,
+        B.COLLECTOR_CATEGORY_ID,
+        B.COLLECTOR_CATEGORY
+    FROM COLLECTOR_BIDDING A
+    LEFT JOIN V_BIDDING_STATE_NAME B ON A.ID = B.COLLECTOR_BIDDING_ID
+	WHERE A.COLLECTOR_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = 204 AND ACTIVE = TRUE);
+*/
+/*
+CALL sp_retrieve_current_state(204);    
+*/
+/*
+ SET @DISPOSER_ORDER_ID = 273;
+ SET @COLLECTOR_BIDDING_ID = 117;
+ SET @STATE_CATEGORY_ID = 0;
+		CALL sp_set_display_time_for_collector(
+			CUR_DISPOSER_ORDER_ID,
+			CUR_COLLECTOR_BIDDING_ID,
+			CUR_STATE_CATEGORY_ID,
+			@RETRIEVE_CURRENT_STATE_DISPLAY_DATE
+		);
+*/
+/*
+SELECT 
+		A.COLLECTOR_ID, 
+        A.ID, 
+        A.DISPOSAL_ORDER_ID,
+        B.STATE_CODE,
+        B.STATE,
+        B.STATE_PID,
+        B.COLLECTOR_CATEGORY_ID,
+        B.COLLECTOR_CATEGORY
+    FROM COLLECTOR_BIDDING A
+    LEFT JOIN V_BIDDING_STATE_NAME B ON A.ID = B.COLLECTOR_BIDDING_ID
+	WHERE A.COLLECTOR_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = 204 AND ACTIVE = TRUE);
+*/
+
+/*
+CALL sp_req_transaction_report(188, 394);
+*/
+/*
+			CALL sp_req_site_id_from_transaction_report(
+				394,
+                @DISPOSER_SITE_ID,
+                @COLLECTOR_SITE_ID
+            );
+            
+            SELECT 
+                @DISPOSER_SITE_ID,
+                @COLLECTOR_SITE_ID
+*/
+/*
+CALL sp_req_transaction_report(188);
+*/
+/*
+CALL sp_get_transaction_report(11, @json_data);
+select @json_data
+*/
+
+
+/*
+			CALL sp_req_site_id_of_transaction_id(
+				406,
+                @DISPOSER_SITE_ID,
+                @COLLECTOR_SITE_ID
+            );
+            SELECT 
+                @DISPOSER_SITE_ID,
+                @COLLECTOR_SITE_ID
+*/
+
+/*
+CALL sp_retrieve_existing_transactions(188);    
+*/
+
+
+
+
+CALL sp_req_current_time(@REG_DT);
+
+SET @USER_ID = 190;
+SET @TRANSACTION_ID = 394;
+SET @WSTE_CODE = '51';
+SET @QUANTITY = 3500;
+SET @PRICE = 52000000;
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 4.35}]';
+/*
+CALL sp_req_collector_ask_transaction_completed(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@REG_DT,
+	@PRICE,
+	@TRMT_METHOD,
+	@IMG_LIST
+);  
+*/ 
+SELECT TRANSACTION_STATE_CODE, DISPOSAL_ORDER_ID 
+INTO @STATE, @DISPOSER_ORDER_ID 
+FROM V_TRANSACTION_STATE
+WHERE TRANSACTION_ID = @TRANSACTION_ID;   
+
+SELECT @STATE, @DISPOSER_ORDER_ID;
+/*
+CALL sp_req_site_id_of_transaction_id(
+	@TRANSACTION_ID,
+	@DISPOSER_SITE_ID,
+	@COLLECTOR_SITE_ID
+);       
+CALL sp_create_site_wste_photo_information(
+	432,
+	421,
+	@REG_DT,
+	'처리',
+	@IMG_LIST,
+	@rtn_val,
+	@msg_txt
+);      
+
+SELECT 
+	@REG_DT,
+	@IMG_LIST,
+	@rtn_val,
+	@msg_txt
+*/    
