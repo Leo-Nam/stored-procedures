@@ -3,7 +3,8 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_write_review_without_handler`(
 	IN IN_CONTENTS				TEXT,				/*입력값 : 내용*/
 	IN IN_SITE_ID				BIGINT,				/*입력값 : 게시판 소유자(COMP_SITE.ID)*/
 	IN IN_PID					BIGINT,				/*입력값 : 댓글의 경우에는 원글의 번호이며 원글인 경우에는 0*/    
-	IN IN_RATING				FLOAT,				/*입력값 : 리뷰작성시 입력되는 평점*/    
+	IN IN_RATING				FLOAT,				/*입력값 : 리뷰작성시 입력되는 평점*/  
+	IN IN_DISPOSER_ORDER_ID		BIGINT,				/*입력값 : 리뷰를 작성할 입찰등록번호*/      
     OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 				VARCHAR(100),		/*출력값 : 처리결과 문자열*/
     OUT json_data 				JSON
@@ -28,6 +29,9 @@ AUTHOR 			: Leo Nam
 		NULL,
 		IN_PID,
 		IN_RATING,
+		IN_DISPOSER_ORDER_ID,
+		NULL,
+		NULL,
 		@rtn_val,
 		@msg_txt,
 		@last_insert_id

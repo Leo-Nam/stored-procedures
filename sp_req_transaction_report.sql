@@ -39,7 +39,7 @@ AUTHOR 			: Leo Nam
         );
         IF @TRANSACTION_EXISTS = TRUE THEN
         /*트랜잭션이 존재하는 경우*/
-			CALL sp_req_site_id_of_transaction_id(
+			CALL sp_req_site_id_from_transaction_report(
             /*트랜잭션의 양 당사자(배출자와 수거자)의 사이트 등록번호를 반환한다.*/
 				IN_TRANSACTION_ID,
                 @DISPOSER_SITE_ID,
@@ -92,15 +92,39 @@ AUTHOR 			: Leo Nam
 						SIGNAL SQLSTATE '23000';
                     END IF;
                 ELSE
-                /*사용자가 배출자 사이트의 관리자가 아닌 경우 예외처리한다.*/
-					SET @rtn_val = 35003;
-					SET @msg_txt = 'User does not belong to the emitter';
-					SIGNAL SQLSTATE '23000';
+                /*사용자가 배출자 사이트의 관리자가 아닌 경우*/
+					IF @COLLECTOR_SITE_ID = @USER_SITE_ID THEN
+					/*사용자가 수거자 사이트의 관리자인 경우 정상처리한다.*/
+						SELECT CLASS INTO @USER_CLASS FROM USERS WHERE ID = IN_USER_ID;
+						IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
+						/*사용자에게 권한이 있는 경우 정상처리한다.*/
+							SELECT ID INTO @TRANSACTION_REPORT_ID FROM TRANSACTION_REPORT WHERE TRANSACTION_ID = IN_TRANSACTION_ID;
+							CALL sp_req_transaction_report_without_handler(
+								@TRANSACTION_REPORT_ID,
+								@rtn_val,
+								@msg_txt,
+								@json_data
+							);
+							IF @rtn_val > 0 THEN
+								SIGNAL SQLSTATE '23000';
+							END IF;
+						ELSE
+						/*사용자에게 권한이 없는 경우 예외처리한다.*/
+							SET @rtn_val = 35003;
+							SET @msg_txt = 'User not authorized';
+							SIGNAL SQLSTATE '23000';
+						END IF;
+					ELSE
+					/*사용자가 수거자 사이트의 관리자가 아닌 경우 예외처리한다.*/
+						SET @rtn_val = 35004;
+						SET @msg_txt = 'User does not belong to the emitter or collector1';
+						SIGNAL SQLSTATE '23000';
+					END IF;
                 END IF;
             END IF;            
         ELSE
         /*트랜잭션이 존재하지 않는 경우 예외처리한다.*/
-			SET @rtn_val = 25402;
+			SET @rtn_val = 35005;
 			SET @msg_txt = 'Transaction is not found or invalid';
 			SIGNAL SQLSTATE '23000';
         END IF;

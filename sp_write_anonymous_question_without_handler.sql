@@ -13,7 +13,7 @@ BEGIN
 Procedure Name 	: sp_write_anonymous_question_without_handler
 Input param 	: 5개
 Job 			: 비회원의 문의사항작성
-Update 			: 2022.02.16
+Update 			: 2022.03.19
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */

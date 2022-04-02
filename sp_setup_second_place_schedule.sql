@@ -1,5 +1,6 @@
-CREATE PROCEDURE `sp_setup_second_place_schedule` (
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_setup_second_place_schedule`(
 	IN IN_DISPOSER_ORDER_ID			BIGINT,
+	IN IN_REG_DT					DATETIME,
     OUT rtn_val						INT,
     OUT msg_txt						VARCHAR(200)
 )
@@ -15,9 +16,10 @@ BEGIN
 			'max_selection_duration',
 			@max_selection_duration
 		);
-							
+				
+		SET @MAX_SELECT2_AT = IN_REG_DT;			
 		SET @MAX_DECISION2_AT = ADDTIME(
-								@REG_DT, 
+								IN_REG_DT, 
 								CONCAT(
 									CAST(@max_selection_duration AS UNSIGNED), 
 									':00:00'
@@ -26,10 +28,9 @@ BEGIN
 							
 		UPDATE SITE_WSTE_DISPOSAL_ORDER
 		SET 
+			MAX_SELECT2_AT				= @MAX_SELECT2_AT,
 			COLLECTOR_MAX_DECISION2_AT 	= @MAX_DECISION2_AT ,
-			SELECTED2 					= IN_COLLECTOR_BIDDING_ID,
-			SELECTED2_AT 				= @REG_DT,
-			UPDATED_AT					= @REG_DT
+			UPDATED_AT					= IN_REG_DT
 		WHERE ID 						= IN_DISPOSER_ORDER_ID;
         
         IF ROW_COUNT() = 1 THEN
