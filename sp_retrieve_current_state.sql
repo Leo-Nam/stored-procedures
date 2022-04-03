@@ -144,7 +144,6 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
             
 		CALL sp_get_disposal_order_info(
 			CUR_DISPOSER_ORDER_ID,
-			@RETRIEVE_CURRENT_STATE_TRANSACTION_ID,
 			@RETRIEVE_CURRENT_STATE_DISPOSER_ORDER_INFO
 		);
 		

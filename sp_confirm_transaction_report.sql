@@ -34,12 +34,11 @@ AUTHOR 			: Leo Nam
     );
     
     IF @rtn_val = 0 THEN
-    /*사용자가 유효한 경우에는 정상처리한다.*/
-		CALL sp_req_site_id_of_disposal_order_id(
-        /*DISPOSAL ORDER 의 배출자 사이트 아이디를 구한다.*/
-			IN_DISPOSER_ORDER_ID,
-            @DISPOSER_SITE_ID
-        );
+    /*사용자가 유효한 경우에는 정상처리한다.*/	
+		SELECT DISPOSER_SITE_ID
+		INTO @DISPOSER_SITE_ID
+		FROM TRANSACTION_REPORT 
+		WHERE ID = IN_REPORT_ID;
         
         SELECT AFFILIATED_SITE INTO @USER_SITE_ID
         FROM USERS
@@ -61,18 +60,19 @@ AUTHOR 			: Leo Nam
 				);
 				IF @rtn_val = 0 THEN
 				/*리포트가 존재하는 경우 정상처리한다.*/
-					SELECT REPORTED_AT, TRANSACTION_ID 
-                    INTO @REPORTED_AT, @TRANSACTION_ID
+					SELECT CREATED_AT, TRANSACTION_ID 
+                    INTO @CREATED_AT, @TRANSACTION_ID
                     FROM TRANSACTION_REPORT 
                     WHERE ID = IN_REPORT_ID;
 					/*수거자가 리포트를 제출할 준비가 되었는지 검사하여 @REPORTED_AT에 반환한다.*/
 					
-					IF @REPORTED_AT IS NOT NULL THEN
+					IF @CREATED_AT IS NOT NULL THEN
 					/*수거자가 리포트를 제출한 경우*/
 						UPDATE TRANSACTION_REPORT 
 						SET 
 							CONFIRMED 					= IN_RESPONSE, 
 							UPDATED_AT 					= @REG_DT,
+							CONFIRMED_AT 				= @REG_DT,
                             TRANSACTION_COMPLETED_AT	= IF(IN_RESPONSE = TRUE, @REG_DT, NULL),
 							DISPOSER_MANAGER_ID 		= IN_USER_ID
 						WHERE ID = IN_REPORT_ID;
@@ -101,6 +101,9 @@ AUTHOR 			: Leo Nam
 									SET @msg_txt = 'Transaction Closing Failed';
 									SIGNAL SQLSTATE '23000';
                                 END IF;
+							ELSE
+								SET @rtn_val = 0;
+								SET @msg_txt = 'success';
                             END IF;
 						ELSE
 						/*정보변경에 실패했다면 예외처리한다.*/

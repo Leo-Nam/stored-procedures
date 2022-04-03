@@ -93,7 +93,6 @@ AUTHOR 			: Leo Nam
         
         CALL sp_get_disposal_order_info(
 			CUR_DISPOSER_ORDER_ID,
-			CUR_TRANSACTION_ID,
             @ORDER_INFO
         );
         

@@ -5037,7 +5037,7 @@ SELECT
 */    
 
 
-
+/*
 CALL sp_req_current_time(@REG_DT);
 
 SET @USER_ID = 215;
@@ -5061,3 +5061,29 @@ CALL sp_req_collector_ask_transaction_completed(
 	@TRMT_METHOD,
 	@IMG_LIST
 );  
+*/
+/*
+SET @DISPOSER_ORDER_ID = 191;
+SET @STATE_CATEGORY_CODE = 2;
+
+call sp_test(
+	@DISPOSER_ORDER_ID,
+    @STATE_CATEGORY_CODE,
+    @COLLECTOR_LIST
+);
+SELECT @DISPOSER_ORDER_ID, @STATE_CATEGORY_CODE, @COLLECTOR_LIST;
+*/
+
+/*
+CALL sp_test(247);
+*/
+
+
+SET @USER_ID = 188;
+SET @RESPONSE = TRUE;
+SET @REPORT_ID = 34;
+CALL sp_test(
+	@USER_ID,
+    @REPORT_ID,
+    @RESPONSE
+);

@@ -4,6 +4,17 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_collector_wste_lists`(
     OUT OUT_WSTE_LIST					JSON
 )
 BEGIN	
+
+/*
+Procedure Name 	: sp_get_collector_wste_lists
+Input param 	: 2개
+Job 			: 폐기물 수집업자가 실제로 수거한 폐기물 리스트를 반환한다. 폐기물 수집업자가 투찰(견적)할 때의 폐기물 리스트는 BIDDING_DETAILS로 관리된다.
+Update 			: 2022.04.03
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+				
+*/
+
 	SELECT JSON_ARRAYAGG(
 		JSON_OBJECT(
 			'WSTE_CODE'			, A.WSTE_CODE, 
