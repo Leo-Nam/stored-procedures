@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_delete_sigungu`(
-	IN IN_USER_ID			BIGINT,				/*입력값 : 사업지역을 추가하고자 하는 사이트의 관리자(USERS.ID)*/
-	IN IN_SIGUNGU_CODE		VARCHAR(10)			/*입력값 : 추가하고자 하는 시군구코드(KIKCD_B.B_CODE)*/
+	IN IN_USER_ID			BIGINT,				/*입력값 : 사업지역을 삭제하고자 하는 사이트의 관리자(USERS.ID)*/
+	IN IN_SIGUNGU_CODE		VARCHAR(10)			/*입력값 : 삭제하고자 하는 시군구코드(KIKCD_B.B_CODE)*/
 )
 BEGIN
 
