@@ -4983,7 +4983,7 @@ CALL sp_retrieve_existing_transactions(188);
 
 
 
-
+/*
 CALL sp_req_current_time(@REG_DT);
 
 SET @USER_ID = 190;
@@ -4993,7 +4993,7 @@ SET @QUANTITY = 3500;
 SET @PRICE = 52000000;
 SET @TRMT_METHOD = '1001';
 SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 4.35}]';
-/*
+
 CALL sp_req_collector_ask_transaction_completed(
 	@USER_ID,
 	@TRANSACTION_ID,
@@ -5005,12 +5005,14 @@ CALL sp_req_collector_ask_transaction_completed(
 	@IMG_LIST
 );  
 */ 
+/*
 SELECT TRANSACTION_STATE_CODE, DISPOSAL_ORDER_ID 
 INTO @STATE, @DISPOSER_ORDER_ID 
 FROM V_TRANSACTION_STATE
 WHERE TRANSACTION_ID = @TRANSACTION_ID;   
 
 SELECT @STATE, @DISPOSER_ORDER_ID;
+*/
 /*
 CALL sp_req_site_id_of_transaction_id(
 	@TRANSACTION_ID,
@@ -5033,3 +5035,29 @@ SELECT
 	@rtn_val,
 	@msg_txt
 */    
+
+
+
+CALL sp_req_current_time(@REG_DT);
+
+SET @USER_ID = 215;
+SET @TRANSACTION_ID = 378;
+SET @WSTE_CODE = '51';
+SET @QUANTITY = 3500;
+SET @COMPLETED_AT = '2022-04-25';
+SET @PRICE = 52000000;
+SET @UNIT = 'Kg';
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 4.35}]';
+
+CALL sp_req_collector_ask_transaction_completed(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@COMPLETED_AT,
+	@PRICE,
+	@UNIT,
+	@TRMT_METHOD,
+	@IMG_LIST
+);  

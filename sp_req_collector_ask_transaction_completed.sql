@@ -29,6 +29,9 @@ AUTHOR 			: Leo Nam
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 
+	SET @rtn_val 		= NULL;
+	SET @msg_txt 		= NULL;
+	SET @json_data 		= NULL;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -127,7 +130,7 @@ AUTHOR 			: Leo Nam
 									IF @rtn_val = 0 THEN
 										SET @json_data = NULL;
 										SET @rtn_val = 0;
-										SET @msg_txt = 'success98765432111';
+										SET @msg_txt = 'success:sp_req_collector_ask_transaction_completed';
 									ELSE
 										SIGNAL SQLSTATE '23000';
 									END IF;
@@ -143,7 +146,7 @@ AUTHOR 			: Leo Nam
 							END IF;
                         ELSE
 							SET @rtn_val = 25406;
-							SET @msg_txt = 'The report cannot be submitted1';
+							SET @msg_txt = CONCAT('Report can be submitted only in 221 state, but now ', @STATE);
 							SIGNAL SQLSTATE '23000';
                         END IF;
 					ELSE
@@ -155,11 +158,13 @@ AUTHOR 			: Leo Nam
 				ELSE
 				/*사용자가 수거자 소속의 관리자가 아닌 경우 예외처리한다.*/
 					SET @rtn_val = 25403;
-					SET @msg_txt = 'User does not belong to the collector';
+					SET @msg_txt = CONCAT('User(', @USER_SITE_ID ,') does not belong to the collector(', @COLLECTOR_SITE_ID, ')');
 					SIGNAL SQLSTATE '23000';
 				END IF;
 			ELSE
 			/*사이트가 존재하지 않거나 유효하지 않은(개인사용자의 경우) 경우*/
+				SET @rtn_val = 25407;
+				SET @msg_txt = 'Not for personal use';
 				SIGNAL SQLSTATE '23000';
 			END IF;
         ELSE

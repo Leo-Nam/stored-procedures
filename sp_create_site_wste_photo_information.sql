@@ -46,44 +46,50 @@ Change			: SITE_WSTE_REG_ID를 IN_DISPOSER_ORDER_ID로 변경(0.0.2)
 			CUR_IMG_PATH,
 			CUR_FILE_SIZE;   
         
-		SET vRowCount = vRowCount + 1;
-		IF endOfRow THEN
-			SET rtn_val = 0;
-			SET msg_txt = 'Success';
+        IF CUR_IMG_PATH IS NOT NULL THEN
+			SET vRowCount = vRowCount + 1;
+			IF endOfRow THEN
+				SET rtn_val = 0;
+				SET msg_txt = 'Success';
+				LEAVE cloop;
+			END IF;
+			
+			INSERT INTO 
+			WSTE_REGISTRATION_PHOTO(
+				DISPOSAL_ORDER_ID, 
+				FILE_NAME, 
+				IMG_PATH, 
+				FILE_SIZE, 
+				ACTIVE,
+				CLASS_CODE,
+				CREATED_AT,
+				UPDATED_AT,
+				TRANSACTION_ID
+			)
+			VALUES(
+				IN_DISPOSER_ORDER_ID, 
+				CUR_FILE_NAME, 
+				CUR_IMG_PATH, 
+				CUR_FILE_SIZE, 
+				TRUE, 
+				IN_CLASS_CODE, 
+				IN_REG_DT, 
+				IN_REG_DT,
+				IN_TRANSACTION_ID
+			);
+			
+			IF ROW_COUNT() = 0 THEN
+				SET rtn_val = 22801;
+				SET msg_txt = 'Failed to insert uploaded images information';
+				LEAVE cloop;
+			ELSE
+				SET rtn_val = 0;
+				SET msg_txt = 'Success';
+			END IF;
+        ELSE
+			SET rtn_val = 22802;
+			SET msg_txt = 'image path should not be null';
 			LEAVE cloop;
-		END IF;
-        
-		INSERT INTO 
-        WSTE_REGISTRATION_PHOTO(
-			DISPOSAL_ORDER_ID, 
-            FILE_NAME, 
-            IMG_PATH, 
-            FILE_SIZE, 
-            ACTIVE,
-            CLASS_CODE,
-            CREATED_AT,
-            UPDATED_AT,
-            TRANSACTION_ID
-		)
-        VALUES(
-			IN_DISPOSER_ORDER_ID, 
-            CUR_FILE_NAME, 
-            CUR_IMG_PATH, 
-            CUR_FILE_SIZE, 
-            TRUE, 
-            IN_CLASS_CODE, 
-            IN_REG_DT, 
-            IN_REG_DT,
-            IN_TRANSACTION_ID
-		);
-        
-        IF ROW_COUNT() = 0 THEN
-			SET rtn_val = 22801;
-			SET msg_txt = 'Failed to insert uploaded images information';
-			LEAVE cloop;
-		ELSE
-			SET rtn_val = 0;
-			SET msg_txt = 'Success';
         END IF;
 	END LOOP;   
 	CLOSE PHOTO_CURSOR;
