@@ -60,8 +60,8 @@ AUTHOR 			: Leo Nam
 				);
 				IF @rtn_val = 0 THEN
 				/*리포트가 존재하는 경우 정상처리한다.*/
-					SELECT CREATED_AT, TRANSACTION_ID 
-                    INTO @CREATED_AT, @TRANSACTION_ID
+					SELECT CREATED_AT, TRANSACTION_ID, DISPOSER_ORDER_ID 
+                    INTO @CREATED_AT, @TRANSACTION_ID, @DISPOSER_ORDER_ID
                     FROM TRANSACTION_REPORT 
                     WHERE ID = IN_REPORT_ID;
 					/*수거자가 리포트를 제출할 준비가 되었는지 검사하여 @REPORTED_AT에 반환한다.*/
@@ -89,12 +89,21 @@ AUTHOR 			: Leo Nam
                                     CONFIRMED			= IN_RESPONSE
 								WHERE ID = @TRANSACTION_ID;
 								IF ROW_COUNT() = 1 THEN
-									CALL sp_get_transaction_report(
-										IN_REPORT_ID,
-										@json_data
-									);
-									SET @rtn_val = 0;
-									SET @msg_txt = 'success';
+									UPDATE SITE_WSTE_DISPOSAL_ORDER
+                                    SET CLOSE_AT = @REG_DT
+                                    WHERE ID = @DISPOSER_ORDER_ID;
+                                    IF ROW_COUNT() = 1 THEN
+										CALL sp_get_transaction_report(
+											IN_REPORT_ID,
+											@json_data
+										);
+										SET @rtn_val = 0;
+										SET @msg_txt = 'success';
+                                    ELSE
+										SET @rtn_val = 36006;
+										SET @msg_txt = 'Failed to change contract expiration date';
+										SIGNAL SQLSTATE '23000';
+                                    END IF;
                                 ELSE
 									SET @json_data = NULL;
 									SET @rtn_val = 36005;
