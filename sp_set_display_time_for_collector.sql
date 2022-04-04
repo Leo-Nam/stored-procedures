@@ -46,8 +46,17 @@ BEGIN
 		WHEN IN_COLLECTOR_CATEGORY_ID = 5
 			THEN (
 				SELECT IF(B.BIDDING_RANK = 1, 
-					A.MAX_SELECT_AT,
-                    A.MAX_SELECT2_AT
+					A.MAX_DECISION_AT,
+                    IF(A.COLLECTOR_SELECTION_CONFIRMED IS NOT NULL,
+						IF(A.COLLECTOR_SELECTION_CONFIRMED = TRUE,
+							A.COLLECTOR_SELECTION_CONFIRMED_AT,
+                            A.MAX_DECISION2_AT
+                        ),
+						IF(A.MAX_DECISION_AT <= NOW(),
+							A.MAX_DECISION2_AT,
+                            A.MAX_DECISION_AT
+                        )
+					)
                 )
 				FROM SITE_WSTE_DISPOSAL_ORDER A
                 LEFT JOIN COLLECTOR_BIDDING B ON A.ID = B.DISPOSAL_ORDER_ID
@@ -58,8 +67,17 @@ BEGIN
 		WHEN IN_COLLECTOR_CATEGORY_ID = 6
 			THEN (
 				SELECT IF(B.BIDDING_RANK = 1, 
-					A.COLLECTOR_SELECTION_CONFIRMED_AT,
-                    A.COLLECTOR_SELECTION_CONFIRMED2_AT
+					A.MAX_DECISION_AT,
+                    IF(A.COLLECTOR_SELECTION_CONFIRMED IS NOT NULL,
+						IF(A.COLLECTOR_SELECTION_CONFIRMED = TRUE,
+							A.COLLECTOR_SELECTION_CONFIRMED_AT,
+                            A.MAX_DECISION2_AT
+                        ),
+						IF(A.MAX_DECISION_AT <= NOW(),
+							A.MAX_DECISION2_AT,
+                            A.MAX_DECISION_AT
+                        )
+					)
                 )
 				FROM SITE_WSTE_DISPOSAL_ORDER A
                 LEFT JOIN COLLECTOR_BIDDING B ON A.ID = B.DISPOSAL_ORDER_ID

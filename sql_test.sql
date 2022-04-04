@@ -5078,7 +5078,7 @@ SELECT @DISPOSER_ORDER_ID, @STATE_CATEGORY_CODE, @COLLECTOR_LIST;
 CALL sp_test(247);
 */
 
-
+/*
 SET @USER_ID = 188;
 SET @RESPONSE = TRUE;
 SET @REPORT_ID = 34;
@@ -5087,3 +5087,55 @@ CALL sp_test(
     @REPORT_ID,
     @RESPONSE
 );
+*/
+/*
+SET @USER_ID = 188;
+SET @COLLECTOR_BIDDING_ID = 100;
+CALL sp_set_invisible_order(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID
+);
+*/
+
+/*
+SET @DISPOSER_ORDER_ID = 120;
+CALL sp_retrieve_sites_that_can_bid(
+	@DISPOSER_ORDER_ID,
+    @rtn_val,
+    @msg_txt,
+    @json_data
+);
+SELECT 
+    @rtn_val,
+    @msg_txt,
+    @json_data
+*/
+/*
+
+	DROP TABLE IF EXISTS MY_DISPOSAL_LISTS_BY_OPTION_TEMP;
+CALL sp_retrieve_my_disposal_lists_by_option_with_json(
+			119,
+			101,
+			'person',
+			@rtn_val,
+			@msg_txt,
+			@json_data);
+SELECT 
+			@rtn_val,
+			@msg_txt,
+			@json_data
+*/
+
+/*
+SET @USER_ID = 212;
+CALL sp_retrieve_new_coming(
+	@USER_ID
+);
+*/
+
+/*
+    DROP TABLE IF EXISTS PAST_TRANSACTIONS;
+CALL sp_test(188);
+*/
+
+CALL sp_retrieve_past_transactions(188);

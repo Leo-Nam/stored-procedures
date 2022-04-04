@@ -22,12 +22,13 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_WSTE_APPEARANCE						VARCHAR(20);   		/*폐기물 성상*/
     DECLARE CUR_DISPOSER_ORDER_ID					BIGINT;				/*폐기물 배출 입찰등록번호*/
     DECLARE CUR_DISPOSER_ORDER_CODE					VARCHAR(10);    	/*폐기물 배출 입찰등록코드*/
-    DECLARE CUR_TRANSACTION_COMPLETED_AT			DATETIME;    		/*수거자가 폐기물을 처리완료한 일자*/
+    DECLARE CUR_CREATED_AT							DATETIME;    		/*수거자가 보고서를 제출한 일자*/
     DECLARE CUR_CONFIRMED_AT						DATETIME;    		/*수거자가 제출한 보고서를 배출자가 확정한 일자*/
     DECLARE CUR_STATE								VARCHAR(20);    	/*오더 상태*/
     DECLARE CUR_STATE_CODE							INT;   				/*오더 상태 코드*/
     DECLARE CUR_STATE_CATEGORY						VARCHAR(20);   		/*오더 대구분 상태*/
     DECLARE CUR_STATE_CATEGORY_ID					INT;    			/*오더 대구분 상태 코드*/
+    DECLARE CUR_AVATAR_PATH							VARCHAR(255); 		/*수거자 아바타 경로*/
     DECLARE TEMP_CURSOR		 						CURSOR FOR 
 	SELECT 
 		A.ID, 
@@ -38,12 +39,13 @@ AUTHOR 			: Leo Nam
         G.KOREAN,
         D.ID,
         D.ORDER_CODE,
-        A.TRANSACTION_COMPLETED_AT,
+        A.CREATED_AT,
         A.CONFIRMED_AT,
         E.STATE,
         E.STATE_CODE,
         E.STATE_CATEGORY,
-        E.STATE_CATEGORY_ID
+        E.STATE_CATEGORY_ID,
+        H.AVATAR_PATH
     FROM TRANSACTION_REPORT A
     LEFT JOIN WSTE_CODE B ON A.WSTE_CODE = B.CODE
     LEFT JOIN WSTE_TRMT_METHOD C ON A.TRMT_METHOD = C.CODE
@@ -51,12 +53,25 @@ AUTHOR 			: Leo Nam
     LEFT JOIN V_ORDER_STATE_NAME E ON A.DISPOSER_ORDER_ID = E.DISPOSER_ORDER_ID
     LEFT JOIN USERS F ON D.SITE_ID = F.AFFILIATED_SITE
     LEFT JOIN WSTE_APPEARANCE G ON A.WSTE_APPEARANCE = G.ID
+    LEFT JOIN USERS H ON A.COLLECTOR_SITE_ID = H.AFFILIATED_SITE
 	WHERE 
         A.CONFIRMED_AT <= NOW() AND
         F.CLASS = 201 AND
         F.ID = IN_USER_ID AND
-        F.ACTIVE = TRUE;
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;    
+        F.ACTIVE = TRUE AND
+        H.CLASS = 201;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;   
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		DROP TABLE IF EXISTS PAST_TRANSACTIONS;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;				
+    /*트랜잭션 시작*/  
+     
     
 	CREATE TEMPORARY TABLE IF NOT EXISTS PAST_TRANSACTIONS (
 		REPORT_ID							BIGINT,   			/*수거자가 제출한 보고서 등록번호*/
@@ -67,12 +82,13 @@ AUTHOR 			: Leo Nam
 		WSTE_APPEARANCE						VARCHAR(20),   		/*폐기물 성상*/
 		DISPOSER_ORDER_ID					BIGINT,				/*폐기물 배출 입찰등록번호*/
 		DISPOSER_ORDER_CODE					VARCHAR(10),    	/*폐기물 배출 입찰등록코드*/
-		TRANSACTION_COMPLETED_AT			DATETIME,    		/*수거자가 폐기물을 처리완료한 일자*/
+		CREATED_AT							DATETIME,    		/*수거자가 보고서를 제출한 일자*/
 		CONFIRMED_AT						DATETIME,    		/*수거자가 제출한 보고서를 배출자가 확정한 일자*/
 		STATE								VARCHAR(20),    	/*오더 상태*/
 		STATE_CODE							INT,   				/*오더 상태 코드*/
 		STATE_CATEGORY						VARCHAR(20),   		/*오더 대구분 상태*/
-		STATE_CATEGORY_ID					INT	    			/*오더 대구분 상태 코드*/
+		STATE_CATEGORY_ID					INT,    			/*오더 대구분 상태 코드*/
+		AVATAR_PATH							VARCHAR(255)		/*수거자 아바타 경로*/
 	);         
 	
 	OPEN TEMP_CURSOR;	
@@ -89,12 +105,13 @@ AUTHOR 			: Leo Nam
 				CUR_WSTE_APPEARANCE,
 				CUR_DISPOSER_ORDER_ID,
 				CUR_DISPOSER_ORDER_CODE,
-				CUR_TRANSACTION_COMPLETED_AT,
+				CUR_CREATED_AT,
 				CUR_CONFIRMED_AT,
 				CUR_STATE,
 				CUR_STATE_CODE,
 				CUR_STATE_CATEGORY,
-				CUR_STATE_CATEGORY_ID;
+				CUR_STATE_CATEGORY_ID,
+				CUR_AVATAR_PATH;
 			
 			SET vRowCount = vRowCount + 1;
 			IF endOfRow THEN
@@ -111,12 +128,13 @@ AUTHOR 			: Leo Nam
 				WSTE_APPEARANCE,
 				DISPOSER_ORDER_ID,
 				DISPOSER_ORDER_CODE,
-				TRANSACTION_COMPLETED_AT,
+				CREATED_AT,
 				CONFIRMED_AT,
 				STATE,
 				STATE_CODE,
 				STATE_CATEGORY,
-				STATE_CATEGORY_ID
+				STATE_CATEGORY_ID,
+				AVATAR_PATH
 			)
 			VALUES(
 				CUR_REPORT_ID,
@@ -127,12 +145,13 @@ AUTHOR 			: Leo Nam
 				CUR_WSTE_APPEARANCE,
 				CUR_DISPOSER_ORDER_ID,
 				CUR_DISPOSER_ORDER_CODE,
-				CUR_TRANSACTION_COMPLETED_AT,
+				CUR_CREATED_AT,
 				CUR_CONFIRMED_AT,
 				CUR_STATE,
 				CUR_STATE_CODE,
 				CUR_STATE_CATEGORY,
-				CUR_STATE_CATEGORY_ID
+				CUR_STATE_CATEGORY_ID,
+				CUR_AVATAR_PATH
 			);
 			
 		END LOOP;   
@@ -148,12 +167,13 @@ AUTHOR 			: Leo Nam
 				'WSTE_APPEARANCE'				, WSTE_APPEARANCE, 
 				'DISPOSER_ORDER_ID'				, DISPOSER_ORDER_ID, 				
 				'DISPOSER_ORDER_CODE'			, DISPOSER_ORDER_CODE, 
-				'TRANSACTION_COMPLETED_AT'		, TRANSACTION_COMPLETED_AT, 
+				'CREATED_AT'					, CREATED_AT, 
 				'CONFIRMED_AT'					, CONFIRMED_AT, 
 				'STATE'							, STATE, 
 				'STATE_CODE'					, STATE_CODE, 
 				'STATE_CATEGORY'				, STATE_CATEGORY, 
-				'STATE_CATEGORY_ID'				, STATE_CATEGORY_ID
+				'STATE_CATEGORY_ID'				, STATE_CATEGORY_ID, 
+				'AVATAR_PATH'					, AVATAR_PATH
 			)
 		) 
 		INTO @json_data 
@@ -166,6 +186,7 @@ AUTHOR 			: Leo Nam
 		SET @rtn_val = 28501;
 		SET @msg_txt = 'No data found';
     END IF;
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
     DROP TABLE IF EXISTS PAST_TRANSACTIONS;
+	COMMIT;     
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
