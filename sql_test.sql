@@ -5540,7 +5540,35 @@ SELECT
         
 */
 
+/*
 SET @USER_ID = 188;
 CALL sp_retrieve_existing_transactions(
 	@USER_ID
 );
+*/
+/*
+CALL sp_req_collector_bidding_details(324);
+*/
+
+/*
+	SELECT 
+		A.ID, 
+        B.ID, 
+        B.ORDER_CODE, 
+        C.STATE, 
+        C.STATE_CODE, 
+        C.COLLECTOR_CATEGORY_ID, 
+        C.COLLECTOR_CATEGORY
+    FROM COLLECTOR_BIDDING A 
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+    LEFT JOIN V_BIDDING_STATE_NAME C ON A.ID = C.COLLECTOR_BIDDING_ID
+	WHERE A.ID = 324;
+*/
+
+SET @ORDER_ID = 480;
+CALL sp_get_disposer_wste_geo_info(
+	@ORDER_ID,
+    @TEMP
+);
+
+SELECT @ORDER_ID, @TEMP;
