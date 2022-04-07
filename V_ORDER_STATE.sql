@@ -89,15 +89,17 @@ VIEW `chiumdev_2`.`V_ORDER_STATE` AS
                                     110)),
                             117),
                         103))),
-            IF((`A`.`CLOSE_AT` <= NOW()),
-                105,
-                IF((`B`.`ACCEPT_ASK_END` IS NOT NULL),
-                    IF((`B`.`ACCEPT_ASK_END` = TRUE),
-                        118,
-                        122),
-                    IF((`B`.`MAX_DECISION_AT` <= NOW()),
-                        122,
-                        104)))) AS `STATE_CODE`
+            IF((`A`.`IS_DELETED` = TRUE),
+                106,
+                IF((`A`.`CLOSE_AT` <= NOW()),
+                    105,
+                    IF((`B`.`ACCEPT_ASK_END` IS NOT NULL),
+                        IF((`B`.`ACCEPT_ASK_END` = TRUE),
+                            118,
+                            122),
+                        IF((`B`.`MAX_DECISION_AT` <= NOW()),
+                            122,
+                            104))))) AS `STATE_CODE`
     FROM
         (`chiumdev_2`.`SITE_WSTE_DISPOSAL_ORDER` `A`
         LEFT JOIN `chiumdev_2`.`WSTE_CLCT_TRMT_TRANSACTION` `B` ON ((`A`.`ID` = `B`.`DISPOSAL_ORDER_ID`)))

@@ -41,7 +41,9 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 	WHERE 
         C.ID = IN_USER_ID AND
         (C.CLASS = 201 OR C.CLASS = 202) AND
-        C.ACTIVE = TRUE;
+        C.ACTIVE = TRUE AND
+        A.ORDER_VISIBLE = TRUE AND
+        B.STATE_CODE NOT IN (202, 207, 230, 238, 239, 241, 244, 249);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
             
     DECLARE EXIT HANDLER FOR SQLEXCEPTION

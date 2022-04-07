@@ -73,8 +73,8 @@ AUTHOR 			: Leo Nam
 					);
 					IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 					/*사용자가 수거자 소속의 권한있는 사용자인 경우*/
-						SELECT TRANSACTION_STATE_CODE, DISPOSAL_ORDER_ID 
-                        INTO @STATE, @DISPOSER_ORDER_ID 
+						SELECT TRANSACTION_STATE_CODE, DISPOSAL_ORDER_ID, VISIT_END_AT
+                        INTO @STATE, @DISPOSER_ORDER_ID, @VISIT_END_AT 
                         FROM V_TRANSACTION_STATE
                         WHERE TRANSACTION_ID = IN_TRANSACTION_ID;
                         IF @STATE = 221 THEN
@@ -128,9 +128,25 @@ AUTHOR 			: Leo Nam
 										@msg_txt
 									);
 									IF @rtn_val = 0 THEN
-										SET @json_data = NULL;
-										SET @rtn_val = 0;
-										SET @msg_txt = 'success:sp_req_collector_ask_transaction_completed';
+										IF @VISIT_END_AT IS NOT NULL THEN
+                                        /*방문일정이 존재하는 경우*/
+											IF @VISIT_END_AT <= @REG_DT THEN
+											/*방문일정 이후에 보고서를 작성한 경우에는 정상처리한다.*/
+												SET @json_data = NULL;
+												SET @rtn_val = 0;
+												SET @msg_txt = 'success';
+											ELSE
+											/*방문일정중에 보고서를 작성한 경우에는 예외처리한다.*/
+												SET @rtn_val = 25408;
+												SET @msg_txt = 'Reports can be submitted during the visit schedule';
+												SIGNAL SQLSTATE '23000';
+											END IF;
+                                        ELSE
+                                        /*방문일정이 존재하지 않는 경우에는 정상처리한다.*/
+											SET @json_data = NULL;
+											SET @rtn_val = 0;
+											SET @msg_txt = 'success';
+                                        END IF;
 									ELSE
 										SIGNAL SQLSTATE '23000';
 									END IF;

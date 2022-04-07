@@ -132,13 +132,7 @@ AUTHOR 			: Leo Nam
         CALL sp_get_disposer_wste_geo_info(
 			CUR_DISPOSER_ORDER_ID,
             @DISPOSER_WSTE_GEO_INFO
-        );
-		
-        CALL sp_get_site_info(
-			CUR_DISPOSER_ORDER_ID,
-            @DISPOSER_WSTE_GEO_INFO
-        );
-        
+        );	
 		UPDATE COLLECTOR_BIDDING_DETAILS_TEMP 
         SET 
 			DISPLAY_DATE 			= @DISPLAY_DATE, 
@@ -146,11 +140,11 @@ AUTHOR 			: Leo Nam
             WSTE_BIDDING_LIST 		= @WSTE_BIDDING_LIST, 
             WSTE_DISPOSAL_LIST 		= @WSTE_DISPOSAL_LIST, 
             DISPOSER_ORDER_INFO 	= @DISPOSER_ORDER_INFO , 
-            DISPOSER_WSTE_GEO_INFO 	= @DISPOSER_WSTE_GEO_INFO 
+            DISPOSER_WSTE_GEO_INFO 	= @DISPOSER_WSTE_GEO_INFO
         WHERE DISPOSER_ORDER_ID = CUR_DISPOSER_ORDER_ID;
 		/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
 		
-		
+		SET @AAA = CUR_DISPOSER_ORDER_ID;
 	END LOOP;   
 	CLOSE TEMP_CURSOR;
 	
@@ -178,7 +172,7 @@ AUTHOR 			: Leo Nam
 		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
-		SET @msg_txt = 'Success';
+		SET @msg_txt = CONCAT('Success:', @AAA);
     END IF; 
     COMMIT;   
 	DROP TABLE IF EXISTS COLLECTOR_BIDDING_DETAILS_TEMP;

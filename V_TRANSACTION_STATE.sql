@@ -7,6 +7,7 @@ VIEW `chiumdev_2`.`V_TRANSACTION_STATE` AS
         `A`.`ID` AS `TRANSACTION_ID`,
         `A`.`DISPOSAL_ORDER_ID` AS `DISPOSAL_ORDER_ID`,
         `A`.`IN_PROGRESS` AS `IN_PROGRESS`,
+        `A`.`VISIT_END_AT` AS `VISIT_END_AT`,
         IF((`B`.`CLOSE_AT` <= NOW()),
             211,
             IF((`A`.`VISIT_END_AT` IS NOT NULL),
