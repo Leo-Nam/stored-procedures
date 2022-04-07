@@ -55,6 +55,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
     LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
     LEFT JOIN V_ORDER_STATE_NAME C ON A.ID = C.DISPOSER_ORDER_ID
     LEFT JOIN COLLECTOR_BIDDING D ON A.ID = D.DISPOSAL_ORDER_ID
+    LEFT JOIN USERS E ON D.COLLECTOR_ID = E.AFFILIATED_SITE
     WHERE 
 		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 				/*0.0.2에서 새롭게 추가한 부분*/
         IF(A.VISIT_END_AT IS NOT NULL, 
@@ -62,7 +63,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
             A.BIDDING_END_AT >= NOW()
         ) AND 
         (C.PID <> 105 AND C.STATE_CODE <> 105) AND
-        D.DATE_OF_BIDDING IS NULL AND
+        (E.ID IS NULL OR E.ID <> IN_USER_ID) AND
 		LEFT(A.KIKCD_B_CODE, 5) IN (
 			SELECT LEFT(SUB_A.KIKCD_B_CODE, 5) 
 			FROM BUSINESS_AREA SUB_A 
@@ -101,7 +102,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
 		STATE_CATEGORY					VARCHAR(20),
 		STATE_CATEGORY_ID				INT,
 		STATE_PID						INT,	
-		IMG_PATH						JSON,
+		IMG_LIST						JSON,
 		WSTE_LIST						JSON
 	);
     
@@ -171,31 +172,21 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
 			CUR_STATE_CATEGORY_ID,
 			CUR_STATE_PID
 		);
-        SELECT JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'CLASS'	, WSTE_CLASS_NM, 
-                'APR'	, WSTE_APPEARANCE_NM
-			)
-		) 
-        INTO @WSTE_LIST 
-        FROM V_WSTE_DISCHARGED_FROM_SITE 
-        WHERE DISPOSAL_ORDER_ID = CUR_DISPOSER_ORDER_ID;
-        /*DISPOSAL_ORDER_ID에 등록된 폐기물 종류 중 하나만 불러온다.*/
         
-        SELECT JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'ID'	, ID, 
-                'PATH'	, IMG_PATH
-			)
-		) 
-        INTO @IMG_PATH 
-        FROM WSTE_REGISTRATION_PHOTO 
-        WHERE DISPOSAL_ORDER_ID = CUR_DISPOSER_ORDER_ID;
-        /*DISPOSAL_ORDER_ID에 해당하는 이미지에 대한 저장경로를 JSON 형태로 받아온다.*/
+        CALL sp_get_disposal_wste_lists(
+			CUR_DISPOSER_ORDER_ID,
+            @WSTE_LIST
+        );
+        
+        CALL sp_get_disposal_img_lists(
+			CUR_DISPOSER_ORDER_ID,
+            '입찰',
+            @IMG_LIST
+        );
         
 		UPDATE NEW_COMING 
         SET 
-			IMG_PATH 			= @IMG_PATH, 
+			IMG_LIST 			= @IMG_LIST, 
             WSTE_LIST 			= @WSTE_LIST 
 		WHERE DISPOSER_ORDER_ID = CUR_DISPOSER_ORDER_ID;
         /*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/        
@@ -222,7 +213,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
             'STATE_CATEGORY'			, STATE_CATEGORY, 
             'STATE_CATEGORY_ID'			, STATE_CATEGORY_ID, 
             'STATE_PID'					, STATE_PID, 
-            'IMG_PATH'					, IMG_PATH, 
+            'IMG_LIST'					, IMG_LIST, 
             'WSTE_LIST'					, WSTE_LIST
 		)
 	) 

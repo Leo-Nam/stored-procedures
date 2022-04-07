@@ -1,0 +1,104 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_wste_lists_registerd_by_site`(
+	IN IN_SITE_ID							BIGINT,
+    OUT OUT_WSTE_LIST						JSON
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_get_wste_lists_registerd_by_site
+Input param 	: 1개
+Job 			: 수거업체가 관리할 수 있는 폐기물 리스트를 반환한다.
+Update 			: 2022.04.05
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/
+
+    DECLARE vRowCount 								INT 				DEFAULT 0;
+    DECLARE endOfRow 								TINYINT 			DEFAULT FALSE;   
+    DECLARE CUR_LIST_ID								BIGINT;   			/*SITE_WSTE_CLS_MATCH.ID*/
+    DECLARE CUR_SITE_ID								BIGINT;   			/*사이트 아이디*/
+    DECLARE CUR_WSTE_CODE							VARCHAR(8);			/*폐기물 코드*/
+    DECLARE CUR_WSTE_NAME							VARCHAR(255);		/*폐기물 이름*/
+    DECLARE CUR_CREATED_AT							DATETIME;   		/*레코드 최초생성일자*/
+    DECLARE CUR_UPDATED_AT							DATETIME;			/*레코드 최종수정일자*/
+    DECLARE CUR_WSTE_APPEARANCE						VARCHAR(10);		/*폐기물 성상*/
+    DECLARE TEMP_CURSOR		 						CURSOR FOR 
+	SELECT 
+		A.ID, 
+		A.SITE_ID, 
+		A.WSTE_CLS_CODE, 
+        B.NAME,
+        C.KOREAN, 
+        A.CREATED_AT,
+        A.UPDATED_AT
+    FROM SITE_WSTE_CLS_MATCH A 
+    LEFT JOIN WSTE_CODE B ON A.WSTE_CLS_CODE = B.CODE
+    LEFT JOIN WSTE_APPEARANCE C ON A.WSTE_APPEARANCE = C.ID
+    WHERE A.SITE_ID = IN_SITE_ID;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;        
+    
+	CREATE TEMPORARY TABLE IF NOT EXISTS WSTE_LIST_REGISTERED_TEMP (
+		LIST_ID								BIGINT, 
+		SITE_ID								BIGINT,
+		WSTE_CODE							VARCHAR(8),
+		WSTE_NAME							VARCHAR(255),
+		CREATED_AT							DATETIME,
+		UPDATED_AT							DATETIME,
+        WSTE_APPEARANCE						VARCHAR(10)
+	);         
+	
+	OPEN TEMP_CURSOR;	
+	cloop: LOOP
+		FETCH TEMP_CURSOR 
+		INTO  
+			CUR_LIST_ID,
+			CUR_SITE_ID,
+			CUR_WSTE_CODE,
+			CUR_WSTE_NAME,
+			CUR_WSTE_APPEARANCE,
+			CUR_CREATED_AT,
+			CUR_UPDATED_AT;
+		
+		SET vRowCount = vRowCount + 1;
+		IF endOfRow THEN
+			LEAVE cloop;
+		END IF;
+		
+		INSERT INTO 
+		WSTE_LIST_REGISTERED_TEMP(
+			LIST_ID,
+			SITE_ID,
+			WSTE_CODE,
+			WSTE_NAME,
+			WSTE_APPEARANCE,
+			CREATED_AT,
+			UPDATED_AT
+		)
+		VALUES(
+			CUR_LIST_ID,
+			CUR_SITE_ID,
+			CUR_WSTE_CODE,
+			CUR_WSTE_NAME,
+			CUR_WSTE_APPEARANCE,
+			CUR_CREATED_AT,
+			CUR_UPDATED_AT
+		);
+		
+	END LOOP;   
+	CLOSE TEMP_CURSOR;
+	
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'LIST_ID'						, LIST_ID, 
+			'SITE_ID'						, SITE_ID, 
+			'WSTE_CODE'						, WSTE_CODE, 	
+			'WSTE_NAME'						, WSTE_NAME, 				
+			'WSTE_APPEARANCE'				, WSTE_APPEARANCE, 
+			'CREATED_AT'					, CREATED_AT, 
+			'UPDATED_AT'					, UPDATED_AT
+		)
+	) 
+	INTO OUT_WSTE_LIST 
+	FROM WSTE_LIST_REGISTERED_TEMP;
+	DROP TABLE IF EXISTS WSTE_LIST_REGISTERED_TEMP;
+END

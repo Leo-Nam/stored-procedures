@@ -123,11 +123,18 @@ BEGIN
 			@min_disposal_duration
 		);
 		/*SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);*/
-		SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
+        IF IN_COLLECTOR_SITE_ID IS NULL THEN
+        /*일반 입찰거래인 경우*/
+			SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
+        ELSE
+        /*기존거래인 경우*/
+			SET @ASK_DISPOSAL_END_AT = IN_OPEN_AT;
+        END IF;
 		CALL sp_insert_clct_trmt_transaction(
 		/*폐기물배출작업을 생성한다.*/
 			IN_USER_ID,
 			@WSTE_DISPOSAL_ORDER_ID,
+            IN_COLLECTOR_SITE_ID,
             IN_VISIT_START_AT,
             IN_VISIT_END_AT,
             @ASK_DISPOSAL_END_AT,

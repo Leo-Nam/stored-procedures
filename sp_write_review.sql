@@ -21,6 +21,7 @@ AUTHOR 			: Leo Nam
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
+		SET @json_data = NULL;
 		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 	END;        
 	START TRANSACTION;							
@@ -34,109 +35,69 @@ AUTHOR 			: Leo Nam
     );
     IF @rtn_val = 0 THEN
     /*사용자가 존재하는 경우 정상처리한다.*/
-		SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
-        IF @USER_SITE_ID = 0 THEN
-        /*사용자가 개인이거나 치움관리자인경우*/
-			SELECT SELECTED INTO @COLLECTOR_ID FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
-            IF @COLLECTOR_ID IS NOT NULL THEN
-				IF @COLLECTOR_ID = IN_SITE_ID THEN
-                /*수집업자의 사이트와 현재의 사이트가 동일한 경우 리뷰작성가능*/
-					CALL sp_write_review_without_handler(
-						IN_USER_ID,
-						IN_CONTENTS,
-						IN_SITE_ID,
-						IN_PID,
-						IN_RATING,
-						IN_DISPOSER_ORDER_ID,
-						@rtn_val,
-						@msg_txt,
-						@json_data
-					);
-					IF @rtn_val = 0 THEN
-						SET @rtn_val = 0;
-						SET @msg_txt = 'success 001';
-					ELSE
-					/*공지사항 작성에 실패한 경우 예외처리한다*/
-						SIGNAL SQLSTATE '23000';
-					END IF;
-                ELSE
-                /*수집업자의 사이트와 현재의 사이트가 상이한 경우 리뷰작성불가능하며 예외처리한다.*/
-					SET @rtn_val = 33805;
-					SET @msg_txt = 'Can not write a review for this site';
-					SIGNAL SQLSTATE '23000';
-                END IF;
-            ELSE
-				SET @rtn_val = 33804;
-				SET @msg_txt = 'Could not write review';
-				SIGNAL SQLSTATE '23000';
-            END IF;
-        ELSE
-        /*사용자가 사업자의 관리자인경우*/
-			SELECT USER_CURRENT_TYPE_CODE INTO @USER_CURRENT_TYPE_CODE FROM V_USERS WHERE ID = IN_USER_ID;
-            IF @USER_CURRENT_TYPE_CODE = 2 THEN
-            /*사용자가 배출자인 경우*/
-				SELECT SELECTED INTO @COLLECTOR_ID FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
-                IF @COLLECTOR_ID = IN_SITE_ID THEN
-                /*수집업자의 사이트와 현재의 사이트가 동일한 경우 리뷰작성가능*/
-					CALL sp_write_review_without_handler(
-						IN_USER_ID,
-						IN_CONTENTS,
-						IN_SITE_ID,
-						IN_PID,
-						IN_RATING,
-						IN_DISPOSER_ORDER_ID,
-						@rtn_val,
-						@msg_txt,
-						@json_data
-					);
-					IF @rtn_val = 0 THEN
-						SET @rtn_val = 0;
-						SET @msg_txt = 'success 002';
-					ELSE
-					/*공지사항 작성에 실패한 경우 예외처리한다*/
-						SIGNAL SQLSTATE '23000';
-					END IF;
-                ELSE
-                /*수집업자의 사이트와 현재의 사이트가 상이한 경우 리뷰작성불가능하며 예외처리한다.*/
-					SET @rtn_val = 33803;
-					SET @msg_txt = 'Can not write a review for this site';
-					SIGNAL SQLSTATE '23000';
-                END IF;
-            ELSE
-				IF @USER_CURRENT_TYPE_CODE = 3 THEN
-				/*사용자가 수거자인 경우*/
-					SELECT SELECTED INTO @COLLECTOR_ID FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
-                    IF @USER_SITE_ID = @COLLECTOR_ID THEN
-                    /*사용자의 사이트가 수거자사이트와 동일한 경우에는 리뷰작성 가능*/
-						CALL sp_write_review_without_handler(
-							IN_USER_ID,
-							IN_CONTENTS,
-							IN_SITE_ID,
-							IN_PID,
-							IN_RATING,
-							IN_DISPOSER_ORDER_ID,
-							@rtn_val,
-							@msg_txt,
-							@json_data
-						);
-						IF @rtn_val = 0 THEN
-							SET @rtn_val = 0;
-							SET @msg_txt = 'success 003';
+		SELECT COUNT(ID) INTO @REPORT_EXISTS
+		FROM TRANSACTION_REPORT 
+		WHERE 
+			DISPOSER_ORDER_ID = IN_DISPOSER_ORDER_ID AND
+			COLLECTOR_SITE_ID = IN_SITE_ID;
+		IF @REPORT_EXISTS = 1 THEN
+		/*리포트가 존재하는 경우 정상처리한다.*/
+			SELECT CONFIRMED, DISPOSER_SITE_ID INTO @CONFIRMED, @DISPOSER_SITE_ID
+			FROM TRANSACTION_REPORT 
+			WHERE 
+				DISPOSER_ORDER_ID = IN_DISPOSER_ORDER_ID AND
+				COLLECTOR_SITE_ID = IN_SITE_ID;
+			IF @CONFIRMED = TRUE THEN
+			/*폐기물 처리작업이 완료된 경우에는 정상처리한다.*/  
+				SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;
+				IF @USER_SITE_ID > 0 THEN
+				/*사용자가 사업자의 소속인 경우*/
+					IF @DISPOSER_SITE_ID = @USER_SITE_ID THEN
+					/*사용자가 배출자 소속인 경우 정상처리한다.*/
+						SELECT CLASS INTO @USER_CLASS
+						FROM USERS
+						WHERE ID = IN_USER_ID;
+						IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
+						/*사용자에게 리뷰를 작성할 권한이 있는 경우 정상처리한다.*/
+							CALL sp_write_review_without_handler(
+								IN_USER_ID,
+								IN_CONTENTS,
+								IN_SITE_ID,
+								IN_PID,
+								IN_RATING,
+								IN_DISPOSER_ORDER_ID,
+								@rtn_val,
+								@msg_txt,
+								@json_data
+							);
+							IF @rtn_val = 0 THEN
+								SET @rtn_val = 0;
+								SET @msg_txt = 'success';
+							ELSE
+							/*공지사항 작성에 실패한 경우 예외처리한다*/
+								SET @rtn_val = 33806;
+								SET @msg_txt = 'Failed to write a review';
+								SIGNAL SQLSTATE '23000';
+							END IF;
 						ELSE
-						/*공지사항 작성에 실패한 경우 예외처리한다*/
+						/*사용자에게 리뷰를 작성할 권한이 없는 경우 예외처리한다.*/
+							SET @rtn_val = 33806;
+							SET @msg_txt = 'user is not authorized to write a review';
 							SIGNAL SQLSTATE '23000';
 						END IF;
-                    ELSE
-                    /*사용자의 사이트가 수거자사이트와 상이한 경우에는 리뷰작성 불가능하며 예외처리한다.*/
-						SET @rtn_val = 33802;
-						SET @msg_txt = 'Can1 not write a review for this site';
+					ELSE
+					/*사용자가 배출자 소속이 아닌 경우 예외처리한다.*/
+						SET @rtn_val = 33805;
+						SET @msg_txt = 'user does not belong to the emitter';
 						SIGNAL SQLSTATE '23000';
-                    END IF;
+					END IF;
 				ELSE
-				/*사용자가 현재타입이 결정되지 않은 경우(USER_CURRENT_TYPE_CODE = NULL)*/	
-					SELECT CLASS INTO @USER_CLASS FROM USERS WHERE ID = IN_USER_ID;
-                    IF @USER_CLASS < 200 THEN
-					/*사용자가 치움시스템관리자인 경우에는 리뷰작성가능*/	
+				/*사용자가 개인인 경우*/
+					SELECT DISPOSER_ID INTO @DISPOSER_ID
+                    FROM SITE_WSTE_DISPOSAL_ORDER
+                    WHERE ID = IN_DISPOSER_ORDER_ID;
+                    IF @DISPOSER_ID = IN_USER_ID THEN
+                    /*배출자와 사용자가 동일한 경우 정상처리한다.*/
 						CALL sp_write_review_without_handler(
 							IN_USER_ID,
 							IN_CONTENTS,
@@ -150,25 +111,37 @@ AUTHOR 			: Leo Nam
 						);
 						IF @rtn_val = 0 THEN
 							SET @rtn_val = 0;
-							SET @msg_txt = 'success 004';
+							SET @msg_txt = 'success';
 						ELSE
 						/*공지사항 작성에 실패한 경우 예외처리한다*/
+							SET @rtn_val = 33804;
+							SET @msg_txt = 'Failed to write a review';
 							SIGNAL SQLSTATE '23000';
 						END IF;
                     ELSE
-					/*사용자가 치움시스템관리자가 아닌 경우에는 예외처리한다*/
-						SET @rtn_val = 33801;
-						SET @msg_txt = 'The user current type has not been determined';
+                    /*배출자와 사용자가 동일하지 않은 경우 예외처리한다.*/
+						SET @rtn_val = 33803;
+						SET @msg_txt = 'user is not the diposer';
 						SIGNAL SQLSTATE '23000';
                     END IF;
 				END IF;
-            END IF;
-        END IF;
-    ELSE
+			ELSE
+			/*폐기물 처리작업이 완료되지 않은 경우에는 예외처리한다.*/
+				SET @rtn_val = 33802;
+				SET @msg_txt = 'transaction does not completed';
+				SIGNAL SQLSTATE '23000';
+			END IF;
+		ELSE
+		/*리포트가 존재하지 않는 경우 예외처리한다.*/
+			SET @rtn_val = 33801;
+			SET @msg_txt = 'transaction report does not exist';
+			SIGNAL SQLSTATE '23000';
+		END IF;
+	ELSE
     /*사용자가 존재하지 않는 경우 예외처리한다.*/
-		SET @json_data = NULL;
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
+    SET @json_data = NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

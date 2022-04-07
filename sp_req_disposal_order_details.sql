@@ -16,6 +16,7 @@ AUTHOR 			: Leo Nam
     DECLARE vRowCount 								INT DEFAULT 0;
     DECLARE endOfRow 								TINYINT DEFAULT FALSE;    
     DECLARE CUR_DISPOSER_ORDER_ID					BIGINT;
+    DECLARE CUR_COLLECTOR_ID						BIGINT;
     DECLARE CUR_DISPOSER_ORDER_CODE					VARCHAR(10);
     DECLARE CUR_DISPOSER_SITE_ID					BIGINT;
     DECLARE CUR_DISPOSER_SITE_SI_DO					VARCHAR(20);
@@ -43,6 +44,7 @@ AUTHOR 			: Leo Nam
     DECLARE TEMP_CURSOR		 						CURSOR FOR 
 	SELECT 
 		A.ID, 
+		A.COLLECTOR_ID, 
 		A.ORDER_CODE, 
         A.SITE_ID,
         B.COMP_SITE_SI_DO,
@@ -123,6 +125,7 @@ AUTHOR 			: Leo Nam
 			FETCH TEMP_CURSOR 
 			INTO 
 				CUR_DISPOSER_ORDER_ID,
+				CUR_COLLECTOR_ID,
 				CUR_DISPOSER_ORDER_CODE,
 				CUR_DISPOSER_SITE_ID,
 				CUR_DISPOSER_SITE_SI_DO,
@@ -206,11 +209,18 @@ AUTHOR 			: Leo Nam
 				CUR_WSTE_LNG
 			);
 			
-            CALL sp_get_collector_lists(
-				CUR_DISPOSER_ORDER_ID,
-                CUR_STATE_CATEGORY_CODE,
-                @COLLECTOR_INFO
-            );
+            IF CUR_COLLECTOR_ID IS NULL THEN
+				CALL sp_get_collector_lists(
+					CUR_DISPOSER_ORDER_ID,
+					CUR_STATE_CATEGORY_CODE,
+					@COLLECTOR_INFO
+				);
+            ELSE
+				CALL sp_get_site_info(
+					CUR_COLLECTOR_ID,
+					@COLLECTOR_INFO
+				);
+            END IF;
 			
             CALL sp_get_disposal_wste_lists(
 				CUR_DISPOSER_ORDER_ID,

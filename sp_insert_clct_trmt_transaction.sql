@@ -1,6 +1,7 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_clct_trmt_transaction`(
     IN IN_USER_ID					BIGINT,					/*입력값 : 배출요청을 한 배출업체의 관리자 고유등록번호(USERS.ID)*/
 	IN IN_DISPOSER_ORDER_ID			BIGINT,					/*입력값 : SITE_WSTE_DISPOSAL_ORDER.ID*/
+	IN IN_COLLECTOR_SITE_ID			BIGINT,					/*입력값 : 기존거래로 들어오는 경우에는 값이 있으며 일반 입찰거래인 경우에는 NULL*/
 	IN IN_VISIT_START_AT			DATETIME,				/*입력값 : 배출자가 요청하는 방문요청일*/
 	IN IN_VISIT_END_AT				DATETIME,				/*입력값 : 배출자가 요청하는 방문요청일*/
     IN IN_COLLECT_ASK_END_AT		DATETIME,				/*입력값 : 배출자가 요청하는 수거마감일*/
@@ -11,7 +12,7 @@ BEGIN
 
 /*
 Procedure Name 	: sp_insert_clct_trmt_transaction
-Input param 	: 5개
+Input param 	: 6개
 Output param 	: 2개
 Job 			: 폐기물처리작업을 생성한다.
 TIME_ZONE 		: UTC + 09:00 처리하여 시간을 수동입력하였음
@@ -26,6 +27,7 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
 	INSERT INTO WSTE_CLCT_TRMT_TRANSACTION (
 		DISPOSAL_ORDER_ID,
         ASKER_ID,
+        COLLECTOR_SITE_ID,
         COLLECT_ASK_END_AT,
         VISIT_START_AT,
         VISIT_END_AT,
@@ -34,6 +36,7 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
 	) VALUES (
 		IN_DISPOSER_ORDER_ID,
         IN_USER_ID,
+        IN_COLLECTOR_SITE_ID,
         IN_COLLECT_ASK_END_AT,
         IN_VISIT_START_AT,
         IN_VISIT_END_AT,

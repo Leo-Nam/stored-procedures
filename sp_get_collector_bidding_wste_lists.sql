@@ -15,14 +15,16 @@ AUTHOR 			: Leo Nam
 */
         
 		SELECT JSON_ARRAYAGG(JSON_OBJECT(
-			'WSTE_NM'			, WSTE_NM, 
-            'UNIT'				, UNIT, 
-            'UNIT_PRICE'		, UNIT_PRICE, 
-            'VOLUME'			, VOLUME, 
-            'TRMT_METHOD_NM'	, TRMT_METHOD_NM
+			'WSTE_NM'			, B.NAME, 
+            'UNIT'				, A.UNIT, 
+            'UNIT_PRICE'		, A.UNIT_PRICE, 
+            'VOLUME'			, A.VOLUME, 
+            'TRMT_METHOD_NM'	, C.NAME
 		)) 
         INTO OUT_WSTE_LIST 
-        FROM V_BIDDING_DETAILS 
-        WHERE COLLECTOR_BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
+        FROM BIDDING_DETAILS A
+        LEFT JOIN WSTE_CODE B ON A.WSTE_CODE = B.CODE
+        LEFT JOIN WSTE_TRMT_METHOD C ON A.TRMT_CODE = C.CODE
+        WHERE A.COLLECTOR_BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
 		/*DISPOSAL_ORDER_ID에 등록된 폐기물 종류 중 하나만 불러온다.*/
 END

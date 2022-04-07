@@ -39,17 +39,13 @@ Changes			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
-    SET IN_AGREE_TERMS = TRUE;		/*야관에 동의한것으로 가정함(임시-BackEnd 요청사항)*/
     IF IN_AGREE_TERMS = TRUE THEN
     /*약관에 동의한 경우 정상처리한다.*/
-/*
 		CALL sp_req_use_same_company_reg_id(
 			IN_BIZ_REG_CODE, 
 			@rtn_val, 
 			@msg_txt
 		);
-*/
-		SET @rtn_val = 0;	/*사업자등록증 이중등록체크 부분 일시정지(FrontEnd 요청사항: 2022.03.07)*/
 		/*체크할 사업자등록번호로 등록된 사업자가 존재하는지 체크한 후 
         존재한다면 1, 
         그렇지 않으면 0을 반환하게 됨*/
