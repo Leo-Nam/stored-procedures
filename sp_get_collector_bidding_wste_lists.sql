@@ -15,11 +15,13 @@ AUTHOR 			: Leo Nam
 */
         
 		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'ID'				, A.ID, 
 			'WSTE_NM'			, B.NAME, 
             'UNIT'				, A.UNIT, 
             'UNIT_PRICE'		, A.UNIT_PRICE, 
             'VOLUME'			, A.VOLUME, 
-            'TRMT_METHOD_NM'	, C.NAME
+            'TRMT_METHOD_NM'	, C.NAME, 
+            'TRMT_CODE'			, A.TRMT_CODE
 		)) 
         INTO OUT_WSTE_LIST 
         FROM BIDDING_DETAILS A

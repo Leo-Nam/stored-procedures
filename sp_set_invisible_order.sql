@@ -58,11 +58,45 @@ AUTHOR 			: Leo Nam
 							ORDER_VISIBLE_CHANGED_AT = @REG_DT,
 							UPDATED_AT = @REG_DT
 						WHERE ID = IN_COLLECTOR_BIDDING_ID;
+                        IF ROW_COUNT() = 1 THEN
+                        /*데이타베이스에 성공적으로 반영된 경우에는 정상처리한다.*/
+							SET @rtn_val = 0;
+							SET @msg_txt = 'success';
+                        ELSE
+                        /*데이타베이스에 성공적으로 반영되지 않은 경우에는 예외처리한다.*/
+							SET @rtn_val = 36106;
+							SET @msg_txt = 'update not applied to the database';
+							SIGNAL SQLSTATE '23000';
+                        END IF;
                     ELSE
                     /*배출자가 자신의 오더를 삭제하지 않은 경우 예외처리한다.*/
-						SET @rtn_val = 36104;
-						SET @msg_txt = 'The order is not deleted by the emitter';
-						SIGNAL SQLSTATE '23000';
+						SELECT STATE_CODE INTO @CURRENT_STATE_CODE
+                        FROM V_BIDDING_STATE
+                        WHERE COLLECTOR_BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
+                        IF @CURRENT_STATE_CODE IN (203, 213, 230, 231, 232) THEN
+                        /*현재 상태가 나열된 상태에 포함된 경우에는 정상처리한다.*/
+							UPDATE COLLECTOR_BIDDING
+							SET 
+								ORDER_VISIBLE = FALSE,
+								ORDER_VISIBLE_CHANGED_AT = @REG_DT,
+								UPDATED_AT = @REG_DT
+							WHERE ID = IN_COLLECTOR_BIDDING_ID;
+							IF ROW_COUNT() = 1 THEN
+							/*데이타베이스에 성공적으로 반영된 경우에는 정상처리한다.*/
+								SET @rtn_val = 0;
+								SET @msg_txt = 'success';
+							ELSE
+							/*데이타베이스에 성공적으로 반영되지 않은 경우에는 예외처리한다.*/
+								SET @rtn_val = 36105;
+								SET @msg_txt = 'update not applied to the database';
+								SIGNAL SQLSTATE '23000';
+							END IF;
+                        ELSE
+                        /*현재 상태가 나열된 상태에 포함되지 않은 경우에는 예외처리한다.*/
+							SET @rtn_val = 36104;
+							SET @msg_txt = 'bidding can not be invisible';
+							SIGNAL SQLSTATE '23000';
+                        END IF;
                     END IF;
                 ELSE
                 /*사용자에게 권한이 없는 경우 예외처리한다.*/

@@ -120,10 +120,10 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 											@rtn_val,
 											@msg_txt
 										);
-                                        SELECT DATE_OF_VISIT INTO @DATE_OF_VISIT
+                                        SELECT VISIT_END_AT INTO @VISIT_END_AT
                                         FROM SITE_WSTE_DISPOSAL_ORDER
                                         WHERE ID = IN_DISPOSAL_ORDER_ID;
-                                        IF @DATE_OF_VISIT <= @REG_DT THEN
+                                        IF @VISIT_END_AT <= @REG_DT THEN
                                         /*입찰신청일이 방문예정일이 지난 시간인 경우에는 정상처리한다.*/
 											IF @rtn_val = 0 THEN
 											/*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 없는 경우 정상처리한다.*/
