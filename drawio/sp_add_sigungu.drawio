@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="bBSNHSyns5B7564u4pym" name="Page-1">
-        <mxGraphModel dx="2647" dy="2139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="5377" dy="3594" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -19,7 +19,7 @@
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-18" target="oMOvZgjtxlTCz-zowUhw-20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-22" value="TRUE:사용자존재" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-21" vertex="1" connectable="0">
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-22" value="&lt;font style=&quot;font-size: 10px&quot;&gt;TRUE:사용자존재&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-21" vertex="1" connectable="0">
                     <mxGeometry x="-0.2444" y="-2" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -41,10 +41,10 @@
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-20" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_site_id_of_user_reg_id&lt;br&gt;사용자가 소속한 사이트의&lt;br&gt;등록번호를&amp;nbsp;@SITE_ID에 반환한다&lt;br&gt;실행결과에 대한 성공과 실패는&lt;br&gt;@rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="-560" y="-560" width="220" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-25" target="oMOvZgjtxlTCz-zowUhw-29" edge="1">
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="oMOvZgjtxlTCz-zowUhw-25" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-36" value="TRUE: 사이트 존재" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-31" vertex="1" connectable="0">
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-36" value="&lt;font style=&quot;font-size: 10px&quot;&gt;TRUE: 사이트 존재&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-31" vertex="1" connectable="0">
                     <mxGeometry x="-0.2444" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -64,12 +64,12 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-29" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_sigungu_is_already_added&lt;br&gt;이미 등록된 사이트인지 검사한 후&lt;br&gt;그 결과를 @rtn_val에 반환한다.&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="-180" width="220" height="100" as="geometry"/>
+                    <mxGeometry x="-560" y="180" width="220" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-34" target="oMOvZgjtxlTCz-zowUhw-39" edge="1">
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="oMOvZgjtxlTCz-zowUhw-34" target="11" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-41" value="TRUE:미등록" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-40" vertex="1" connectable="0">
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-41" value="&lt;font style=&quot;font-size: 10px&quot;&gt;TRUE:미등록&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-40" vertex="1" connectable="0">
                     <mxGeometry x="-0.2444" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -79,29 +79,23 @@
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-50" value="&lt;font style=&quot;font-size: 10px&quot;&gt;FALSE:기등록시군구&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="oMOvZgjtxlTCz-zowUhw-49" vertex="1" connectable="0">
                     <mxGeometry x="-0.8056" y="1" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
+                        <mxPoint x="-24" y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-34" value="&lt;font style=&quot;font-size: 10px&quot;&gt;시군구를 이미 &lt;br&gt;등록하였는가?&lt;br&gt;@rtn_val=0?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="10" width="220" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-39" target="oMOvZgjtxlTCz-zowUhw-42" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
+                    <mxGeometry x="-560" y="370" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-39" target="oMOvZgjtxlTCz-zowUhw-53" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-39" value="&lt;font style=&quot;font-size: 10px&quot;&gt;시군구를 관심지역으로 등록한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="200" width="220" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-42" value="&lt;font style=&quot;font-size: 10px&quot;&gt;BUSINESS_AREA&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=8;" parent="1" vertex="1">
-                    <mxGeometry x="-820" y="210" width="160" height="80" as="geometry"/>
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-39" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_add_sigungu_without_handler&lt;br&gt;시군구를 추가한 후 그 결과를 &lt;br&gt;@rtn_val에 반환한다&lt;br&gt;&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-560" y="1050" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-44" target="oMOvZgjtxlTCz-zowUhw-59" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="-10" y="-510"/>
-                            <mxPoint x="-10" y="630"/>
+                            <mxPoint x="-10" y="1470"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -119,11 +113,92 @@
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-60" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="oMOvZgjtxlTCz-zowUhw-53" target="oMOvZgjtxlTCz-zowUhw-59" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="oMOvZgjtxlTCz-zowUhw-53" value="&lt;font style=&quot;font-size: 10px&quot;&gt;성공적으로 시군구를&amp;nbsp;&lt;br&gt;등록하였는가?&lt;br&gt;ROW_COUNT() = 1&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="390" width="220" height="100" as="geometry"/>
+                <mxCell id="10" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="oMOvZgjtxlTCz-zowUhw-60">
+                    <mxGeometry x="-0.2418" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="oMOvZgjtxlTCz-zowUhw-53" value="&lt;font style=&quot;font-size: 10px&quot;&gt;성공적으로 시군구를&amp;nbsp;&lt;br&gt;등록하였는가?&lt;br&gt;@rtn_val = 0&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-560" y="1230" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="oMOvZgjtxlTCz-zowUhw-59" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_return_results&lt;br&gt;(@rtn_val, @msg_txt, @json_data)&lt;br&gt;결과를 반환한다.&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="580" width="220" height="100" as="geometry"/>
+                    <mxGeometry x="-560" y="1420" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" edge="1" source="3" target="4" parent="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_is_site_collector&lt;br&gt;사이트가 수거자인지 검사한 후&lt;br&gt;수거자인 경우 0, 수거자가 아닌 경우 &lt;br&gt;0이 아닌 값을 @rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-560" y="-187.14" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="4" target="oMOvZgjtxlTCz-zowUhw-29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="5">
+                    <mxGeometry x="-0.3" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4" target="oMOvZgjtxlTCz-zowUhw-44">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="7">
+                    <mxGeometry x="-0.8281" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="&lt;font style=&quot;font-size: 10px&quot;&gt;사이트가 수거자인가?&lt;br&gt;@rtn_val = 0?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-560" y="2.8599999999999994" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="11" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="13">
+                    <mxGeometry x="-0.2358" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="11" target="oMOvZgjtxlTCz-zowUhw-39">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-660" y="585"/>
+                            <mxPoint x="-660" y="1100"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="23">
+                    <mxGeometry x="-0.8835" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="&lt;font style=&quot;font-size: 10px&quot;&gt;무료추가인가?&lt;br&gt;@IN_IS_DEFAULT=TRUE?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-560" y="535" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="12" target="14">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;sp_req_policy_direction&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;무료로 가입시킬수 있는 지역의 개수를 구하여&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@number_of_free_areas_of_interest에 &lt;br&gt;반환한다.&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-560" y="700" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="14" target="oMOvZgjtxlTCz-zowUhw-39">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="16">
+                    <mxGeometry x="-0.2186" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="14" target="oMOvZgjtxlTCz-zowUhw-44">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-210" y="813.6508091517857" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="18">
+                    <mxGeometry x="-0.9003" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="&lt;font style=&quot;font-size: 10px&quot;&gt;무료추가가 가능한가?&lt;br&gt;@AREA_COUNT &amp;lt; @number_of_free_areas_of_interest&amp;nbsp;?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-560" y="870" width="220" height="100" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
