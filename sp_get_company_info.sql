@@ -24,7 +24,9 @@ BEGIN
         CONFIRMED_AT			DATETIME,
         CREATED_AT				DATETIME,
         UPDATED_AT				DATETIME,
-        ADDRESS_INFO			JSON
+        ACTIVE					TINYINT,
+        ADDRESS_INFO			JSON,
+        PARENT_COMP_INFO		JSON
 	);     
     
     INSERT INTO COMP_INFO_TEMP (
@@ -46,7 +48,8 @@ BEGIN
         CONFIRMED,
         CONFIRMED_AT,
         CREATED_AT,
-        UPDATED_AT
+        UPDATED_AT,
+        ACTIVE
 	)
 	SELECT 
 		ID,
@@ -67,11 +70,12 @@ BEGIN
         CONFIRMED,
         CONFIRMED_AT,
         CREATED_AT,
-        UPDATED_AT
+        UPDATED_AT,
+        ACTIVE
 	FROM COMPANY 
 	WHERE ID = IN_COMP_ID;	
     
-    SELECT KIKCD_B_CODE INTO @KIKCD_B_CODE
+    SELECT KIKCD_B_CODE, P_COMP_ID INTO @KIKCD_B_CODE, @P_COMP_ID
     FROM COMPANY 
 	WHERE ID = IN_COMP_ID;	
     
@@ -80,8 +84,19 @@ BEGIN
         @ADDRESS_INFO
     );
     
+    IF @P_COMP_ID > 0 THEN
+		CALL sp_get_parent_company_info(
+			@P_COMP_ID,
+			@PARENT_COMP_INFO
+		);
+    ELSE
+		SET @PARENT_COMP_INFO = NULL;
+    END IF;
+    
     UPDATE COMP_INFO_TEMP
-    SET ADDRESS_INFO = @ADDRESS_INFO
+    SET 
+		ADDRESS_INFO 		= @ADDRESS_INFO,
+		PARENT_COMP_INFO 	= @PARENT_COMP_INFO
     WHERE ID = IN_COMP_ID;	
     
 	SELECT JSON_ARRAYAGG(
@@ -105,7 +120,9 @@ BEGIN
             'CONFIRMED_AT'				, CONFIRMED_AT,
             'CREATED_AT'				, CREATED_AT,
             'UPDATED_AT'				, UPDATED_AT,
-            'ADDRESS_INFO'				, ADDRESS_INFO
+            'ACTIVE'					, ACTIVE,
+            'ADDRESS_INFO'				, ADDRESS_INFO,
+            'PARENT_COMP_INFO'			, PARENT_COMP_INFO
 		)
 	) 
 	INTO OUT_COMP_INFO 

@@ -24,6 +24,7 @@ BEGIN
         CONFIRMED_AT			DATETIME,
         CREATED_AT				DATETIME,
         UPDATED_AT				DATETIME,
+        ACTIVE					TINYINT,
         ADDRESS_INFO			JSON
 	);     
     
@@ -46,7 +47,8 @@ BEGIN
         CONFIRMED,
         CONFIRMED_AT,
         CREATED_AT,
-        UPDATED_AT
+        UPDATED_AT,
+        ACTIVE
 	)
 	SELECT 
 		ID,
@@ -67,7 +69,8 @@ BEGIN
         CONFIRMED,
         CONFIRMED_AT,
         CREATED_AT,
-        UPDATED_AT
+        UPDATED_AT,
+        ACTIVE
 	FROM COMPANY 
 	WHERE ID = IN_COMP_ID;	
     
@@ -106,6 +109,7 @@ BEGIN
             'CONFIRMED_AT'				, CONFIRMED_AT,
             'CREATED_AT'				, CREATED_AT,
             'UPDATED_AT'				, UPDATED_AT,
+            'ACTIVE'					, ACTIVE,
             'ADDRESS_INFO'				, ADDRESS_INFO
 		)
 	) 

@@ -120,70 +120,81 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 											@rtn_val,
 											@msg_txt
 										);
-                                        IF @rtn_val = 0 THEN
-                                        /*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 없는 경우 정상처리한다.*/
-											CALL sp_req_bidding_end_date_expired(
-											/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
-												IN_DISPOSAL_ORDER_ID,
-												@rtn_val,
-												@msg_txt
-											);
+                                        SELECT DATE_OF_VISIT INTO @DATE_OF_VISIT
+                                        FROM SITE_WSTE_DISPOSAL_ORDER
+                                        WHERE ID = IN_DISPOSAL_ORDER_ID;
+                                        IF @DATE_OF_VISIT <= @REG_DT THEN
+                                        /*입찰신청일이 방문예정일이 지난 시간인 경우에는 정상처리한다.*/
 											IF @rtn_val = 0 THEN
-											/*입찰마감일이 종료되지 않은 경우*/
-												CALL sp_insert_collector_wste_lists(
-												/*수거자 등이 입력한 입찰정보를 데이타베이스에 저장한다.*/
-													@COLLECTOR_BIDDING_ID,
+											/*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 없는 경우 정상처리한다.*/
+												CALL sp_req_bidding_end_date_expired(
+												/*입찰마감일이 종료되었는지 검사한다. 종료되었으면 TRUE, 그렇지 않으면 FALSE반환*/
 													IN_DISPOSAL_ORDER_ID,
-													@REG_DT,
-													IN_BIDDING_DETAILS,
 													@rtn_val,
 													@msg_txt
 												);
 												IF @rtn_val = 0 THEN
-												/*데이타베이스 입력에 성공한 경우*/
-													UPDATE COLLECTOR_BIDDING 
-													SET 
-														DATE_OF_BIDDING 		= @REG_DT, 
-														BID_AMOUNT 				= IN_BID_AMOUNT,  
-                                                        /*BID_AMOUNT를 폐기물 견적에서 단가와 수량을 곱한 후 합산한 금액으로 sp_insert_collector_wste_lists의 실행으로 계산을 하고 있으나 
-                                                        앱 사용측면에서 페기물 리스트를 업로드 하는것과는 별개로 전체 금액을 입력하고 있으므로 위의 계산결과와는 별개로 BID_AMOUNT통하여 
-                                                        입력받은 전체 금액을 데이타베이스에 입력하고 있다. 추후 견적관련 서비스를 수정하게 되면 이 부분은 삭제되어야 한다.*/
-														TRMT_METHOD 			= IN_TRMT_METHOD, 
-														UPDATED_AT 				= @REG_DT 
-													WHERE 
-														ID = @COLLECTOR_BIDDING_ID;
-													IF ROW_COUNT() = 1 THEN
-													/*데이타 입력에 성공하였다면*/
-                                                        CALL sp_calc_max_decision_at(
-                                                        /*수거자가 배출자의 낙찰통보에 대하여 최종결심할 수 있는 최대시간을 확정한다.*/
-															IN_DISPOSAL_ORDER_ID,
-                                                            @COLLECTOR_BIDDING_ID,
-                                                            @REG_DT
-                                                        );
-														CALL sp_calc_bidders(
-															IN_DISPOSAL_ORDER_ID
-														);
-														CALL sp_calc_bidding_rank(
-															IN_DISPOSAL_ORDER_ID
-														);
-														SET @rtn_val 		= 0;
-														SET @msg_txt 		= 'Success1';
+												/*입찰마감일이 종료되지 않은 경우*/
+													CALL sp_insert_collector_wste_lists(
+													/*수거자 등이 입력한 입찰정보를 데이타베이스에 저장한다.*/
+														@COLLECTOR_BIDDING_ID,
+														IN_DISPOSAL_ORDER_ID,
+														@REG_DT,
+														IN_BIDDING_DETAILS,
+														@rtn_val,
+														@msg_txt
+													);
+													IF @rtn_val = 0 THEN
+													/*데이타베이스 입력에 성공한 경우*/
+														UPDATE COLLECTOR_BIDDING 
+														SET 
+															DATE_OF_BIDDING 		= @REG_DT, 
+															BID_AMOUNT 				= IN_BID_AMOUNT,  
+															/*BID_AMOUNT를 폐기물 견적에서 단가와 수량을 곱한 후 합산한 금액으로 sp_insert_collector_wste_lists의 실행으로 계산을 하고 있으나 
+															앱 사용측면에서 페기물 리스트를 업로드 하는것과는 별개로 전체 금액을 입력하고 있으므로 위의 계산결과와는 별개로 BID_AMOUNT통하여 
+															입력받은 전체 금액을 데이타베이스에 입력하고 있다. 추후 견적관련 서비스를 수정하게 되면 이 부분은 삭제되어야 한다.*/
+															TRMT_METHOD 			= IN_TRMT_METHOD, 
+															UPDATED_AT 				= @REG_DT 
+														WHERE 
+															ID = @COLLECTOR_BIDDING_ID;
+														IF ROW_COUNT() = 1 THEN
+														/*데이타 입력에 성공하였다면*/
+															CALL sp_calc_max_decision_at(
+															/*수거자가 배출자의 낙찰통보에 대하여 최종결심할 수 있는 최대시간을 확정한다.*/
+																IN_DISPOSAL_ORDER_ID,
+																@COLLECTOR_BIDDING_ID,
+																@REG_DT
+															);
+															CALL sp_calc_bidders(
+																IN_DISPOSAL_ORDER_ID
+															);
+															CALL sp_calc_bidding_rank(
+																IN_DISPOSAL_ORDER_ID
+															);
+															SET @rtn_val 		= 0;
+															SET @msg_txt 		= 'Success1';
+														ELSE
+														/*데이타 입력에 실패하였다면 예외처리한다.*/
+															SET @rtn_val 		= 23401;
+															SET @msg_txt 		= 'Failed to change bid request record';
+															SIGNAL SQLSTATE '23000';
+														END IF;
 													ELSE
-													/*데이타 입력에 실패하였다면 예외처리한다.*/
-														SET @rtn_val 		= 23401;
-														SET @msg_txt 		= 'Failed to change bid request record';
+													/*데이타베이스 입력에 실패한 경우*/
 														SIGNAL SQLSTATE '23000';
 													END IF;
 												ELSE
-												/*데이타베이스 입력에 실패한 경우*/
+												/*입찰마감일이 종료된 경우 예외처리한다.*/
 													SIGNAL SQLSTATE '23000';
 												END IF;
 											ELSE
-											/*입찰마감일이 종료된 경우 예외처리한다.*/
+											/*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 존재하는 경우 예외처리한다.*/
 												SIGNAL SQLSTATE '23000';
 											END IF;
                                         ELSE
-                                        /*수거자가 자신의 방문신청에 대하여 이미 취소한 사실이 존재하는 경우 예외처리한다.*/
+                                        /*입찰신청일이 방문예정일이 이전 시간인 경우에는 예외처리한다.*/
+											SET @rtn_val 		= 23405;
+											SET @msg_txt 		= 'Bidding is not possible before the scheduled visit date';
 											SIGNAL SQLSTATE '23000';
                                         END IF;
 									ELSE

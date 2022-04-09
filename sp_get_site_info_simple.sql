@@ -1,4 +1,4 @@
-CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_site_info`(
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_site_info_simple`(
 	IN IN_SITE_ID			BIGINT,
     OUT OUT_SITE_INFO		JSON
 )
@@ -32,6 +32,7 @@ BEGIN
         DONG_RI					VARCHAR(20),
         AVATAR_PATH				VARCHAR(255),
         PHONE					VARCHAR(20),
+        ACTIVE					TINYINT,
         BUSINESS_TARGET			JSON,
         ADDRESS_INFO			JSON,
         COMPANY_INFO			JSON
@@ -95,7 +96,7 @@ BEGIN
 		B.DONG_RI,
 		C.AVATAR_PATH,
 		C.PHONE,
-		A.ACTIVE
+        A.ACTIVE
 	FROM COMP_SITE A         
     LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
     LEFT JOIN USERS C ON A.ID = C.AFFILIATED_SITE
@@ -103,34 +104,7 @@ BEGIN
 	WHERE 
 		A.ID = IN_SITE_ID AND
         C.CLASS = 201 AND
-        C.ACTIVE = TRUE;	
-    
-	CALL sp_get_wste_lists_registerd_by_site(
-		IN_SITE_ID,
-		@BUSINESS_TARGET
-	);
-	
-    SELECT COMP_ID, KIKCD_B_CODE INTO @COMP_ID, @KIKCD_B_CODE
-    FROM COMP_SITE
-    WHERE ID = IN_SITE_ID;
-    
-	CALL sp_get_address_with_bcode(
-		@KIKCD_B_CODE,
-		@ADDRESS_INFO
-	);
-    
-	CALL sp_get_company_info(
-		@COMP_ID,
-		@COMPANY_INFO
-	);
-    
-	UPDATE SITE_INFO_TEMP
-    SET 
-		BUSINESS_TARGET	 = @BUSINESS_TARGET,
-		ADDRESS_INFO	 = @ADDRESS_INFO,
-		COMPANY_INFO	 = @COMPANY_INFO
-    WHERE ID = IN_SITE_ID;
-    
+        C.ACTIVE = TRUE;	    
     
 	SELECT JSON_ARRAYAGG(
 		JSON_OBJECT(
@@ -161,10 +135,7 @@ BEGIN
 			'DONG_RI'					, DONG_RI,
 			'AVATAR_PATH'				, AVATAR_PATH,
 			'PHONE'						, PHONE,
-			'ACTIVE'					, ACTIVE,
-            'BUSINESS_TARGET'			, BUSINESS_TARGET,
-            'ADDRESS_INFO'				, ADDRESS_INFO,
-            'COMPANY_INFO'				, COMPANY_INFO
+			'ACTIVE'					, ACTIVE
 		)
 	) 
 	INTO OUT_SITE_INFO 
