@@ -63,6 +63,12 @@ BEGIN
 	SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(@MAX_SELECT_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED), ':00:00'));
 	SET @COLLECTOR_MAX_DECISION2_AT = ADDTIME(@MAX_SELECT2_AT, CONCAT(CAST(@max_selection_duration AS UNSIGNED)*2, ':00:00'));
 */
+    
+    CALL sp_create_order_code(
+		IN_REG_DT,
+        @ORDER_CODE
+    );
+    
 	CALL sp_req_policy_direction(
 		'max_disposal_duration',
 		@max_disposal_duration
@@ -101,7 +107,8 @@ BEGIN
 		IN_VISIT_END_AT,
 		IN_BIDDING_END_AT,
 		IN_OPEN_AT,
-		IF(IN_COLLECTOR_SITE_ID IS NULL, DATE_ADD(IN_OPEN_AT, INTERVAL @max_disposal_duration DAY), IN_CLOSE_AT),
+		IF(IN_COLLECTOR_SITE_ID IS NULL, DATE_ADD(IN_OPEN_AT, INTERVAL @max_disposal_duration DAY), IN_CLOSE_AT), 
+        /*기존거래인 경우에는 OPEN_AT(폐기물수거요청일)로부터 @max_disposal_duration을 합산한 날짜를 계약종료일로 정하고 입찰거래인 경우에는 CLOSE_AT을 그대로 사용한다.*/
 		@SERVICE_INSTRUCTION_ID,
 		@ORDER_CODE,
 		IN_NOTE,
