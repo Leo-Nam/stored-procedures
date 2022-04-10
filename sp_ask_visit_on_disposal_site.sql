@@ -159,7 +159,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 			ELSE
 			/*방문신청을 하는 사이트가 자신이 배출한 사이트인 경우에는 예외처리한다.*/
 				SET @rtn_val 		= 23109;
-				SET @msg_txt 		= 'user does not belong to the site';
+				SET @msg_txt 		= 'Requests for visits are not allowed for self-bidding cases';
 				SIGNAL SQLSTATE '23000';
 			END IF;
 			

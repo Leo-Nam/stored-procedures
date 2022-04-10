@@ -43,7 +43,7 @@ AUTHOR 			: Leo Nam
 		/*배출자의 방문예정일에 여유가 없는 경우*/
 			SET OUT_COLLECTOR_CAN_VISIT = FALSE;
 			SET rtn_val 				= 31301;
-			SET msg_txt 				= CONCAT('no room for the discharger scheduled visit date, VISIT_END_AT: ', @VISIT_END_AT, ', TIME_NEW: ', @time_new);
+			SET msg_txt 				= CONCAT('Request for visit must be made at least ', @minimum_required_time, ' hours in advance');
         END IF;
     END IF;
 END
