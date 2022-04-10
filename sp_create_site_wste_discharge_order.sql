@@ -55,56 +55,44 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     IF @rtn_val = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
 		IF IN_VISIT_END_AT IS NOT NULL THEN
-			SET IN_VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:59') AS DATETIME);
+			SET @VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:59') AS DATETIME);
+			SET @REF_DATE = @VISIT_END_AT;
+		ELSE
+			SET @REF_DATE = @REG_DT;
         END IF;
         
 		IF IN_BIDDING_END_AT IS NOT NULL THEN
-			SET IN_BIDDING_END_AT = CAST(CONCAT(DATE(IN_BIDDING_END_AT), ' ', '23:59:59') AS DATETIME);
-        END IF;
-        
-		IF IN_CLOSE_AT IS NOT NULL THEN
-			SET IN_CLOSE_AT = CAST(CONCAT(DATE(IN_CLOSE_AT), ' ', '23:59:59') AS DATETIME);
-        END IF;
-        
-		SET @VISIT_END_AT = IN_VISIT_END_AT;
-		IF IN_VISIT_END_AT IS NOT NULL THEN
-			SET @REF_DATE = IN_VISIT_END_AT;
+			SET @BIDDING_END_AT = CAST(CONCAT(DATE(IN_BIDDING_END_AT), ' ', '23:59:59') AS DATETIME);
 		ELSE
-			SET @REF_DATE = @REG_DT;
-		END IF;
-        
-		IF IN_BIDDING_END_AT IS NULL THEN
 			CALL sp_req_policy_direction(
 			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
 				'bidding_end_date_after_the_visit_early_closing',
 				@bidding_end_date_after_the_visit_early_closing
 			);
 			SET @BIDDING_END_AT = ADDTIME(
-									@REF_DATE, 
-                                    CONCAT(
-										CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), 
-                                        ':00:00'
-									)
-								);
+				@REF_DATE, 
+				CONCAT(
+					CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), 
+					':00:00'
+				)
+			);
+        END IF;
+        
+		IF IN_CLOSE_AT IS NOT NULL THEN
+			SET @CLOSE_AT = CAST(CONCAT(DATE(IN_CLOSE_AT), ' ', '23:59:59') AS DATETIME);
 		ELSE
-			SET @BIDDING_END_AT = IN_BIDDING_END_AT;
-        END IF;
-        
-        IF IN_OPEN_AT IS NULL THEN
-			SET @OPEN_AT = @REG_DT;
-        ELSE
-			SET @OPEN_AT = IN_OPEN_AT;
-        END IF;
-        
-        IF IN_CLOSE_AT IS NULL THEN
 			CALL sp_req_policy_direction(
-			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+			/*입찰마감일로부터 배출종료일까지의 최소 소요기간(단위: day)을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
 				'max_disposal_duration',
 				@max_disposal_duration
 			);
 			SET @CLOSE_AT = DATE_ADD(@BIDDING_END_AT, INTERVAL @max_disposal_duration DAY);
+        END IF;
+        
+        IF IN_OPEN_AT IS NOT NULL THEN
+			SET @OPEN_AT = IN_OPEN_AT;
         ELSE
-			SET @CLOSE_AT = IN_CLOSE_AT;
+			SET @OPEN_AT = @REG_DT;
         END IF;
         
 		CALL sp_req_get_user_current_type(
