@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="GoSXiqhEjkwd7hs7oLC1" name="Page-1">
-        <mxGraphModel dx="10754" dy="8357" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="4254" dy="4893" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -135,7 +135,7 @@
                     <mxGeometry x="-1177.97" y="-1600" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-114" value="&lt;font style=&quot;font-size: 10px&quot;&gt;폐기물배출종료일=입력값&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-1507.34" y="-1580" width="224.05" height="60" as="geometry"/>
+                    <mxGeometry x="-1484.05" y="-1580" width="224.05" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-143" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="nqFcclDZsv5z8-_tzMHj-142" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -147,7 +147,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-154" value="sp_req_user_affiliation_by_user_id&lt;br&gt;사용자의 소속사이트를 구한 후 그 값을&amp;nbsp;@BELONG_TO에 반환한다" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-1195.93" y="-1430" width="255.94" height="80" as="geometry"/>
+                    <mxGeometry x="-1175.92" y="-1430" width="215.92" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-159" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="nqFcclDZsv5z8-_tzMHj-155" target="nqFcclDZsv5z8-_tzMHj-158" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -211,13 +211,13 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-170" value="&lt;font style=&quot;font-size: 10px&quot;&gt;사용자타입을 'company'으로 정함&lt;br&gt;@DISPOSER_TYPE = 'company'&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-1507.3400000000001" y="-1260" width="224.07" height="60" as="geometry"/>
+                    <mxGeometry x="-1484.0700000000002" y="-1260" width="224.07" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-175" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="nqFcclDZsv5z8-_tzMHj-172" target="nqFcclDZsv5z8-_tzMHj-174" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-172" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_site_exists&lt;br&gt;사이트가 존재하는지 검사한 후 그 결과를&amp;nbsp;@rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-1507.33" y="-1120" width="224.06" height="80" as="geometry"/>
+                    <mxGeometry x="-1484.07" y="-1120" width="224.06" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-176" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="nqFcclDZsv5z8-_tzMHj-174" target="nqFcclDZsv5z8-_tzMHj-160" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -228,15 +228,15 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-174" value="&lt;font style=&quot;font-size: 10px&quot;&gt;사이트 존재?&lt;br&gt;@rtn_val = 0&lt;/font&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="-1503.27" y="-980" width="215.94" height="80" as="geometry"/>
+                    <mxGeometry x="-1480.01" y="-980" width="215.94" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="nqFcclDZsv5z8-_tzMHj-178" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="nqFcclDZsv5z8-_tzMHj-174" target="nqFcclDZsv5z8-_tzMHj-9" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="-1400" y="-1280" as="sourcePoint"/>
                         <mxPoint x="-760.0700000000002" y="-3280" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="-1620" y="-940"/>
-                            <mxPoint x="-1620" y="-3480"/>
+                            <mxPoint x="-1580" y="-940"/>
+                            <mxPoint x="-1580" y="-3480"/>
                             <mxPoint x="-650" y="-3480"/>
                         </Array>
                     </mxGeometry>
@@ -305,7 +305,7 @@
                 <mxCell id="44" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=8;" edge="1" parent="1" source="23" target="43">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="23" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_policy_direction&lt;br&gt;입찰종료일을 자동결정하기 위하여 &lt;br&gt;방문종료일로부터의 기간을 반환받는다bidding_end_date_after_the_visit_early_closing&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="23" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_policy_direction&lt;br&gt;입찰종료일을 자동결정하기 위하여 &lt;br&gt;방문종료일로부터의 기간을 반환받는다bidding_end_date_after&lt;br&gt;_the_visit_early_closing&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1480" y="-2650" width="215.94" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="29" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="43" target="8">
@@ -327,16 +327,16 @@
                 <mxCell id="41" value="&lt;font style=&quot;font-size: 10px&quot;&gt;@CLOSE_AT&lt;br&gt;=&amp;nbsp;@BIDDING_END_AT&amp;nbsp;&lt;br&gt;+&amp;nbsp;max_disposal_duration&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-890.0200000000001" y="-2190" width="215.94" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" value="&lt;font style=&quot;font-size: 10px&quot;&gt;@BIDDING_END_AT&lt;br&gt;= @REF_DATE +&amp;nbsp;bidding_end_date_after_the_visit_early_closing&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="43" value="&lt;font style=&quot;font-size: 10px&quot;&gt;@BIDDING_END_AT&lt;br&gt;= @REF_DATE &lt;br&gt;+&amp;nbsp;bidding_end_date_after&lt;br&gt;_the_visit_early_closing&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1480" y="-2490" width="215.94" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="45" value="&lt;font style=&quot;font-size: 10px&quot;&gt;@OPEN_AT = 폐기물 배출시작일&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
-                    <mxGeometry x="-1503.2800000000002" y="-2040" width="215.94" height="60" as="geometry"/>
+                    <mxGeometry x="-1480.0000000000002" y="-2040" width="215.94" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="46" value="&lt;font style=&quot;font-size: 10px&quot;&gt;@OPEN_AT = @REG_DT&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1175.94" y="-1890" width="215.94" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="47" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_get_user_current_type&lt;br&gt;현재 사용자의 타입을 구하여&amp;nbsp;&lt;br&gt;@USER_CURRENT_TYPE_CODE에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="47" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_get_user_current_type&lt;br&gt;현재 사용자의 타입을 구하여&amp;nbsp;&lt;br&gt;@USER_CURRENT_TYPE_CODE&lt;br&gt;에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1175.94" y="-1750" width="215.94" height="80" as="geometry"/>
                 </mxCell>
             </root>
