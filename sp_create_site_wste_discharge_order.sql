@@ -31,8 +31,6 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				: IN_VISIT_END_AT이 시간이 없이 날짜만 존재하는 경우에는 IN_VISIT_END_AT에 1일을 추가해준다.(0.0.9)
 				: 사용자의 현재 타입에 따른 배출권한 제한(0.0.8)
 */
-
-	DECLARE REGISTRATION_JOB_CAN_GO TINYINT DEFAULT FALSE;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
