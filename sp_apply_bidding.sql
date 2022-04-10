@@ -165,9 +165,6 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 																@COLLECTOR_BIDDING_ID,
 																@REG_DT
 															);
-															CALL sp_calc_bidders(
-																IN_DISPOSAL_ORDER_ID
-															);
 															CALL sp_calc_bidding_rank(
 																IN_DISPOSAL_ORDER_ID
 															);
@@ -247,7 +244,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 									IN_DISPOSAL_ORDER_ID
                                 );
                                 IF ROW_COUNT() = 1 THEN
-									CALL sp_calc_bidders(
+									CALL sp_calc_bidding_rank(
 										IN_DISPOSAL_ORDER_ID
 									);
 									SET @rtn_val 		= 0;

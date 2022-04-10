@@ -64,93 +64,59 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 				);
 				IF @rtn_val = 0 THEN
 				/*수집운반업자등이 방문신청을 할 수 있는 경우*/
-					CALL sp_req_visit_date_expired(
-					/*방문마감일정이 남아 있는지 확인한다.*/
+					CALL sp_req_visit_date_on_disposal_order(
 						IN_DISPOSER_ORDER_ID,
-						@rtn_val,
-						@msg_txt
+						@DISPOSAL_VISIT_START_AT,
+						@DISPOSAL_VISIT_END_AT
 					);
-					IF @rtn_val > 0 THEN
-					/*배출자가 결정한 방문마감일이 아직 남아 있는 경우*/
-						CALL sp_req_is_visit_schedule_close_early(
-						/*사이트가 방문조기마감이 되었는지 확인한다.*/
-							IN_DISPOSER_ORDER_ID,
+					SET IN_VISIT_AT = @DISPOSAL_VISIT_END_AT;
+					
+					SELECT COUNT(ID) INTO @CHK_COUNT 
+					FROM COLLECTOR_BIDDING 
+					WHERE 
+						COLLECTOR_ID = IN_USER_ID AND 
+						DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
+						ACTIVE = TRUE;
+					/*기존에 입력된 데이타가 존재하는지 확인한다.*/
+					IF @CHK_COUNT = 1 THEN
+					/*기존 데이타가 존재한다면 데이타를 업데이트 처리한다.*/
+						UPDATE COLLECTOR_BIDDING 
+						SET 
+							DATE_OF_VISIT = IN_VISIT_AT,
+							UPDATED_AT = @REG_DT
+						WHERE 
+							COLLECTOR_ID = IN_USER_ID AND 
+							DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
+							ACTIVE = TRUE;
+						IF ROW_COUNT() = 1 THEN
+						/*정상적으로 변경완료된 경우*/
+							SET @rtn_val 		= 0;
+							SET @msg_txt 		= 'Success';
+						ELSE
+						/*정상적으로 변경되지 않은 경우*/
+							SET @rtn_val 		= 23104;
+							SET @msg_txt 		= 'Error in processing the request for visit by the collector';
+							SIGNAL SQLSTATE '23000';
+						END IF;
+					ELSE
+					/*기존 데이타가 존재하지 않는다면 새로운 레코드를 생성한다.*/
+						CALL sp_create_collector_bidding(
+							@USER_SITE_ID, 
+							IN_DISPOSER_ORDER_ID, 
+							TRUE, 
+							IN_VISIT_AT, 
+							@REG_DT,
 							@rtn_val,
 							@msg_txt
 						);
 						IF @rtn_val = 0 THEN
-						/*사이트의 방문일정이 조기 마감되지 않았다면*/
-							CALL sp_req_visit_date_on_disposal_order(
-								IN_DISPOSER_ORDER_ID,
-								@DISPOSAL_VISIT_START_AT,
-								@DISPOSAL_VISIT_END_AT
-							);
-							IF @DISPOSAL_VISIT_END_AT IS NOT NULL THEN
-							/*배출자의 방문요청이 존재하는 경우*/
-								SET IN_VISIT_AT = @DISPOSAL_VISIT_END_AT;
-                                
-								SELECT COUNT(ID) INTO @CHK_COUNT 
-								FROM COLLECTOR_BIDDING 
-								WHERE 
-									COLLECTOR_ID = IN_USER_ID AND 
-									DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
-									ACTIVE = TRUE;
-								/*기존에 입력된 데이타가 존재하는지 확인한다.*/
-								IF @CHK_COUNT = 1 THEN
-								/*기존 데이타가 존재한다면 데이타를 업데이트 처리한다.*/
-									UPDATE COLLECTOR_BIDDING 
-									SET 
-										DATE_OF_VISIT = IN_VISIT_AT,
-										UPDATED_AT = @REG_DT
-									WHERE 
-										COLLECTOR_ID = IN_USER_ID AND 
-										DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID AND 
-										ACTIVE = TRUE;
-									IF ROW_COUNT() = 1 THEN
-									/*정상적으로 변경완료된 경우*/
-										SET @rtn_val 		= 0;
-										SET @msg_txt 		= 'Success';
-									ELSE
-									/*정상적으로 변경되지 않은 경우*/
-										SET @rtn_val 		= 23104;
-										SET @msg_txt 		= 'Error in processing the request for visit by the collector';
-										SIGNAL SQLSTATE '23000';
-									END IF;
-								ELSE
-								/*기존 데이타가 존재하지 않는다면 새로운 레코드를 생성한다.*/
-									CALL sp_create_collector_bidding(
-										@USER_SITE_ID, 
-										IN_DISPOSER_ORDER_ID, 
-										TRUE, 
-										IN_VISIT_AT, 
-										@REG_DT,
-										@rtn_val,
-										@msg_txt
-									);
-									IF @rtn_val = 0 THEN
-									/*정상적으로 입력완료된 경우*/
-										SET @rtn_val 		= 0;
-										SET @msg_txt 		= 'Success77';
-									ELSE
-									/*정상적으로 입력되지 않은 경우*/
-										SIGNAL SQLSTATE '23000';
-									END IF;
-								END IF;
-							ELSE
-							/*배출자의 방문요청이 존재하지 않는 경우*/
-								SET @rtn_val 		= 23107;
-								SET @msg_txt 		= 'There is no visit request from the emitter';
-								SIGNAL SQLSTATE '23000';
-							END IF;
+						/*정상적으로 입력완료된 경우*/
+							SET @rtn_val 		= 0;
+							SET @msg_txt 		= 'Success77';
 						ELSE
-						/*사이트의 방문일정이 조기 마감되었다면 예외처리한다.*/
+						/*정상적으로 입력되지 않은 경우*/
 							SIGNAL SQLSTATE '23000';
 						END IF;
-					ELSE
-					/*배출자가 결정한 방문마감일이 초과한 경우*/
-						SET @rtn_val 		= 23106;
-						SET @msg_txt 		= 'Visitation schedule has ended early';
-						SIGNAL SQLSTATE '23000';
 					END IF;
 				ELSE
 				/*수집운반업자등이 방문신청을 할 수 없는 경우*/

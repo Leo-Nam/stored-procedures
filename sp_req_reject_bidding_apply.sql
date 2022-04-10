@@ -12,7 +12,7 @@ Job 			: 배출자가 수거자의 입찰자격을 박탈한다
 Update 			: 2022.03.19
 Version			: 0.0.2
 AUTHOR 			: Leo Nam
-Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_calc_bidders 실행)(0.0.2)
+Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_calc_bidding_rank 실행)(0.0.2)
 */
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -62,9 +62,6 @@ Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_c
                     /*수거자의 입찰자격을 박탈한다.*/
                     IF ROW_COUNT() = 1 THEN
                     /*배출자가 수거자의 입찰자격을을 성공적으로 박탈한 경우*/
-						CALL sp_calc_bidders(
-							IN_DISPOSAL_ORDER_ID
-						);
 						CALL sp_calc_bidding_rank(
 							IN_DISPOSAL_ORDER_ID
 						);
@@ -112,7 +109,7 @@ Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_c
                     /*수거자의 입찰자격을 박탈한다.*/
                     IF ROW_COUNT() = 1 THEN
                     /*배출자가 수거자의 입찰자격을을 성공적으로 박탈한 경우*/
-						CALL sp_calc_bidders(
+						CALL sp_calc_bidding_rank(
 							IN_DISPOSAL_ORDER_ID
 						);
 						SET @rtn_val = 0;

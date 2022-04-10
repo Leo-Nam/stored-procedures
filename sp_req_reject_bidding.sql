@@ -67,9 +67,6 @@ AUTHOR 			: Leo Nam
 						/*수거자의 투찰신청을 거절한다.*/
 						IF ROW_COUNT() = 1 THEN
 						/*배출자가 수거자의 투찰신청을 성공적으로 거절한 경우*/
-							CALL sp_calc_bidders(
-								IN_DISPOSER_ORDER_ID
-							);
 							CALL sp_calc_bidding_rank(
 								IN_DISPOSER_ORDER_ID
 							);
@@ -130,7 +127,7 @@ AUTHOR 			: Leo Nam
 						/*수거자의 투찰신청을 거절한다.*/
 						IF ROW_COUNT() = 1 THEN
 						/*배출자가 수거자의 투찰신청을 성공적으로 거절한 경우*/
-							CALL sp_calc_bidders(
+							CALL sp_calc_bidding_rank(
 								IN_DISPOSER_ORDER_ID
 							);
 							SET @rtn_val = 0;

@@ -87,9 +87,6 @@ AUTHOR 			: Leo Nam
                                     NULL,
                                     @REG_DT
                                 );
-								CALL sp_calc_bidders(
-									IN_DISPOSER_ORDER_ID
-								);
 								CALL sp_calc_bidding_rank(
 									IN_DISPOSER_ORDER_ID
 								);
