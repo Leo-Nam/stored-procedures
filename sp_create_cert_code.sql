@@ -46,8 +46,15 @@ BEGIN
                 FROM CELL_PHONE_CERTIFICATION 
                 WHERE ID = @ID;
                 
+				SELECT ID INTO @USER_ID
+                FROM USERS 
+                WHERE 
+					PHONE = IN_PHONE_NO AND
+                    ACTIVE = TRUE;
+                
 				SELECT JSON_ARRAYAGG(JSON_OBJECT(
 					'ID', @ID,
+					'UID', @USER_ID,
 					'PHONE_NO', IN_PHONE_NO,
 					'CERT_CODE', @CERT_CODE,
 					'MIN_GEN_CYCLE', @min_req_cert_code_duration,
@@ -64,11 +71,18 @@ BEGIN
 					IN_PHONE_NO,
 					@CERT_CODE
 				);
+                
 				
 				SELECT LAST_INSERT_ID() INTO @ID;
 				IF @ID IS NOT NULL THEN
+					SELECT ID INTO @USER_ID
+					FROM USERS 
+					WHERE 
+						PHONE = IN_PHONE_NO AND
+						ACTIVE = TRUE;
 					SELECT JSON_ARRAYAGG(JSON_OBJECT(
 						'ID', 					@ID,
+						'UID', 					@USER_ID,
 						'PHONE_NO', 			IN_PHONE_NO,
 						'CERT_CODE', 			@CERT_CODE,
 						'MIN_GEN_CYCLE', 		@min_req_cert_code_duration,
@@ -79,6 +93,7 @@ BEGIN
 				ELSE
 					SELECT JSON_ARRAYAGG(JSON_OBJECT(
 						'ID', 					NULL,
+						'UID', 					NULL,
 						'PHONE_NO', 			NULL,
 						'CERT_CODE', 			NULL,
 						'MIN_GEN_CYCLE', 		@min_req_cert_code_duration,
