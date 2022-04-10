@@ -34,25 +34,25 @@ Change			: 사용자 타입구분 폐지(전화번호는 유일한 키 => 전화
 		@msg_txt
     );
     
-    IF @rtn_val = 0 THEN
-    /*사용자가 유효한 경우에는 정상처리한다.*/
+	IF @rtn_val = 0 THEN
+	/*사용자가 유효한 경우에는 정상처리한다.*/
 		UPDATE USERS SET PWD = IN_PWD, UPDATED_AT = @REG_DT WHERE ID = IN_USER_ID;
-        /*사용자 암호를 변경한다.*/
-        
-        IF ROW_COUNT() = 1 THEN
-        /*사용자 암호 변경에 성공한 경우*/
+		/*사용자 암호를 변경한다.*/
+		
+		IF ROW_COUNT() = 1 THEN
+		/*사용자 암호 변경에 성공한 경우*/
 			SET @rtn_val = 0;
 			SET @msg_txt = 'Password changed successfully';
-        ELSE
-        /*사용자 암호 변경에 실패한 경우*/
+		ELSE
+		/*사용자 암호 변경에 실패한 경우*/
 			SET @rtn_val = 21301;
 			SET @msg_txt = 'Password change failed';
 			SIGNAL SQLSTATE '23000';
-        END IF;
-    ELSE
-    /*사용자가 유효하지 않은 경우에는 예외처리한다.*/
+		END IF;
+	ELSE
+	/*사용자가 유효하지 않은 경우에는 예외처리한다.*/
 		SIGNAL SQLSTATE '23000';
-    END IF;
+	END IF;
     COMMIT;
     
 	SET @json_data 		= NULL;
