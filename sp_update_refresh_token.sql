@@ -7,6 +7,7 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
+        SET @json_data = NULL;
 		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 	END;
 	START TRANSACTION;
@@ -37,5 +38,6 @@ BEGIN
 		SIGNAL SQLSTATE '23000';
     END IF;
 	COMMIT;
+	SET @json_data = NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

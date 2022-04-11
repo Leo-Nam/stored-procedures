@@ -21,8 +21,8 @@ AUTHOR 			: Leo Nam
     
 	CALL sp_req_policy_direction('minimum_visit_required', @minimum_required_time);
 
-	SET @time_plue = CONCAT(@minimum_required_time, ':00:00');
-	SET @time_new = ADDTIME(@CURRENT_DT, @time_plue);
+	SET @time_plus = CONCAT(@minimum_required_time, ':00:00');
+	SET @time_new = ADDTIME(@CURRENT_DT, @time_plus);
     
     SELECT VISIT_END_AT INTO @VISIT_END_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
     /*배출자가 지정한 방문예정일을 구해온다.*/
