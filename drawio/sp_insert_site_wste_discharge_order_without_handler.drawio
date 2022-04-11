@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="aU7rOV0qWsAluSbqn4Nf" name="Page-1">
-        <mxGraphModel dx="11581" dy="8357" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="3998" dy="4315" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -80,7 +80,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="35" value="&lt;font style=&quot;font-size: 10px&quot;&gt;IN_VISIT_START_AT = IN_REG_DT&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="35" value="&lt;font style=&quot;font-size: 10px&quot;&gt;방문시작일을 현재로 정한다&lt;br&gt;IN_VISIT_START_AT = IN_REG_DT&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1430" y="-3100" width="222" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="46" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="38" target="45">
@@ -222,7 +222,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="64" value="&lt;font style=&quot;font-size: 10px&quot;&gt;IN_OPEN_AT = IN_REG_DT&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="64" value="&lt;font style=&quot;font-size: 10px&quot;&gt;배출시작일을 현재날짜로 정한다&lt;br&gt;IN_OPEN_AT = IN_REG_DT&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1428" y="-1858" width="218" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="71" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="67" target="70">

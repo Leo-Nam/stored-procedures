@@ -20,7 +20,6 @@ Update 			: 2022.02.18
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
-    
 	SET @MAX_BIDDING_END_TARGET_DATE = DATE_ADD(IN_REF_DATE, INTERVAL IN_MAX_BIDDING_DURATION DAY);
 	IF IN_BIDDING_END_AT <= @MAX_BIDDING_END_TARGET_DATE THEN
 	/*입찰종료일이 정책적으로 결정된 기간 이내인 경우에는 정상처리한다.*/
@@ -70,10 +69,8 @@ AUTHOR 			: Leo Nam
 			END IF;
 		ELSE
 		/*배출종료일이 결정되지 않은 경우*/
-			SET OUT_CLOSE_AT = @MIN_DISPOSAL_START_DATE;
-			/*데이타베이스 입력처리를 시작한다.*/    
-			SET rtn_val = 0;
-			SET msg_txt = 'Success';                                    
+			SET rtn_val = 30803;
+			SET msg_txt = 'The discharge end date is mandatory';                                    
 		END IF;
 	ELSE
 	/*입찰종료일이 정책적으로 결정된 기간 이후인 경우에는 예외처리한다.*/
