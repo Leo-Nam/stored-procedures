@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="aU7rOV0qWsAluSbqn4Nf" name="Page-1">
-        <mxGraphModel dx="3998" dy="4315" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="3694" dy="4154" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -253,7 +253,7 @@
                 <mxCell id="77" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="74" target="76">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="74" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;sp_set_bidding_schedule&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;전체 입찰일정을 조정한 후 &lt;br&gt;그 결과를&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                <mxCell id="74" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&lt;a href=&quot;https://github.com/Leo-Nam/stored-procedures/blob/main/drawio/sp_set_bidding_schedule.svg&quot;&gt;sp_set_bidding_schedule&lt;/a&gt;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;전체 입찰일정을 조정한 후 &lt;br&gt;그 결과를&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
                     <mxGeometry x="-1741" y="-1418" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="79" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="76" target="78">
@@ -280,7 +280,7 @@
                 <mxCell id="82" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="78" target="81">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="78" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_insert_site_wste_discharge_order_to_table&lt;br&gt;데이타베이스 입력작업을 실행한 후 그 결과를&amp;nbsp;@rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                <mxCell id="78" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;a href=&quot;https://github.com/Leo-Nam/stored-procedures/blob/main/drawio/sp_insert_site_wste_discharge_order_to_table.svg&quot;&gt;sp_insert_site_wste_discharge_order_to_table&lt;/a&gt;&lt;br&gt;데이타베이스 입력작업을 실행한 후 그 결과를&amp;nbsp;@rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
                     <mxGeometry x="-1741" y="-1118" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="84" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="81" target="83">
