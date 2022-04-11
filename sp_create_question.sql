@@ -24,17 +24,22 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
+    CALL sp_req_current_time(@REG_DT);
 	INSERT INTO QUESTIONS (
 		PHONE, 
         EMAIL, 
         QUEST_CLASS, 
-        CONTENTS
+        CONTENTS,
+        CREATED_AT,
+        UPDATED_AT
 	) 
 	VALUES (
 		IN_PHONE, 
         IN_EMAIL, 
         IN_QUEST_CLASS, 
-        IN_CONTENTS
+        IN_CONTENTS,
+        @REG_DT,
+        @REG_DT
 	);
     
     IF ROW_COUNT() = 1 THEN    

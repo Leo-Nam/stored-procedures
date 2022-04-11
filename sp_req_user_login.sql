@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_user_login`(
 	IN IN_USER_REG_ID		VARCHAR(50),		/*입력값 : 사용자 아이디*/
-	IN IN_PWD				VARCHAR(100)		/*입력값 : 사용자 등록 전화번호*/
+	IN IN_PWD				VARCHAR(200)		/*입력값 : 사용자 등록 전화번호*/
 )
 BEGIN
 
