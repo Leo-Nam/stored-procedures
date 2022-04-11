@@ -1,1 +1,891 @@
-<mxfile host="app.diagrams.net" modified="2022-04-06T15:50:27.066Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4947.3 Safari/537.36" etag="ybrETCa4ucEkEEUuIAFS" version="17.1.2" type="device"><diagram id="RlCUwnaK-4LFBKvAwP7c" name="Page-1">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</diagram></mxfile>
+<mxfile host="65bd71144e">
+    <diagram id="RlCUwnaK-4LFBKvAwP7c" name="Page-1">
+        <mxGraphModel dx="2849" dy="1078" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-1" target="0ODxhAR9AB6k-3VPqA4q-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-12" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-3" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2464" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-1" target="0ODxhAR9AB6k-3VPqA4q-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-6" value="&lt;font style=&quot;font-size: 9px&quot;&gt;FALSE&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-5" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2175" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-1" value="&lt;font style=&quot;font-size: 9px&quot;&gt;배출자가 자신의 오더를 &lt;br style=&quot;font-size: 9px&quot;&gt;삭제하였는가?&lt;br style=&quot;font-size: 9px&quot;&gt;ORDER.IS_DELETED = TRUE&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="40" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-2" target="0ODxhAR9AB6k-3VPqA4q-10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-13" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-11" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1988" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-255" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;shape=link;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-2" target="0ODxhAR9AB6k-3VPqA4q-67" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="220" y="285"/>
+                            <mxPoint x="220" y="1340"/>
+                            <mxPoint x="414" y="1340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-262" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-255" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9301" relative="1" as="geometry">
+                        <mxPoint x="8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-2" value="&lt;font style=&quot;font-size: 8px&quot;&gt;방문마감일이 존재하는가?&lt;br style=&quot;font-size: 8px&quot;&gt;ORDER.VISIT_END_AT &lt;br style=&quot;font-size: 8px&quot;&gt;IS NOT NULL&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="230" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-4" value="&lt;font style=&quot;font-size: 10px&quot;&gt;214&lt;br&gt;삭제&lt;br&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="65" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-10" target="0ODxhAR9AB6k-3VPqA4q-14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-16" value="&lt;font style=&quot;font-size: 10px&quot;&gt;FALSE&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-15" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1655" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=9;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-10" target="0ODxhAR9AB6k-3VPqA4q-29" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-34" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;" parent="0ODxhAR9AB6k-3VPqA4q-30" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2917" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-10" value="&lt;font style=&quot;font-size: 10px&quot;&gt;수거자의 방문신청이 존재하는가?&lt;br&gt;BIDDING.DATE_OF_VISIT&lt;br&gt;IS NOT NULL&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="420" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-14" target="0ODxhAR9AB6k-3VPqA4q-20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-22" value="&lt;font style=&quot;font-size: 10px&quot;&gt;FALSE&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-21" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2161" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-14" target="0ODxhAR9AB6k-3VPqA4q-23" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-25" value="&lt;font style=&quot;font-size: 10px&quot;&gt;TRUE&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="0ODxhAR9AB6k-3VPqA4q-24" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1991" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-14" value="&lt;font style=&quot;font-size: 10px&quot;&gt;방문마감일이 지났는가?&lt;br&gt;ORDER.VISIT_END_AT&lt;br&gt;&amp;lt;= NOW()&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="608" y="420" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-20" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;204&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문신청중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="445" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-23" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;230&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문미신청종료&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="255" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=9;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-29" target="0ODxhAR9AB6k-3VPqA4q-31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-33" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;" parent="0ODxhAR9AB6k-3VPqA4q-32" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2917" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=9;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-29" target="0ODxhAR9AB6k-3VPqA4q-35" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="414" y="760"/>
+                            <mxPoint x="414" y="760"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-43" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-36" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2328" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-29" value="&lt;font style=&quot;font-size: 10px&quot;&gt;수거자가 방문신청을 취소하였는가?&lt;br&gt;BIDDING.CANCEL_VISIT = TRUE&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="610" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=9;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-31" target="0ODxhAR9AB6k-3VPqA4q-37" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-39" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-38" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2136" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-31" target="0ODxhAR9AB6k-3VPqA4q-40" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-42" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-41" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2447" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-31" value="&lt;span style=&quot;font-size: 10px&quot;&gt;방문마감일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.VISIT_END_AT&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="608" y="610" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-35" target="0ODxhAR9AB6k-3VPqA4q-44" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-46" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-45" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2345" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-32" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-35" target="0ODxhAR9AB6k-3VPqA4q-52" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-54" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-53" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1724" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-35" value="&lt;font style=&quot;font-size: 10px&quot;&gt;배출자가 방문신청에 &lt;br&gt;응답하였는가?&lt;br&gt;BIDDING.RESPONSE_VISIT &lt;br&gt;IS NOT NULL&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="800" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-37" value="&lt;font style=&quot;font-size: 11px&quot;&gt;202&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;방문포기&lt;/font&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="635" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-40" value="&lt;font style=&quot;font-size: 11px&quot;&gt;241&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문포기종료&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="825" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-44" target="0ODxhAR9AB6k-3VPqA4q-47" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-49" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-48" vertex="1" connectable="0">
+                    <mxGeometry x="0.2126" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-44" target="0ODxhAR9AB6k-3VPqA4q-50" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-44" value="&lt;span style=&quot;font-size: 10px&quot;&gt;방문마감일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.VISIT_END_AT&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-316" y="800" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-47" value="&lt;font style=&quot;font-size: 11px&quot;&gt;222&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문수락대기중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-570" y="825" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-50" value="&lt;font style=&quot;font-size: 11px&quot;&gt;203&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문거절&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-262" y="635" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-52" target="0ODxhAR9AB6k-3VPqA4q-55" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-57" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-56" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1621" y="1" relative="1" as="geometry">
+                        <mxPoint x="16" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-59" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-52" target="0ODxhAR9AB6k-3VPqA4q-58" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-60" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-59" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2672" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-52" value="&lt;font style=&quot;font-size: 10px&quot;&gt;배출자가 방문신청을 &lt;br&gt;수락하였는가?&lt;br&gt;BIDDING.RESPONSE_VISIT &lt;br&gt;= TRUE&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="990" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-55" value="&lt;font style=&quot;font-size: 11px&quot;&gt;203&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문거절&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="1015" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-65" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-58" target="0ODxhAR9AB6k-3VPqA4q-64" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-66" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-65" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2692" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-68" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-58" target="0ODxhAR9AB6k-3VPqA4q-67" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-69" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-68" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2586" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-58" value="&lt;span style=&quot;font-size: 10px&quot;&gt;방문마감일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.VISIT_END_AT&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1180" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-64" value="&lt;font style=&quot;font-size: 11px&quot;&gt;201&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="1205" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-71" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-67" target="0ODxhAR9AB6k-3VPqA4q-70" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-72" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-71" vertex="1" connectable="0">
+                    <mxGeometry x="0.231" relative="1" as="geometry">
+                        <mxPoint x="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-86" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-67" target="0ODxhAR9AB6k-3VPqA4q-85" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-90" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-86" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1983" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-67" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 투찰을 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.DATE_OF_BIDDING&lt;br&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1370" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-74" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-70" target="0ODxhAR9AB6k-3VPqA4q-73" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-75" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-74" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2906" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-77" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-70" target="0ODxhAR9AB6k-3VPqA4q-76" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-78" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-77" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2103" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-70" value="&lt;span style=&quot;font-size: 10px&quot;&gt;입찰기한이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.BIDDING_END_AT&lt;br&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-8" y="1370" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-73" value="&lt;font style=&quot;font-size: 11px&quot;&gt;238&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;미입찰종료&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="1205" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-80" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-76" target="0ODxhAR9AB6k-3VPqA4q-79" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-81" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-80" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2775" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-83" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-76" target="0ODxhAR9AB6k-3VPqA4q-82" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-84" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-83" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2156" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-76" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 입찰권한을&lt;br&gt;포기하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.GIVEUP_BIDDING&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-316" y="1370" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-79" value="&lt;font style=&quot;font-size: 11px&quot;&gt;244&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-262" y="1205" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-82" value="&lt;font style=&quot;font-size: 11px&quot;&gt;224&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰준비중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-570" y="1395" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-85" target="0ODxhAR9AB6k-3VPqA4q-87" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-89" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-88" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1518" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-92" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-85" target="0ODxhAR9AB6k-3VPqA4q-91" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-96" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-92" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2241" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-85" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 입찰권한을&lt;br&gt;포기하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.GIVEUP_BIDDING&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1560" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-87" value="&lt;font style=&quot;font-size: 11px&quot;&gt;244&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="1585" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-94" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-91" target="0ODxhAR9AB6k-3VPqA4q-93" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-95" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-94" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1004" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-98" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-91" target="0ODxhAR9AB6k-3VPqA4q-97" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-108" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-98" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2672" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-91" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 입찰을&lt;br&gt;취소하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.CANCEL_BIDDING&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1750" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-93" value="&lt;font style=&quot;font-size: 11px&quot;&gt;207&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="1775" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-100" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-97" target="0ODxhAR9AB6k-3VPqA4q-99" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-101" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-100" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2342" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-103" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-97" target="0ODxhAR9AB6k-3VPqA4q-102" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-104" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-103" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1897" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-97" value="&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 수거자의 &lt;br&gt;입찰을 거절하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.REJECT_BIDDING&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1940" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-99" value="&lt;font style=&quot;font-size: 11px&quot;&gt;231&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰거절&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="1965" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-106" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-102" target="0ODxhAR9AB6k-3VPqA4q-105" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-107" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-106" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2445" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-110" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-102" target="0ODxhAR9AB6k-3VPqA4q-109" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-114" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-110" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2096" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-102" value="&lt;span style=&quot;font-size: 10px&quot;&gt;입찰마감일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.BIDDING_END_AT&lt;br&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="2130" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-105" value="&lt;font style=&quot;font-size: 11px&quot;&gt;206&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;입찰중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="2155" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-112" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-109" target="0ODxhAR9AB6k-3VPqA4q-111" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-113" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-112" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1731" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-116" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-109" target="0ODxhAR9AB6k-3VPqA4q-115" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-117" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-116" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2096" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-109" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 1순위자인가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.FIRST_PLACE&lt;br&gt;= BIDDING.ID&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-179" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-111" target="0ODxhAR9AB6k-3VPqA4q-178" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-180" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-179" vertex="1" connectable="0">
+                    <mxGeometry x="-0.324" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-182" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-111" target="0ODxhAR9AB6k-3VPqA4q-181" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-111" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 2순위자인가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.SECOND_PLACE&lt;br&gt;= BIDDING.ID&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="608" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-119" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-115" target="0ODxhAR9AB6k-3VPqA4q-118" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-120" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-119" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1231" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-122" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-115" target="0ODxhAR9AB6k-3VPqA4q-121" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-123" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-122" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1432" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-115" value="&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 수거자를 &lt;br&gt;최종선정하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.SELECTED&lt;br&gt;= BIDDING.ID&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="2510" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-149" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-118" target="0ODxhAR9AB6k-3VPqA4q-148" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-150" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-149" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1704" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-152" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-118" target="0ODxhAR9AB6k-3VPqA4q-151" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-153" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-152" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2474" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-118" value="&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 수거자를 &lt;br&gt;결정해야하는 DEADLINE을 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.MAX_SELECT_AT&lt;br&gt;&amp;lt;= NOW()&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-8" y="2510" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-125" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-121" target="0ODxhAR9AB6k-3VPqA4q-124" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-126" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-125" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3392" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-128" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-121" target="0ODxhAR9AB6k-3VPqA4q-127" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-129" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-128" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2007" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-121" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 선정에&lt;br&gt;대하여 수락 또는 거절을 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="2700" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-137" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-124" target="0ODxhAR9AB6k-3VPqA4q-136" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-138" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-137" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2485" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-140" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-124" target="0ODxhAR9AB6k-3VPqA4q-139" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-146" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-140" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3528" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-124" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의&lt;br&gt;선정에 대하여&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수락 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="2890" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-131" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-127" target="0ODxhAR9AB6k-3VPqA4q-130" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-132" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-131" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1701" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-134" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-127" target="0ODxhAR9AB6k-3VPqA4q-133" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-135" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-134" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2307" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-127" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;선정에 대하여 수락 또는 거절을&lt;br&gt;해야하는 DEADLINE을 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAX_DECISION_AT&lt;br&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="608" y="2700" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-130" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="2535" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-133" value="&lt;font style=&quot;font-size: 11px&quot;&gt;236&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="2725" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-136" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="2915" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-142" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-139" target="0ODxhAR9AB6k-3VPqA4q-141" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-143" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-142" vertex="1" connectable="0">
+                    <mxGeometry x="-0.225" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-145" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-139" target="0ODxhAR9AB6k-3VPqA4q-144" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-147" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-145" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2571" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-139" value="&lt;span style=&quot;font-size: 10px&quot;&gt;계약종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.CLOSE_AT&lt;br&gt;&lt;/span&gt;&amp;lt;= NOW()" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="3080" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-141" value="&lt;font style=&quot;font-size: 11px&quot;&gt;218&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;기존거래&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="3105" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-144" value="&lt;font style=&quot;font-size: 11px&quot;&gt;212&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="354" y="3295" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-148" value="&lt;font style=&quot;font-size: 11px&quot;&gt;226&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰대기중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="2345" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-155" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-151" target="0ODxhAR9AB6k-3VPqA4q-154" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-156" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-155" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1329" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-170" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-151" target="0ODxhAR9AB6k-3VPqA4q-169" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-171" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-170" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1476" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-151" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 요청에&lt;br&gt;수락 또는 거절의사를 표시하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;IS NOT NULL&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-316" y="2510" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-158" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-154" target="0ODxhAR9AB6k-3VPqA4q-157" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-159" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-158" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2632" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-161" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-154" target="0ODxhAR9AB6k-3VPqA4q-160" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-165" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-161" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3566" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-154" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 요청에&lt;br&gt;수락 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;= TRUE&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-316" y="2700" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-157" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="2725" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-163" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-160" target="0ODxhAR9AB6k-3VPqA4q-162" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-164" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-163" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3339" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-167" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-160" target="0ODxhAR9AB6k-3VPqA4q-166" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-168" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-167" vertex="1" connectable="0">
+                    <mxGeometry x="-0.209" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-160" value="&lt;span style=&quot;font-size: 10px&quot;&gt;계약종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.CLOSE_AT&lt;br&gt;&lt;/span&gt;&amp;lt;= NOW()&lt;span style=&quot;font-size: 10px&quot;&gt;&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-316" y="2890" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-162" value="&lt;font style=&quot;font-size: 11px&quot;&gt;218&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;기존거래&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="46" y="2915" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-166" value="&lt;font style=&quot;font-size: 11px&quot;&gt;212&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-262" y="3105" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-173" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-169" target="0ODxhAR9AB6k-3VPqA4q-172" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-176" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-173" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1816" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-175" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-169" target="0ODxhAR9AB6k-3VPqA4q-174" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-177" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-175" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1164" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-169" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청에&amp;nbsp;수락 또는 거절의사를 &lt;br&gt;표시해야 하는 DEADLINE을 지났는가?&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAX_DECISION_AT&lt;br&gt;&amp;lt;= NOW()&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-624" y="2510" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-172" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-570" y="2725" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-174" value="&lt;font style=&quot;font-size: 11px&quot;&gt;236&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-570" y="2345" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-178" value="&lt;font style=&quot;font-size: 11px&quot;&gt;213&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;유찰&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="2155" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-184" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-181" target="0ODxhAR9AB6k-3VPqA4q-183" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-185" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-184" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2529" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-187" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-181" target="0ODxhAR9AB6k-3VPqA4q-186" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-188" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-187" vertex="1" connectable="0">
+                    <mxGeometry x="-0.175" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-181" value="&lt;span style=&quot;font-size: 10px&quot;&gt;1순위자가 결정을 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.COLLECTOR_SELECTION_CONFIRMED&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="916" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-214" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-183" target="0ODxhAR9AB6k-3VPqA4q-213" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-215" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-214" vertex="1" connectable="0">
+                    <mxGeometry x="-0.391" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-223" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-183" target="0ODxhAR9AB6k-3VPqA4q-222" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-224" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-223" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2536" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-183" value="&lt;span style=&quot;font-size: 10px&quot;&gt;1순위자가 결정기한이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;COLLECTOR_MAX_DECISION_AT&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="916" y="2130" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-190" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-186" target="0ODxhAR9AB6k-3VPqA4q-189" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-191" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-190" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2919" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-193" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-186" target="0ODxhAR9AB6k-3VPqA4q-192" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-194" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-193" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2679" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-186" value="&lt;span style=&quot;font-size: 10px&quot;&gt;1순위자가 배출자의 &lt;br&gt;요청을 수락하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.COLLECTOR_SELECTION_CONFIRMED&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1224" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-189" value="&lt;font style=&quot;font-size: 11px&quot;&gt;213&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;유찰&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1278" y="2535" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-196" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-192" target="0ODxhAR9AB6k-3VPqA4q-195" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-199" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-196" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2179" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-198" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-192" target="0ODxhAR9AB6k-3VPqA4q-197" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-200" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-198" vertex="1" connectable="0">
+                    <mxGeometry x="-0.325" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-192" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청을 응답하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;MAKE_DECISION&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1532" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-202" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-195" target="0ODxhAR9AB6k-3VPqA4q-201" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-203" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-202" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2217" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-205" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-195" target="0ODxhAR9AB6k-3VPqA4q-204" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-210" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-205" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3107" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-195" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자의 &lt;br&gt;요청을 수락하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;MAKE_DECISION&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1532" y="2510" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-217" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-197" target="0ODxhAR9AB6k-3VPqA4q-216" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-220" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-217" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3823" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-219" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-197" target="0ODxhAR9AB6k-3VPqA4q-218" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-221" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-219" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3582" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-197" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청에 응답해야할 DEADLINE을 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;MAX_DECISION_AT&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="2320" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-201" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1894" y="2535" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-207" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-204" target="0ODxhAR9AB6k-3VPqA4q-206" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-211" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-207" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3198" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-209" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-204" target="0ODxhAR9AB6k-3VPqA4q-208" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-212" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-209" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3279" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-204" value="&lt;span style=&quot;font-size: 10px&quot;&gt;계약종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.CLOSE_AT&lt;br&gt;&lt;/span&gt;&amp;lt;= NOW()" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1532" y="2700" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-206" value="&lt;font style=&quot;font-size: 11px&quot;&gt;218&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;기존거래&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1278" y="2725" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-208" value="&lt;font style=&quot;font-size: 11px&quot;&gt;212&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1586" y="2915" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-213" value="&lt;font style=&quot;font-size: 11px&quot;&gt;245&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1278" y="2155" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-216" value="&lt;font style=&quot;font-size: 11px&quot;&gt;236&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1894" y="2155" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-218" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="2202" y="2345" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-226" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-222" target="0ODxhAR9AB6k-3VPqA4q-225" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-230" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-226" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3107" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-228" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-222" target="0ODxhAR9AB6k-3VPqA4q-227" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-229" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-228" vertex="1" connectable="0">
+                    <mxGeometry x="-0.275" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-222" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의&lt;br&gt;요청에 응답하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="916" y="1940" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-240" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-225" target="0ODxhAR9AB6k-3VPqA4q-239" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-244" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-240" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2156" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-242" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-225" target="0ODxhAR9AB6k-3VPqA4q-241" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-243" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-242" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2841" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-225" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의&lt;br&gt;요청에 응답해야할 DEADLINE이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAX_DECISION_AT&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1224" y="1940" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-232" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-227" target="0ODxhAR9AB6k-3VPqA4q-231" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-235" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-232" vertex="1" connectable="0">
+                    <mxGeometry x="-0.295" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-246" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-227" target="0ODxhAR9AB6k-3VPqA4q-245" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-247" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-246" vertex="1" connectable="0">
+                    <mxGeometry x="-0.335" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-227" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의&lt;br&gt;요청을 수락하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;BIDDING.MAKE_DECISION&lt;br&gt;= TRUE&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="916" y="1750" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-234" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-231" target="0ODxhAR9AB6k-3VPqA4q-233" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-236" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-234" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2648" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-238" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;" parent="1" source="0ODxhAR9AB6k-3VPqA4q-231" target="0ODxhAR9AB6k-3VPqA4q-237" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-248" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="0ODxhAR9AB6k-3VPqA4q-238" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2836" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-231" value="&lt;span style=&quot;font-size: 10px&quot;&gt;계약종료일이 남았는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;ORDER.CLOSE_AT&lt;br&gt;&lt;/span&gt;&amp;gt; NOW()" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="916" y="1560" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-233" value="&lt;font style=&quot;font-size: 11px&quot;&gt;212&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="1395" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-237" value="&lt;font style=&quot;font-size: 11px&quot;&gt;218&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;기존거래&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="1585" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-239" value="&lt;font style=&quot;font-size: 11px&quot;&gt;236&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰결정중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1586" y="1965" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-241" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1278" y="1775" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="0ODxhAR9AB6k-3VPqA4q-245" value="&lt;font style=&quot;font-size: 11px&quot;&gt;239&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 11px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;낙찰포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="662" y="1775" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
