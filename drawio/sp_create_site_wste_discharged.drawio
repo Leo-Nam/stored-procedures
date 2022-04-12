@@ -1,1 +1,84 @@
-<mxfile host="app.diagrams.net" modified="2022-03-02T09:50:46.258Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4892.0 Safari/537.36" etag="W-1UeypfsU70NVXlc203" version="16.5.6" type="device"><diagram id="5-U5GQrKx4De8IffGInq" name="Page-1">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</diagram></mxfile>
+<mxfile host="65bd71144e">
+    <diagram id="5-U5GQrKx4De8IffGInq" name="Page-1">
+        <mxGraphModel dx="1694" dy="3969" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="DflL0X33gIR-mx3biRKd-4" value="&lt;span style=&quot;font-size: 8px&quot;&gt;폐기물 입력정보(JSON)를 &lt;br&gt;CURSOR에 대입&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-496.07" y="-3470" width="186" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="DflL0X33gIR-mx3biRKd-4" target="DflL0X33gIR-mx3biRKd-24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-403.06999999999994" y="-3380" as="sourcePoint"/>
+                        <mxPoint x="-370.07" y="-3320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="DflL0X33gIR-mx3biRKd-24" target="DflL0X33gIR-mx3biRKd-25" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=8;" parent="1" source="DflL0X33gIR-mx3biRKd-24" target="DflL0X33gIR-mx3biRKd-106" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="INSERT" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="DflL0X33gIR-mx3biRKd-107">
+                    <mxGeometry x="-0.1341" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-24" value="&lt;span style=&quot;font-size: 8px&quot;&gt;CURSOR의 값을 테이블에 입력&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-496.14" y="-3300" width="186.14" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="DflL0X33gIR-mx3biRKd-25" target="DflL0X33gIR-mx3biRKd-108" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-370" y="-2990" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-31" value="TRUE: 존재" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="DflL0X33gIR-mx3biRKd-30" vertex="1" connectable="0">
+                    <mxGeometry x="-0.258" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-110" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;" parent="1" source="DflL0X33gIR-mx3biRKd-25" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-220" y="-3100" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-113" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="DflL0X33gIR-mx3biRKd-110" vertex="1" connectable="0">
+                    <mxGeometry x="-0.6547" y="1" relative="1" as="geometry">
+                        <mxPoint x="20" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-25" value="&lt;span style=&quot;font-size: 8px&quot;&gt;폐기물 리스트가 존재하는가?&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;vRowCount &amp;gt; 0&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-513.0699999999999" y="-3150" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-106" value="&lt;span style=&quot;font-size: 8px&quot;&gt;WSTE_DISCHARGED_FROM_SITE&lt;/span&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="-790" y="-3300" width="195.86" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-116" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="DflL0X33gIR-mx3biRKd-108" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-390" y="-2820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-117" value="FALSE: 성공" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="DflL0X33gIR-mx3biRKd-116" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1862" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="DflL0X33gIR-mx3biRKd-108" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-108" value="&lt;font style=&quot;font-size: 8px&quot;&gt;폐기물정보 입력 실패?&lt;br&gt;ROW_COUNT() = 0&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-513.0699999999999" y="-2980" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;span&gt;Return 22702&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-210" y="-3130" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;span&gt;Return 22701&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-210" y="-2960" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;span&gt;Return 0&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-488.07" y="-2810" width="170" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
