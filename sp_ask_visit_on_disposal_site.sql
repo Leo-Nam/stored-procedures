@@ -40,13 +40,15 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 		@msg_txt
 	);
 	IF @rtn_val = 0 THEN
-	/*USER가 소속한 사이트가 수집운반업 등 폐기물을 처리할 자격이 있는 경우*/        
-		CALL sp_req_disposal_order_exists(
+	/*USER가 소속한 사이트가 수집운반업 등 폐기물을 처리할 자격이 있는 경우*/   
 		/*폐기물 배출 요청 내역이 존재하는지 검사한다.*/
-			IN_DISPOSER_ORDER_ID,
-			@DISPOSAL_ORDER_EXISTS
-		);
-		IF @DISPOSAL_ORDER_EXISTS > 0 THEN
+		SELECT COUNT(ID) 
+        INTO @DISPOSAL_ORDER_EXISTS 
+        FROM SITE_WSTE_DISPOSAL_ORDER 
+        WHERE 
+			ACTIVE 	= TRUE AND 
+            ID 		= IN_DISPOSER_ORDER_ID;
+		IF @DISPOSAL_ORDER_EXISTS = 1 THEN
 		/*폐기물 배출 요청 내역이 존재하는 경우*/
 			CALL sp_req_site_id_of_disposal_order_id(
 				IN_DISPOSER_ORDER_ID,

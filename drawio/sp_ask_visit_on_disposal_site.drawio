@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="BsswEmYbk8sBU4kp3uXG" name="Page-1">
-        <mxGraphModel dx="3110" dy="3114" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="4254" dy="3724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -13,7 +13,7 @@
                 <mxCell id="4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" edge="1" parent="1" source="5" target="10">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_is_user_collector&lt;br&gt;USER가 소속한 사이트가 수집운반업 등 폐기물을 처리할 자격이 있는지 검사 후&lt;br&gt;그 결과를 @rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="5" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;a href=&quot;https://github.com/Leo-Nam/stored-procedures/blob/main/drawio/sp_req_is_user_collector.svg&quot;&gt;sp_req_is_user_collector&lt;/a&gt;&lt;br&gt;USER가 소속한 사이트가 수집운반업 등 폐기물을 처리할 자격이 있는지 검사 후&lt;br&gt;그 결과를 @rtn_val에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1170" y="-2118" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" edge="1" parent="1" source="10" target="12">
@@ -38,7 +38,15 @@
                 <mxCell id="11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" edge="1" parent="1" source="12" target="17">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;sp_req_disposal_order_exists&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;폐기물 배출 요청 내역이 존재하는지 &lt;br&gt;검사하여 그 결과를&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@rtn_val에 반환한다&lt;/span&gt;&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="179" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="12" target="178">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="180" value="SELECT" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="179">
+                    <mxGeometry x="-0.2307" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;폐기물 배출 요청 내역이 존재하는지 &lt;br&gt;검사하여 그 결과를&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@DISPOSAL_ORDER_EXISTS&lt;br&gt;에 반환한다&lt;/span&gt;&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1170" y="-1810" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" edge="1" parent="1" source="17" target="19">
@@ -57,7 +65,7 @@
                         <mxPoint x="10" y="-2" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="17" value="&lt;font style=&quot;font-size: 10px&quot;&gt;폐기물 배출 요청 &lt;br&gt;내역이 존재&amp;nbsp;하는가?&lt;br&gt;@rtn_val = 0?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="17" value="&lt;font style=&quot;font-size: 10px&quot;&gt;폐기물 배출 요청 &lt;br&gt;내역이 존재&amp;nbsp;하는가?&lt;br&gt;@DISPOSAL_ORDER_EXISTS&lt;br&gt;= 1?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1170" y="-1650" width="220" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="123" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="19" target="122">
@@ -210,8 +218,9 @@
                 <mxCell id="152" value="COLLECTOR_BIDDING" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=8;" vertex="1" parent="1">
                     <mxGeometry x="-1450" y="30" width="160" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="157" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="155" target="30">
+                <mxCell id="157" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="155" target="30">
                     <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-510" y="-1830" as="targetPoint"/>
                         <Array as="points">
                             <mxPoint x="-1370" y="-2300"/>
                             <mxPoint x="-550" y="-2300"/>
@@ -277,6 +286,9 @@
                 </mxCell>
                 <mxCell id="167" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_return_results&lt;br&gt;(@rtn_val, @msg_txt, @json_data)&lt;br&gt;결과를 반환한다.&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1170" y="360" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="178" value="SITE_WSTE_DISPOSAL_ORDER" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=8;" vertex="1" parent="1">
+                    <mxGeometry x="-830" y="-1800" width="160" height="80" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
