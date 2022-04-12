@@ -73,6 +73,14 @@ BEGIN
 		'max_disposal_duration',
 		@max_disposal_duration
 	);
+	IF IN_COLLECTOR_SITE_ID IS NULL THEN
+		SET @CLOSE_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @max_disposal_duration DAY);
+	ELSE
+		SET @CLOSE_AT = IN_CLOSE_AT;
+    END IF;
+	/*기존거래인 경우에는 OPEN_AT(폐기물수거요청일)로부터 @max_disposal_duration을 
+    합산한 날짜를 계약종료일로 정하고 입찰거래인 경우에는 CLOSE_AT을 그대로 사용한다.*/
+    
 	INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
 		DISPOSER_ID,
 		COLLECTOR_ID,
@@ -107,8 +115,7 @@ BEGIN
 		IN_VISIT_END_AT,
 		IN_BIDDING_END_AT,
 		IN_OPEN_AT,
-		IF(IN_COLLECTOR_SITE_ID IS NULL, DATE_ADD(IN_OPEN_AT, INTERVAL @max_disposal_duration DAY), IN_CLOSE_AT), 
-        /*기존거래인 경우에는 OPEN_AT(폐기물수거요청일)로부터 @max_disposal_duration을 합산한 날짜를 계약종료일로 정하고 입찰거래인 경우에는 CLOSE_AT을 그대로 사용한다.*/
+		@CLOSE_AT, 
 		@SERVICE_INSTRUCTION_ID,
 		@ORDER_CODE,
 		IN_NOTE,

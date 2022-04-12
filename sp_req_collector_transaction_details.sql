@@ -1,0 +1,179 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_transaction_details`(
+	IN IN_TRANSACTION_ID				BIGINT
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_req_collector_transaction_details
+Input param 	: 1개
+Job 			: 수거자의 개별 트랜잭션에 대한 상세정보 보기
+Update 			: 2022.04.12
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/
+
+    DECLARE vRowCount 					INT DEFAULT 0;
+    DECLARE endOfRow 					TINYINT DEFAULT FALSE;   
+    DECLARE CUR_TRANSACTION_ID					BIGINT;
+    DECLARE CUR_USER_ID							BIGINT;
+    DECLARE CUR_COLLECTOR_SITE_ID				BIGINT;
+    DECLARE CUR_DISPOSER_ORDER_ID				BIGINT;
+    DECLARE CUR_DISPOSER_USER_ID				BIGINT;
+    DECLARE CUR_DISPOSER_SITE_ID				BIGINT;
+    DECLARE CUR_STATE							VARCHAR(20);
+    DECLARE CUR_STATE_CODE						INT;
+    DECLARE TEMP_CURSOR		 			CURSOR FOR 
+	SELECT 
+		A.ID, 
+        B.ID, 
+        A.COLLECTOR_SITE_ID, 
+        A.DISPOSAL_ORDER_ID, 
+        E.ID, 
+        E.AFFILIATED_SITE,
+        C.STATE,
+        C.STATE_CODE
+    FROM WSTE_CLCT_TRMT_TRANSACTION A
+    LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
+    LEFT JOIN V_TRANSACTION_STATE_NAME C ON A.ID = C.TRANSACTION_ID
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER D ON A.DISPOSAL_ORDER_ID = D.ID
+    LEFT JOIN USERS E ON D.DISPOSER_ID = E.ID
+	WHERE A.ID = IN_TRANSACTION_ID;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		DROP TABLE IF EXISTS COLLECTOR_BIDDING_DETAILS_TEMP;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;				
+    /*트랜잭션 시작*/  
+    
+	CREATE TEMPORARY TABLE IF NOT EXISTS COLLECTOR_BIDDING_DETAILS_TEMP (
+		TRANSACTION_ID							BIGINT,
+		USER_ID									BIGINT,
+		COLLECTOR_SITE_ID						BIGINT,
+        DISPOSER_ORDER_ID						BIGINT,
+        DISPOSER_USER_ID						BIGINT,
+        DISPOSER_SITE_ID						BIGINT,
+        STATE									VARCHAR(20),
+        STATE_CODE								BIGINT,
+		DISPLAY_DATE 							JSON,
+		IMG_LIST 								JSON,
+		WSTE_DISPOSAL_LIST 						JSON,
+		DISPOSER_ORDER_INFO 					JSON,
+		DISPOSER_WSTE_GEO_INFO 					JSON
+	);        
+	
+	OPEN TEMP_CURSOR;	
+	cloop: LOOP
+		FETCH TEMP_CURSOR 
+		INTO 
+			CUR_TRANSACTION_ID,
+			CUR_USER_ID,
+			CUR_COLLECTOR_SITE_ID,
+			CUR_DISPOSER_ORDER_ID,
+			CUR_DISPOSER_USER_ID,
+			CUR_DISPOSER_SITE_ID,
+			CUR_STATE,
+			CUR_STATE_CODE;
+		
+		SET vRowCount = vRowCount + 1;
+		IF endOfRow THEN
+			LEAVE cloop;
+		END IF;
+		
+		INSERT INTO 
+		COLLECTOR_BIDDING_DETAILS_TEMP(
+			TRANSACTION_ID,
+			USER_ID,
+			COLLECTOR_SITE_ID,
+			DISPOSER_ORDER_ID,
+			DISPOSER_USER_ID,
+			DISPOSER_SITE_ID,
+			STATE,
+			STATE_CODE
+		)
+		VALUES(
+			CUR_TRANSACTION_ID,
+			CUR_USER_ID,
+			CUR_COLLECTOR_SITE_ID,
+			CUR_DISPOSER_ORDER_ID,
+			CUR_DISPOSER_USER_ID,
+			CUR_DISPOSER_SITE_ID,
+			CUR_STATE,
+			CUR_STATE_CODE
+		);
+        
+        CALL sp_get_disposal_wste_lists(
+			CUR_DISPOSER_ORDER_ID,
+            @WSTE_DISPOSAL_LIST
+        );
+		
+        CALL sp_get_disposal_img_lists(
+			CUR_DISPOSER_ORDER_ID,
+            '입찰',
+            @IMG_LIST
+        );
+            
+		CALL sp_set_display_time_for_transaction(
+			CUR_TRANSACTION_ID,
+			CUR_STATE_CODE,
+			@DISPLAY_DATE
+		);
+		
+        CALL sp_get_disposal_order_info(
+			CUR_DISPOSER_ORDER_ID,
+            @DISPOSER_ORDER_INFO
+        );
+		
+        CALL sp_get_disposer_wste_geo_info(
+			CUR_DISPOSER_ORDER_ID,
+            @DISPOSER_WSTE_GEO_INFO
+        );
+        
+		UPDATE COLLECTOR_BIDDING_DETAILS_TEMP 
+        SET 
+			DISPLAY_DATE 			= @DISPLAY_DATE, 
+			IMG_LIST 				= @IMG_LIST, 
+            WSTE_DISPOSAL_LIST 		= @WSTE_DISPOSAL_LIST, 
+            DISPOSER_ORDER_INFO 	= @DISPOSER_ORDER_INFO, 
+            DISPOSER_WSTE_GEO_INFO 	= @DISPOSER_WSTE_GEO_INFO 
+        WHERE TRANSACTION_ID 		= CUR_TRANSACTION_ID;
+		/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
+		
+		
+	END LOOP;   
+	CLOSE TEMP_CURSOR;
+	
+	SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'TRANSACTION_ID'			, TRANSACTION_ID, 
+        'USER_ID'					, USER_ID, 
+        'COLLECTOR_SITE_ID'			, COLLECTOR_SITE_ID, 
+        'DISPOSER_ORDER_ID'			, DISPOSER_ORDER_ID, 
+        'DISPOSER_USER_ID'			, DISPOSER_USER_ID, 
+        'DISPOSER_SITE_ID'			, DISPOSER_SITE_ID, 
+        'STATE'						, STATE, 
+        'STATE_CODE'				, STATE_CODE, 
+        'DISPLAY_DATE'				, DISPLAY_DATE, 
+        'IMG_LIST'					, IMG_LIST, 
+        'WSTE_DISPOSAL_LIST'		, WSTE_DISPOSAL_LIST, 
+        'DISPOSER_ORDER_INFO'		, DISPOSER_ORDER_INFO, 
+        'DISPOSER_WSTE_GEO_INFO'	, DISPOSER_WSTE_GEO_INFO
+	)) 
+    INTO @json_data 
+    FROM COLLECTOR_BIDDING_DETAILS_TEMP;
+    
+    IF vRowCount = 0 THEN
+		SET @rtn_val = 37501;
+		SET @msg_txt = 'No data found';
+		SIGNAL SQLSTATE '23000';
+    ELSE
+		SET @rtn_val = 0;
+		SET @msg_txt = 'Success';
+    END IF; 
+    COMMIT;   
+	DROP TABLE IF EXISTS COLLECTOR_BIDDING_DETAILS_TEMP;
+	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);   
+END
