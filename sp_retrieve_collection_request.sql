@@ -63,7 +63,11 @@ AUTHOR 			: Leo Nam
         DISPOSER_USER_ID						BIGINT,
         DISPOSER_SITE_ID						BIGINT,
         STATE									VARCHAR(20),
-        STATE_CODE								BIGINT
+        STATE_CODE								BIGINT,
+        DISPOSER_IMG_INFO						JSON,
+        DISPOSER_WSTE_INFO						JSON,
+        DISPOSER_ORDER_INFO						JSON,
+        DISPLAY_DATE							DATETIME
         
 	);        
 	
@@ -107,6 +111,36 @@ AUTHOR 			: Leo Nam
             CUR_STATE,
             CUR_STATE_CODE
 		);
+        
+        CALL sp_get_disposal_img_lists(
+			CUR_DISPOSER_ORDER_ID,
+            '입찰',
+            @DISPOSER_IMG_INFO
+        );
+        
+        CALL sp_get_disposal_wste_lists(
+			CUR_DISPOSER_ORDER_ID,
+            @DISPOSER_WSTE_INFO
+        );
+        
+        CALL sp_get_disposal_order_info(
+			CUR_DISPOSER_ORDER_ID,
+            @DISPOSER_ORDER_INFO
+        );
+            
+		CALL sp_set_display_time_for_transaction(
+			CUR_TRANSACTION_ID,
+            CUR_STATE_CODE,
+			@DISPLAY_DATE
+		);
+        
+        UPDATE RETRIEVE_COLLECTION_REQUEST_TEMP
+        SET 
+			DISPOSER_IMG_INFO 	= @DISPOSER_IMG_INFO,
+			DISPOSER_WSTE_INFO	= @DISPOSER_WSTE_INFO,
+			DISPOSER_ORDER_INFO	= @DISPOSER_ORDER_INFO,
+			DISPLAY_DATE 		= @DISPLAY_DATE
+        WHERE TRANSACTION_ID 	= CUR_TRANSACTION_ID;
 	END LOOP;   
 	CLOSE TEMP_CURSOR;
 	
@@ -118,12 +152,16 @@ AUTHOR 			: Leo Nam
         'DISPOSER_USER_ID'				, DISPOSER_USER_ID, 
         'DISPOSER_SITE_ID'				, DISPOSER_SITE_ID, 
         'STATE'							, STATE, 
-        'STATE_CODE'					, STATE_CODE
+        'STATE_CODE'					, STATE_CODE, 
+        'DISPOSER_IMG_INFO'				, DISPOSER_IMG_INFO, 
+        'DISPOSER_WSTE_INFO'			, DISPOSER_WSTE_INFO, 
+        'DISPOSER_ORDER_INFO'			, DISPOSER_ORDER_INFO, 
+        'DISPLAY_DATE'					, DISPLAY_DATE
 	)) 
     INTO @json_data FROM RETRIEVE_COLLECTION_REQUEST_TEMP;
     
     IF vRowCount = 0 THEN
-		SET @rtn_val = 29101;
+		SET @rtn_val = 37401;
 		SET @msg_txt = 'No data found';
 		SIGNAL SQLSTATE '23000';
     ELSE

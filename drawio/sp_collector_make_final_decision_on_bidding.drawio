@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="yySY9vK7rYap_eBIG5R3" name="Page-1">
-        <mxGraphModel dx="3676" dy="3416" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="4687" dy="3955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -64,7 +64,7 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-15" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-15" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-25" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="CMZ5Q1El2WQaPjV9q1QV-24" vertex="1" connectable="0">
@@ -83,7 +83,7 @@
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-17" value="&lt;font style=&quot;font-size: 10px&quot;&gt;sp_req_is_site_final_bidder&lt;br&gt;사이트가 최종 낙찰자로 선정되었는지&lt;br&gt;검사하여 그 결과를&lt;br&gt;@IS_USER_SITE_FINAL_BIDDER&lt;br&gt;에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="-617" y="-1130" width="240" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-18" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-18" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-27" value="FALSE: 24103" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="CMZ5Q1El2WQaPjV9q1QV-26" vertex="1" connectable="0">
@@ -107,7 +107,7 @@
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-18" value="&lt;font style=&quot;font-size: 10px&quot;&gt;사이트가 최종낙찰자?&lt;br&gt;@IS_USER_SITE_FINAL_BIDDER&lt;br&gt;&amp;nbsp;= TRUE?&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="-617" y="-950" width="240" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-20" target="CMZ5Q1El2WQaPjV9q1QV-55" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-58" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-20" target="CMZ5Q1El2WQaPjV9q1QV-55" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="-144" y="-1840"/>
@@ -134,7 +134,7 @@
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-29" value="&lt;font style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 최종 낙찰자 결정에&lt;br&gt;수락 또는 거절 의사를 표시함&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="-617" y="-740" width="240" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-30" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-34" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-30" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-35" value="FALSE: 24101" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="CMZ5Q1El2WQaPjV9q1QV-34" vertex="1" connectable="0">
@@ -188,7 +188,7 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-47" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-52" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-47" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-53" value="FALSE: 24104" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="CMZ5Q1El2WQaPjV9q1QV-52" vertex="1" connectable="0">
@@ -249,7 +249,7 @@
                 <mxCell id="CMZ5Q1El2WQaPjV9q1QV-64" value="&lt;font style=&quot;font-size: 10px&quot;&gt;성공적으로 레코드를&lt;br&gt;변경하였는가?&lt;br&gt;ROW_COUNT() = 1&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="-923.5" y="850" width="193" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-64" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
+                <mxCell id="CMZ5Q1El2WQaPjV9q1QV-69" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="CMZ5Q1El2WQaPjV9q1QV-64" target="CMZ5Q1El2WQaPjV9q1QV-20" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="-1034" y="-290.14" as="sourcePoint"/>
                         <mxPoint x="-214" y="-2060.14" as="targetPoint"/>
@@ -263,7 +263,7 @@
                 </mxCell>
                 <mxCell id="16" value="FALSE: 24102" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="CMZ5Q1El2WQaPjV9q1QV-69">
                     <mxGeometry x="-0.9815" y="-1" relative="1" as="geometry">
-                        <mxPoint x="68" y="1" as="offset"/>
+                        <mxPoint x="68" y="4" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="6" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="4" target="5">

@@ -87,9 +87,37 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 								SET @msg_txt 		= 'db error occurred during bid cancellation';
 								SIGNAL SQLSTATE '23000';
 							ELSE
-							/*데이타베이스 입력에 성공한 경우*/
-								SET @rtn_val 		= 0;
-								SET @msg_txt 		= 'Success11122';
+							/*데이타베이스 입력에 성공한 경우*/                                
+								SELECT BIDDING_RANK INTO @BIDDING_RANK
+                                FROM COLLECTOR_BIDDING
+                                WHERE ID = IN_COLLECT_BIDDING_ID;
+                                IF @BIDDING_RANK <= 2 THEN
+									IF @BIDDING_RANK = 1 THEN
+										UPDATE SITE_WSTE_DISPOSAL_ORDER
+                                        SET 
+											COLLECTOR_MAX_DECISION_AT 	= @REG_DT,
+											MAX_SELECT_AT 				= @REG_DT,
+                                            UPDATED_AT					= @REG_DT
+                                        WHERE ID 						= @DISPOSAL_ORDER_ID;
+									ELSE
+										UPDATE SITE_WSTE_DISPOSAL_ORDER
+                                        SET 
+											COLLECTOR_MAX_DECISION2_AT 	= @REG_DT,
+											MAX_SELECT2_AT 				= @REG_DT,
+                                            UPDATED_AT					= @REG_DT
+                                        WHERE ID 						= @DISPOSAL_ORDER_ID;
+									END IF;
+									UPDATE COLLECTOR_BIDDING
+									SET 
+										MAX_DECISION_AT = @REG_DT,
+										UPDATED_AT		= @REG_DT
+									WHERE ID = IN_COLLECT_BIDDING_ID;
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success1112233';
+                                ELSE
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success11122';
+                                END IF;
 							END IF;
                         ELSE
 							SET @rtn_val 		= 23805;
