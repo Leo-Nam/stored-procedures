@@ -1,1 +1,66 @@
-<mxfile host="app.diagrams.net" modified="2022-03-02T09:49:08.544Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4892.0 Safari/537.36" etag="1rrOFMbQTMRZhbFw2sGi" version="16.5.6" type="device"><diagram id="5-U5GQrKx4De8IffGInq" name="Page-1">5Vnfd6I4FP5rck77UE8SfgiPonTaXbd21J52njwoKTKDxI2x1f3rN4EAAlLb6Vi7s76Ye8kNSe5373cTgNZdbL4wbzn/i/okAhj6G6D1AMbYQKb4k5ptqjE000o1AQv9VIcKxSj8hyglVNp16JNVqSOnNOLhsqyc0TgmM17SeYzR53K3RxqV37r0AlJTjGZeVNfehz6fp1oLtwv9FQmDefZmZNrpk4WXdVYrWc09nz7vqDQXaF1GKU9bi02XRHL3sn1J7S4bnuYTYyTmrzHoPUZ9+KBpwfXwYrHRpuHwT/9CT0d58qK1WjDAZiTGc1ZLL5az5lu1FebfazlV55HG/GKVOKojOljLTfFMtILk3+0B6xLYELgd4FjAEQ0HdLrA6QoT4HaBhaUoGp02sPSkAYFtyG6OBhz97I/R4OY8sTKUlZrYlGVv6d4NR4OhtLXb8l04eYslBk9eYbvAMjIrsS/pitQEU5fki8PCO0vZnJONF9BYdFkSFi4IJ6zQ3mYq4TzneR5yMlp6M2n2LOAvdHO+iISE5DaFG5LhWcq5+6EUOKM/ckChdLtnYRwIySykMRWD9oSTsgk/EcbJphEAKIeVCEhCxVTZVnRRBhe6bbagAq6KxwtNbyt8PhfwRpYK2/kOtC3Vz1MRFeQvKEAnGgp3b8Bgew8GK94hvghKJVLG51Q4w4vcQuswuo594qv9Lfr0abKHcou/E863yiPemtOyv8Qmsu2DtG8ZmfhNDZcIvU1J2mbSJuQ7ZkL6lo0o2oWRFDKbdH1yUS+7UuwBXbMZORzA3GMB4S/0w/p+bDASeTx8Kk9kn4uV6S0NxRR3MAW1FjTt4qdX8KVVcZMuSY2zm6+qQ2ttWIerhivDpSuvDZcgMV/nz4MTZTM4ERpRCYsFNJvQKKXbncwFVcZWb7J+Lfrwa+GHoPlO/L0rxeAj8dwOA/WAbSUM1JFsZ2OlFNwmlT1JRVZXKR094TkL2HqZvTLSkrQHJfPVOK+Bz86ub0bucHz+v+U1VMs7cC+v5R0/hNo0+Cm4rZIA/qNU94ZkYx2H7DQbVlCWn1N+ht0qYyHzo6nNPE5WvB+N3cnQ/XI9Gg874+vBzeT2ajAevLUUn22jUOCeaYeT0jSNkP40V3izH0ESN4M1F8Pk2UolLqOJFt+XidpW1al701DbaH1ohY3Qpyqp0YE8c7x6RWWGV+UQ+5QFC0L1imU8vHP3urHvTUlU3novCoNYxpDYIsn0jsR1OPOijnqwCH0/9TIRMeFNk/Hk5i9lukmWYzjA6L0hTtQVjBoL5Bcfu456CZ7NYQVb7bY8yuN35PCsC318XJHj5FO0L5+enO1PEz7IOG341C8VLjv9kZuyVnIBpQMHJdW6BhzjN42rhkNXEVeiIsZlxkKfPswyEO4pW+SWvuPS8vC1ZMMpLUWUEPXkqCeshEcv66e34eB+0h3c3YzPzqWRnCGEO3VROv+GuojN6WK6Xh2uhj7BkcxAlWuhaq1r1MuiHNi7NRGCxyuKrJMWRW+82TlmVrc/LKsnph3GvO1OB5Uam89duHbsMivfOg5ZYFuDFcSks/jFqcmupSb3oeveykOQUF91bnp9d1jPC6Ov/dG4MxblHcTixABrwMzOREtGZ2T1ihzQdAA6wqEH19yjoX13Lx8c3UbNFavlhBG+ZrH4W60jCbmqI86ADhmPJ8IK4OSrkw4Xq2DCNzyXv69oPPE97p3vuZ6TBQVOvnellUW39AlL0giUF4WCJUROVA0D2Em3hEBajb7/na/wDvAFtq0j8oUQi8+waS4ovmZr7r8=</diagram></mxfile>
+<mxfile host="65bd71144e">
+    <diagram id="5-U5GQrKx4De8IffGInq" name="Page-1">
+        <mxGraphModel dx="2175" dy="4226" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="DflL0X33gIR-mx3biRKd-4" value="&lt;span style=&quot;font-size: 8px&quot;&gt;폐기물 사진정보(JSON)를 &lt;br&gt;CURSOR에 대입&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-526.0699999999999" y="-3472" width="186" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="DflL0X33gIR-mx3biRKd-4" target="DflL0X33gIR-mx3biRKd-24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-433.06999999999994" y="-3382" as="sourcePoint"/>
+                        <mxPoint x="-400.07" y="-3322" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=8;" parent="1" source="DflL0X33gIR-mx3biRKd-24" target="DflL0X33gIR-mx3biRKd-106" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="INSERT" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="DflL0X33gIR-mx3biRKd-107">
+                    <mxGeometry x="-0.178" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-24" value="&lt;span style=&quot;font-size: 8px&quot;&gt;CURSOR의 값을 테이블에 입력&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-526.14" y="-3302" width="186.14" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="DflL0X33gIR-mx3biRKd-24" target="DflL0X33gIR-mx3biRKd-108" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-420" y="-3212" as="sourcePoint"/>
+                        <mxPoint x="-400" y="-3162" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-106" value="&lt;span style=&quot;font-size: 8px&quot;&gt;WSTE_REGISTRATION_PHOTO&lt;/span&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="-810" y="-3302" width="175.86" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-116" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=8;" parent="1" source="DflL0X33gIR-mx3biRKd-108" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-433.0699999999997" y="-2982" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-117" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="DflL0X33gIR-mx3biRKd-116" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1862" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="DflL0X33gIR-mx3biRKd-108" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="4">
+                    <mxGeometry x="-0.2819" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="DflL0X33gIR-mx3biRKd-108" value="&lt;font style=&quot;font-size: 8px&quot;&gt;사진정보 입력 실패?&lt;br&gt;ROW_COUNT() = 0&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="-543.0699999999999" y="-3152" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 0&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-546.14" y="-2982" width="226.14" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 22801&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-240" y="-3132" width="226.14" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="yEqb0aX-quzxRs0v6ZPx" name="Page-1">
-        <mxGraphModel dx="3694" dy="4154" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="3655" dy="4133" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -196,7 +196,7 @@
                 <mxCell id="128" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="124" target="127">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="124" value="&lt;span style=&quot;font-size: 10px&quot;&gt;sp_create_site_wste_discharged&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 등록한 폐기물 리스트를 &lt;br&gt;테이블에 등록시킨 후 &lt;br&gt;그 결과를@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                <mxCell id="124" value="&lt;span style=&quot;font-size: 10px&quot;&gt;&lt;a href=&quot;https://github.com/Leo-Nam/stored-procedures/blob/main/drawio/sp_create_site_wste_discharged.svg&quot;&gt;sp_create_site_wste_discharged&lt;/a&gt;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 등록한 폐기물 리스트를 &lt;br&gt;테이블에 등록시킨 후 &lt;br&gt;그 결과를@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
                     <mxGeometry x="-2193" y="-1052" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="132" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="127" target="129">
@@ -218,7 +218,7 @@
                 <mxCell id="127" value="&lt;span style=&quot;font-size: 10px&quot;&gt;배출자의 폐기물리스트를&lt;br&gt;성공적으로 등록하였는가?&lt;br&gt;@rtn_val = 0&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-2193" y="-902" width="220" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="129" value="&lt;span style=&quot;font-size: 10px&quot;&gt;sp_create_site_wste_discharged&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 촬영한 폐기물 사진을&lt;br&gt;테이블에 등록시킨 후 &lt;br&gt;그 결과를@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                <mxCell id="129" value="&lt;span style=&quot;font-size: 10px&quot;&gt;sp_create_site_wste_photo_information&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 촬영한 폐기물 사진을&lt;br&gt;테이블에 등록시킨 후 &lt;br&gt;그 결과를@rtn_val에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
                     <mxGeometry x="-2193" y="-742" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="135" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="130" target="134">
@@ -246,7 +246,7 @@
                 <mxCell id="134" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 0&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-2193" y="-422" width="218" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="137" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return Error&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                <mxCell id="137" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 30901&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
                     <mxGeometry x="-1880" y="-1812" width="218" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="140" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return Error&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
