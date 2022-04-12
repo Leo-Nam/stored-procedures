@@ -64,8 +64,8 @@ AUTHOR 			: Leo Nam
         DISPOSER_SITE_ID						BIGINT,
         STATE									VARCHAR(20),
         STATE_CODE								BIGINT,
-        DISPOSER_IMG_INFO						JSON,
-        DISPOSER_WSTE_INFO						JSON,
+        IMG_PATH								JSON,
+        WSTE_LIST								JSON,
         DISPOSER_ORDER_INFO						JSON,
         DISPLAY_DATE							DATETIME
         
@@ -115,12 +115,12 @@ AUTHOR 			: Leo Nam
         CALL sp_get_disposal_img_lists(
 			CUR_DISPOSER_ORDER_ID,
             '입찰',
-            @DISPOSER_IMG_INFO
+            @IMG_PATH
         );
         
         CALL sp_get_disposal_wste_lists(
 			CUR_DISPOSER_ORDER_ID,
-            @DISPOSER_WSTE_INFO
+            @WSTE_LIST
         );
         
         CALL sp_get_disposal_order_info(
@@ -136,8 +136,8 @@ AUTHOR 			: Leo Nam
         
         UPDATE RETRIEVE_COLLECTION_REQUEST_TEMP
         SET 
-			DISPOSER_IMG_INFO 	= @DISPOSER_IMG_INFO,
-			DISPOSER_WSTE_INFO	= @DISPOSER_WSTE_INFO,
+			IMG_PATH 			= @IMG_PATH,
+			WSTE_LIST			= @WSTE_LIST,
 			DISPOSER_ORDER_INFO	= @DISPOSER_ORDER_INFO,
 			DISPLAY_DATE 		= @DISPLAY_DATE
         WHERE TRANSACTION_ID 	= CUR_TRANSACTION_ID;
@@ -153,8 +153,8 @@ AUTHOR 			: Leo Nam
         'DISPOSER_SITE_ID'				, DISPOSER_SITE_ID, 
         'STATE'							, STATE, 
         'STATE_CODE'					, STATE_CODE, 
-        'DISPOSER_IMG_INFO'				, DISPOSER_IMG_INFO, 
-        'DISPOSER_WSTE_INFO'			, DISPOSER_WSTE_INFO, 
+        'IMG_PATH'						, IMG_PATH, 
+        'WSTE_LIST'						, WSTE_LIST, 
         'DISPOSER_ORDER_INFO'			, DISPOSER_ORDER_INFO, 
         'DISPLAY_DATE'					, DISPLAY_DATE
 	)) 
