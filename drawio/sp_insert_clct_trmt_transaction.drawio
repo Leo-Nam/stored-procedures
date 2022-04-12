@@ -1,0 +1,218 @@
+<mxfile host="65bd71144e">
+    <diagram id="1wA_9B6YgJ2VQUX7ZONX" name="Page-1">
+        <mxGraphModel dx="3131" dy="3853" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="72">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2083" y="-3342" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="sp_req_current_time&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;시스템 시간을 구한후&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@REG_DT&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-3490" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="84" target="92">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2083" y="-2261.9999999999995" as="targetPoint"/>
+                        <mxPoint x="-2083" y="-2340" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="16" target="105">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2040" y="-1770" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="16" target="31">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="UPDATE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="14">
+                    <mxGeometry x="-0.1508" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="&lt;font style=&quot;font-size: 10px&quot;&gt;트랜잭션 레코드의 수거자 &lt;br&gt;결정기한을 변경한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-1910" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="28">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2083" y="-2748" as="targetPoint"/>
+                        <mxPoint x="-2083" y="-2800" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="91" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="25">
+                    <mxGeometry x="0.164" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="28" target="83">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2083" y="-2570" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="&lt;font style=&quot;font-size: 10px&quot;&gt;의사결정을 위한 최대시간을 &lt;br&gt;구한 후 그 값을&amp;nbsp;&lt;br&gt;@max_selection_duration에 반환한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-2710" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="WSTE_CLCT_TRMT_TRANSACTION" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-2472" y="-1910" width="180" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="105" target="106">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2083" y="-1620" as="targetPoint"/>
+                        <mxPoint x="-2083" y="-1680" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="107" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="32">
+                    <mxGeometry x="-0.2696" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="74" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="72" target="73">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="INSERT" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="74">
+                    <mxGeometry x="-0.2014" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="77" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="72" target="76">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="&lt;font style=&quot;font-size: 10px&quot;&gt;트랜잭션 레코드를 생성한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-3340" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="WSTE_CLCT_TRMT_TRANSACTION" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-2472" y="-3340" width="180" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="76" target="78">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="79">
+                    <mxGeometry x="-0.2488" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="111" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="76" target="110">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="111">
+                    <mxGeometry x="-0.1941" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="76" value="&lt;span style=&quot;font-size: 10px&quot;&gt;레코드가 성공적으로 &lt;br&gt;생성되었는가?&amp;nbsp;&lt;br&gt;ROW_COUNT() = 1&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-3180" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="78" target="81">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="&lt;span style=&quot;font-size: 10px&quot;&gt;LAST_INSERT_ID()&lt;br&gt;레코드 생성시 발행된 ID를 구한 후&amp;nbsp;&lt;br&gt;@TRANSACTION_ID에 반환한다&lt;br&gt;&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2194" y="-3010" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="81" target="84">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-1880" y="-2820"/>
+                            <mxPoint x="-1880" y="-2378"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="90" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="89">
+                    <mxGeometry x="-0.8921" y="2" relative="1" as="geometry">
+                        <mxPoint x="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="81" value="&lt;span style=&quot;font-size: 10px&quot;&gt;입력받은 수거자 사이트 &lt;br&gt;아이디가 존재하는가?IN_COLLECTOR_SITE_ID &lt;br&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-2870" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="" style="edgeStyle=none;html=1;fontSize=10;" edge="1" parent="1" source="83" target="84">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="&lt;span style=&quot;font-size: 10px&quot;&gt;1순위수거자가 수거요청을 받을때&lt;br&gt;의사결정을 해야하는 DEADLINE을 &lt;br&gt;계산한 후 그 값을 &lt;br&gt;@COLLECTOR_MAX_DECISION_AT&lt;br&gt;에 반환한다&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= @REG_DT+&amp;nbsp;@max_selection_duration&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2192" y="-2580" width="218" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=10;" edge="1" parent="1" source="84" target="86">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="UPDATE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="87">
+                    <mxGeometry x="-0.1872" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="84" value="&lt;font style=&quot;font-size: 10px&quot;&gt;배출자 레코드에 1순위수거자의 &lt;br&gt;의사결정기한과 트랜잭션번호를 등록한다&lt;/font&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-2418" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="SITE_WSTE_DISPOSAL_ORDER" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="-2472" y="-2418" width="180" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="92" target="94">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="95">
+                    <mxGeometry x="-0.2698" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="98" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="92" target="97">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="98">
+                    <mxGeometry x="-0.1747" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="92" value="&lt;span style=&quot;font-size: 10px&quot;&gt;레코드 등록에 성공하였는가?&lt;br&gt;ROW_COUNT() = 1&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-2270" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 25302&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-1880" y="-2250" width="218" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="97" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="100">
+                    <mxGeometry x="-0.2278" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="102" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="97" target="106">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1880" y="-2040" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="-1890" y="-2040"/>
+                            <mxPoint x="-1890" y="-1570"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="103" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="102">
+                    <mxGeometry x="-0.3214" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="97" value="&lt;span style=&quot;font-size: 10px&quot;&gt;수거자 사이트 &lt;br&gt;아이디가 존재(기존거래)하는가?&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IN_COLLECTOR_SITE_ID &lt;br&gt;IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-2090" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="1" source="105" target="108">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="109">
+                    <mxGeometry x="-0.1862" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="105" value="&lt;span style=&quot;font-size: 10px&quot;&gt;레코드가 정상적으로 변경되었는가?&lt;br&gt;ROW_COUNT() = 1&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2193" y="-1760" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 0&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2192" y="-1600" width="218" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 25303&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-2481" y="-1740" width="218" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="&lt;span style=&quot;font-size: 10px&quot;&gt;Return 25301&lt;/span&gt;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
+                    <mxGeometry x="-1880" y="-3160" width="218" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
