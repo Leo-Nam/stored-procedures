@@ -95,24 +95,19 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 			SET @OPEN_AT = @REG_DT;
         END IF;
         
-		CALL sp_req_get_user_current_type(
-			IN_USER_ID,
-            @USER_CURRENT_TYPE_CODE
-        );
+        SELECT USER_CURRENT_TYPE INTO @USER_CURRENT_TYPE_CODE
+		FROM USERS WHERE ID = IN_USER_ID;
+        
         IF @USER_CURRENT_TYPE_CODE = 2 THEN
         /*사용자의 현재 타입정보가 배출자인 경우에는 정상처리한다.*/
-			CALL sp_req_user_affiliation_by_user_id(
-			/*배출자가 개인회원인지 사업자 회원인지 구분한다. 개인이면 0, 사업자의 관리자이면 사이트의 고유등록번호를 반환한다.*/
-				IN_USER_ID,
-				@BELONG_TO
-			);
-			IF @BELONG_TO = 0 THEN
+			SELECT AFFILIATED_SITE INTO @USER_SITE_ID FROM USERS WHERE ID = IN_USER_ID;	
+			IF @USER_SITE_ID = 0 THEN
 			/*배출자의 지위가 개인인 경우*/
 				SET @DISPOSER_TYPE 	= 'person';
 				CALL sp_insert_site_wste_discharge_order_without_handler(
 					IN_USER_ID,
 					IN_COLLECTOR_SITE_ID,
-					@BELONG_TO,
+					@USER_SITE_ID,
 					@DISPOSER_TYPE,
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
@@ -132,6 +127,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				);
 				IF @rtn_val = 0 THEN
 				/*프로시저 실행에 성공한 경우*/
+					CALL sp_get_collector_list_share_business_areas(
+						IN_KIKCD_B_CODE,
+                        @json_data
+                    );
 					SET @rtn_val = 0;
 					SET @msg_txt = 'Success';
 				ELSE
@@ -143,7 +142,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				SET @DISPOSER_TYPE = 'company';
 				CALL sp_req_site_exists(
 				/*사이트가 유효한지 검사한다.*/
-					@BELONG_TO,
+					@USER_SITE_ID,
 					TRUE,
 					@rtn_val,
 					@msg_txt
@@ -153,7 +152,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					CALL sp_insert_site_wste_discharge_order_without_handler(
 						IN_USER_ID,
 						IN_COLLECTOR_SITE_ID,
-						@BELONG_TO,
+						@USER_SITE_ID,
 						@DISPOSER_TYPE,
 						IN_KIKCD_B_CODE,
 						IN_ADDR,
@@ -173,6 +172,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					);
 					IF @rtn_val = 0 THEN
 					/*프로시저 실행에 성공한 경우*/
+						CALL sp_get_collector_list_share_business_areas(
+							IN_KIKCD_B_CODE,
+							@json_data
+						);
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE
@@ -195,7 +198,5 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;   
-    
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
