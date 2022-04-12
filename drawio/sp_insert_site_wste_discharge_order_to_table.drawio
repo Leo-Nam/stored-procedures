@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="yEqb0aX-quzxRs0v6ZPx" name="Page-1">
-        <mxGraphModel dx="2872" dy="3716" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="3937" dy="4283" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -103,7 +103,7 @@
                         <mxPoint x="-2070" y="-2600" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="96" value="sp_create_order_code&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;폐기물 등록코드를 생성 후 &lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@ORDER_CODE에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                <mxCell id="96" value="&lt;a href=&quot;https://github.com/Leo-Nam/stored-procedures/blob/main/drawio/sp_create_order_code.svg&quot;&gt;sp_create_order_code&lt;/a&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;폐기물 등록코드를 생성 후 &lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;@ORDER_CODE에 반환한다&lt;/span&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
                     <mxGeometry x="-2193" y="-2730" width="220" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="104" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="100" target="62">
