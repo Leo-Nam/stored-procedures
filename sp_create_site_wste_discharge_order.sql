@@ -65,7 +65,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 			SET @BIDDING_END_AT = CAST(CONCAT(DATE(IN_BIDDING_END_AT), ' ', '23:59:59') AS DATETIME);
 		ELSE
 			CALL sp_req_policy_direction(
-			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.1*/
 				'bidding_end_date_after_the_visit_early_closing',
 				@bidding_end_date_after_the_visit_early_closing
 			);
@@ -112,7 +112,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
 					IN_VISIT_START_AT,
-					IF(IN_COLLECTOR_SITE_ID IS NULL, @VISIT_END_AT, IN_VISIT_END_AT),
+					@VISIT_END_AT,
 					@BIDDING_END_AT,
 					@OPEN_AT,
 					@CLOSE_AT,
@@ -157,7 +157,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 						IN_KIKCD_B_CODE,
 						IN_ADDR,
 						IN_VISIT_START_AT,
-						IF(IN_COLLECTOR_SITE_ID IS NULL, @VISIT_END_AT, IN_VISIT_END_AT),
+						@VISIT_END_AT,
 						@BIDDING_END_AT,
 						@OPEN_AT,
 						@CLOSE_AT,
@@ -174,8 +174,14 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					/*프로시저 실행에 성공한 경우*/
 						CALL sp_get_collector_list_share_business_areas(
 							IN_KIKCD_B_CODE,
-							@json_data
+							@PUSH_INFO
 						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						) 
+						INTO @json_data;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE

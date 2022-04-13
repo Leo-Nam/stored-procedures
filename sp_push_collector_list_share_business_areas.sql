@@ -1,4 +1,4 @@
-CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_collector_list_share_business_areas`(
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_collector_list_share_business_areas`(
 	IN IN_B_CODE					VARCHAR(10),
     OUT OUT_COLLECTOR_LIST			JSON
 )

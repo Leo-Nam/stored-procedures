@@ -95,6 +95,15 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS, 
 								UPDATED_AT		 		= @REG_DT  
                             WHERE ID = @DISPOSAL_ORDER_ID;
+							CALL sp_push_cancel_visit(
+								IN_COLLECT_BIDDING_ID,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							);
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success';
 						ELSE
@@ -128,6 +137,15 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS , 
 									UPDATED_AT		 		= @REG_DT
                                 WHERE ID = @DISPOSAL_ORDER_ID;
+								CALL sp_push_cancel_visit(
+									IN_COLLECT_BIDDING_ID,
+									@PUSH_INFO
+								);
+								SELECT JSON_ARRAYAGG(
+									JSON_OBJECT(
+										'PUSH_INFO'	, @PUSH_INFO
+									)
+								);
 								SET @rtn_val 		= 0;
 								SET @msg_txt 		= 'Success';
 							ELSE
@@ -166,6 +184,5 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

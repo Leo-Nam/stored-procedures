@@ -75,6 +75,15 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 						CALL sp_calc_prospective_visitors(
 							@DISPOSER_ORDER_ID
 						);
+						CALL sp_push_disposer_response_visit_1(
+							IN_COLLECTOR_BIDDING_ID,
+							@PUSH_INFO
+						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						);
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE
@@ -105,6 +114,5 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
     END IF;
     COMMIT;
     
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

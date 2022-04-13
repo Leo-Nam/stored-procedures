@@ -92,6 +92,15 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 							ACTIVE = TRUE;
 						IF ROW_COUNT() = 1 THEN
 						/*정상적으로 변경완료된 경우*/
+							CALL sp_push_new_visitor_come(
+								IN_DISPOSER_ORDER_ID,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							);
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success';
 						ELSE
@@ -113,6 +122,15 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 						);
 						IF @rtn_val = 0 THEN
 						/*정상적으로 입력완료된 경우*/
+							CALL sp_push_new_visitor_come(
+								IN_DISPOSER_ORDER_ID,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							);
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success77';
 						ELSE
@@ -143,6 +161,5 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 	END IF;
     
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
