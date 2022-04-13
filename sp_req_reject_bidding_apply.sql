@@ -65,6 +65,16 @@ Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_c
 						CALL sp_calc_bidding_rank(
 							IN_DISPOSAL_ORDER_ID
 						);
+						CALL sp_push_disposer_reject_bidding_apply(
+							IN_DISPOSER_ORDER_ID,
+							IN_COLLECTOR_BIDDING_ID,
+							@PUSH_INFO
+						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						) INTO @json_data;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
                     ELSE
@@ -112,6 +122,16 @@ Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_c
 						CALL sp_calc_bidding_rank(
 							IN_DISPOSAL_ORDER_ID
 						);
+						CALL sp_push_disposer_reject_bidding_apply(
+							IN_DISPOSER_ORDER_ID,
+							IN_COLLECTOR_BIDDING_ID,
+							@PUSH_INFO
+						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						) INTO @json_data;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
                     ELSE
@@ -138,6 +158,5 @@ Changes			: 입찰자격을 박탈할 때 전체 입찰자를 계산한다.(sp_c
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

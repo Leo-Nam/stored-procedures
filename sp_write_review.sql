@@ -71,6 +71,16 @@ AUTHOR 			: Leo Nam
 								@json_data
 							);
 							IF @rtn_val = 0 THEN
+								CALL sp_push_disposer_write_review(
+									@DISPOSER_SITE_ID,
+                                    IN_SITE_ID,
+									@PUSH_INFO
+								);
+								SELECT JSON_ARRAYAGG(
+									JSON_OBJECT(
+										'PUSH_INFO'	, @PUSH_INFO
+									)
+								) INTO @json_data;
 								SET @rtn_val = 0;
 								SET @msg_txt = 'success';
 							ELSE
@@ -110,6 +120,16 @@ AUTHOR 			: Leo Nam
 							@json_data
 						);
 						IF @rtn_val = 0 THEN
+							CALL sp_push_disposer_write_review(
+								@DISPOSER_SITE_ID,
+								IN_SITE_ID,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							) INTO @json_data;
 							SET @rtn_val = 0;
 							SET @msg_txt = 'success';
 						ELSE
@@ -142,6 +162,5 @@ AUTHOR 			: Leo Nam
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-    SET @json_data = NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

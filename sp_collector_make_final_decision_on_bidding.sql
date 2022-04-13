@@ -109,6 +109,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
                                     IN_PROGRESS			= TRUE;
 								IF ROW_COUNT() = 1 THEN
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+									CALL sp_push_collector_make_final_decision(
+										IN_COLLECTOR_BIDDING_ID,
+                                        '승인',
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= CONCAT('Success102: ', @DISPOSAL_ORDER_ID);
 								ELSE
@@ -118,6 +128,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									SIGNAL SQLSTATE '23000';
 								END IF;
 							ELSE
+								CALL sp_push_collector_make_final_decision(
+									IN_COLLECTOR_BIDDING_ID,
+									'거절',
+									@PUSH_INFO
+								);
+								SELECT JSON_ARRAYAGG(
+									JSON_OBJECT(
+										'PUSH_INFO'	, @PUSH_INFO
+									)
+								) INTO @json_data;
 								SET @rtn_val 		= 0;
 								SET @msg_txt 		= 'Success101';
 							END IF;
@@ -152,6 +172,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										IN_PROGRESS			= TRUE;
 									IF ROW_COUNT() = 1 THEN
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+										CALL sp_push_collector_make_final_decision(
+											IN_COLLECTOR_BIDDING_ID,
+											'승인',
+											@PUSH_INFO
+										);
+										SELECT JSON_ARRAYAGG(
+											JSON_OBJECT(
+												'PUSH_INFO'	, @PUSH_INFO
+											)
+										) INTO @json_data;
 										SET @rtn_val 		= 0;
 										SET @msg_txt 		= 'Success202';
 									ELSE
@@ -161,6 +191,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										SIGNAL SQLSTATE '23000';
 									END IF;
 								ELSE
+									CALL sp_push_collector_make_final_decision(
+										IN_COLLECTOR_BIDDING_ID,
+										'거절',
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success201';
 								END IF;
@@ -196,6 +236,5 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

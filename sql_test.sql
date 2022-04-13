@@ -5601,6 +5601,7 @@ SET @BIDDING_ID = NULL;
                     )
 */
 
+/*
 SET @USER_ID = 203;
 SELECT 
 		A.ID, 
@@ -5624,7 +5625,7 @@ SELECT
     LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
     LEFT JOIN V_ORDER_STATE_NAME C ON A.ID = C.DISPOSER_ORDER_ID
     WHERE 
-		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 				/*0.0.2에서 새롭게 추가한 부분*/
+		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 
         IF(A.VISIT_END_AT IS NOT NULL, 
 			A.VISIT_END_AT >= NOW(), 
             A.BIDDING_END_AT >= NOW()
@@ -5658,3 +5659,420 @@ SELECT
 				SUB2_B.ID = @USER_ID AND
                 SUB2_A.ACTIVE = TRUE
 		); 
+*/
+
+/*
+SET @USER_ID = 215;
+SET @DISPOSER_ORDER_ID = 507;
+SET @BIDDING_DETAILS = '[{"WSTE_CODE":"51", "UNIT":"Kg", "UNIT_PRICE": 7, "VOLUME": 1, "TRMT_CODE": "1001"}, {"WSTE_CODE":"51-01", "UNIT":"Kg", "UNIT_PRICE": 45, "VOLUME": 1, "TRMT_CODE": "1002"}]';
+SET @TRMT_METHOD = '1001';
+SET @BID_AMOUNT= 25580;
+call sp_apply_bidding(
+    @USER_ID,
+    @DISPOSER_ORDER_ID,
+    @BID_AMOUNT,
+    @TRMT_METHOD,
+    @BIDDING_DETAILS
+);
+*/
+/*
+SELECT B.ID
+    FROM COLLECTOR_BIDDING A 
+    LEFT JOIN COLLECTOR_BIDDING B ON A.DISPOSAL_ORDER_ID = B.DISPOSAL_ORDER_ID
+    WHERE A.ID = 278;
+*/
+
+/*
+CALL sp_retrieve_past_transactions_2(
+190
+);
+*/
+
+/*
+SET @B_CODE = '4377000000';
+CALL sp_get_collector_list_share_business_areas(
+	@B_CODE,
+    @json_data
+);
+
+SELECT @B_CODE,@json_data;
+*/
+/*
+	DROP TABLE IF EXISTS RETRIEVE_HISTORY_OF_TRANSACTION_DONE_TEMP;
+CALL sp_retrieve_history_of_transaction_done(
+	188,
+    166
+);
+*/
+
+/*
+	SELECT 
+		A.ID, 
+        B.ID, 
+        B.ORDER_CODE, 
+        A.COLLECTOR_SITE_ID, 
+        A.TRANSACTION_ID, 
+        A.WSTE_CODE, 
+        C.NAME
+    FROM TRANSACTION_REPORT A
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSER_ORDER_ID = B.ID
+    LEFT JOIN WSTE_CODE C ON A.WSTE_CODE = C.CODE
+    LEFT JOIN USERS D ON IF(B.SITE_ID = 0, B.DISPOSER_ID = D.ID, B.SITE_ID = D.AFFILIATED_SITE)
+	WHERE 
+        D.ID = 188 AND
+        (D.CLASS = 201 OR D.CLASS = 202) AND
+        D.ACTIVE = TRUE AND
+        A.CONFIRMED = TRUE;
+*/
+
+/*
+	SELECT 
+		A.ID, 
+        A.ORDER_CODE, 
+        A.SITE_ID,        
+        A.VISIT_START_AT,
+        A.VISIT_END_AT,
+        A.BIDDING_END_AT,
+        A.OPEN_AT,
+        A.CLOSE_AT,
+        A.SERVICE_INSTRUCTION_ID,
+        A.VISIT_EARLY_CLOSING,
+        A.VISIT_EARLY_CLOSED_AT,
+        A.BIDDING_EARLY_CLOSING,
+        A.BIDDING_EARLY_CLOSED_AT,
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        B.STATE, 
+        B.STATE_CODE, 
+        B.STATE_CATEGORY_ID, 
+        B.STATE_CATEGORY, 
+        A.PROSPECTIVE_VISITORS, 
+        A.BIDDERS, 
+        A.COLLECTOR_ID, 
+        A.NOTE
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+    LEFT JOIN V_ORDER_STATE_NAME B ON A.ID = B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
+    LEFT JOIN COMPANY D ON C.COMP_ID = D.ID
+	WHERE 
+		B.STATE IS NOT NULL AND 
+        A.IS_DELETED = FALSE AND
+        C.ACTIVE = TRUE AND
+        D.ACTIVE = TRUE AND
+        B.STATE_CODE <> 105 AND
+        IF (IN_USER_TYPE = 'Person',
+			(A.DISPOSER_ID = 188),            
+			(A.SITE_ID IS NOT NULL AND A.SITE_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = 188 AND ACTIVE = TRUE)));
+*/
+
+/*
+CALL sp_get_transaction_info_2(500, @AAA);
+SELECT @AAA;
+*/
+
+/*
+CALL sp_req_disposal_order_details_2(256)
+*/
+/*
+SET @USER_ID = 244;
+SET @BIDDING_ID = 383;
+SET @RES = TRUE;
+CALL sp_collector_make_final_decision_on_bidding(
+	@USER_ID,
+	@BIDDING_ID,
+	@RES
+);
+*/
+
+/*
+SET @USER_ID = 243;
+SET @ORDER_ID = 576;
+CALL sp_req_close_bidding_early(
+	@USER_ID,
+    @ORDER_ID
+);
+*/
+
+/*
+SET @USER_ID = 243;
+SET @COLLECTOR_SITE_ID = 244;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+SET @VISIT_START_AT = '2022-04-13';
+SET @VISIT_END_AT = '2022-04-13';
+SET @BIDDING_END_AT = NULL;
+SET @OPEN_AT = '2022-04-13';
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "빨리 해결해주세요";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@LNG,
+	@LAT,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);
+*/
+
+/*
+SET @B_CODE = '4377000000';
+CALL sp_get_collector_list_share_business_areas(
+	@B_CODE,
+    @json_data
+);
+select 
+	@B_CODE,
+    @json_data
+*/
+
+/*
+SET @ORDER_ID = 525;
+CALL sp_push_new_visitor_come(
+    @ORDER_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @ORDER_ID,
+    @PUSH_INFO;
+*/
+
+
+/*
+SET @BIDDING_ID = 380;
+CALL sp_push_cancel_visit(
+    @BIDDING_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @BIDDING_ID,
+    @PUSH_INFO;
+*/
+/*
+SET @ORDER_ID = 577;
+
+CALL sp_push_disposer_close_visit_early(
+    @ORDER_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @ORDER_ID,
+    @PUSH_INFO;
+*/
+/*
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'	, A.ID, 
+				'FCM'		, A.FCM,
+				'MSG'		, @MSG
+			)
+		) 
+		INTO @TARGET_LIST
+		FROM USERS A
+        LEFT JOIN COLLECTOR_BIDDING B ON A.AFFILIATED_SITE = B.COLLECTOR_ID
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER C ON B.DISPOSAL_ORDER_ID = C.ID
+		WHERE 
+			A.ACTIVE 				= TRUE AND
+			A.PUSH_ENABLED			= TRUE AND
+			C.ID					= @ORDER_ID AND
+            B.ACTIVE				= TRUE AND
+            B.DELETED				= FALSE AND
+            B.RESPONSE_VISIT		= TRUE AND
+            B.CANCEL_VISIT			= FALSE AND
+            B.REJECT_BIDDING_APPLY	= FALSE;
+SELECT @ORDER_ID, @TARGET_LIST;
+
+
+	SELECT COUNT(ID) 
+    INTO @ORDER_EXISTS
+    FROM SITE_WSTE_DISPOSAL_ORDER
+    WHERE 
+		ID = @ORDER_ID AND
+        ACTIVE = TRUE;
+SELECT @ORDER_EXISTS, @ORDER_ID, @TARGET_LIST;
+*/
+
+/*
+SET @ORDER_ID = 577;
+SET @BIDDING_ID = 380;
+CALL sp_push_disposer_reject_bidding_apply(
+    @ORDER_ID,
+    @BIDDING_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @BIDDING_ID,
+    @PUSH_INFO;
+*/
+
+
+/*
+SET @BIDDING_ID = 380;
+SET @WHAT = '포기';
+CALL sp_push_collector_cancel_or_giveup_bidding(
+    @BIDDING_ID,
+    @WHAT,
+    @PUSH_INFO
+);
+
+SELECT 
+    @BIDDING_ID,
+    @WHAT,
+    @PUSH_INFO
+*/
+
+
+
+/*
+SET @ORDER_ID = 525;
+CALL sp_push_collector_apply_bidding(
+    @ORDER_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @ORDER_ID,
+    @PUSH_INFO;
+*/    
+  /*  
+SET @ORDER_ID = 570;
+
+CALL sp_push_disposer_close_bidding_early(
+    @ORDER_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @ORDER_ID,
+    @PUSH_INFO;
+*/
+
+/*
+SET @BIDDING_ID = 380;
+CALL sp_push_disposer_select_collector(
+    @BIDDING_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @BIDDING_ID,
+    @PUSH_INFO;
+*/
+
+/*
+SET @BIDDING_ID = 380;
+CALL sp_push_collector_make_final_decision(
+    @BIDDING_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @BIDDING_ID,
+    @PUSH_INFO;
+*/
+/*
+SET @TRANSACTION_ID = 559;
+
+CALL sp_push_collector_ask_transaction_completed(
+    @TRANSACTION_ID,
+    @PUSH_INFO
+);
+
+SELECT 
+    @TRANSACTION_ID,
+    @PUSH_INFO;
+*/
+
+/*
+		SELECT B.ORDER_CODE, B.SITE_ID, B.DISPOSER_ID, IF(A.COLLECTOR_SITE_ID IS NULL, E.SITE_NAME, C.SITE_NAME)
+        INTO @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME
+        FROM WSTE_CLCT_TRMT_TRANSACTION A
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+        LEFT JOIN COMP_SITE C ON A.COLLECTOR_SITE_ID = C.ID
+        LEFT JOIN COLLECTOR_BIDDING D ON A.COLLECTOR_BIDDING_ID = D.ID
+        LEFT JOIN COMP_SITE E ON D.COLLECTOR_ID = E.ID
+        WHERE
+			A.ID = @TRANSACTION_ID;
+            SELECT @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME;
+		SET @MSG = CONCAT('신청하신 [', @ORDER_CODE, ']로 요청하신 폐기물을 ',  @COLLECTOR_SITE_NAME,'님이 처리완료하였습니다. 보고서를 확인해주세요.');
+        SELECT @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME, @MSG;
+        
+        
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'	, ID, 
+					'FCM'		, FCM,
+					'MSG'		, @MSG
+				)
+			) 
+			INTO @TARGET_LIST
+			FROM USERS
+			WHERE 
+				ACTIVE 					= TRUE AND
+				PUSH_ENABLED			= TRUE AND
+                AFFILIATED_SITE			= @DISPOSER_SITE_ID;
+			SELECT @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME, @MSG, @TARGET_LIST;
+*/
+
+/*
+		SELECT B.ORDER_CODE, B.SITE_ID, B.DISPOSER_ID, IF(A.COLLECTOR_SITE_ID IS NULL, E.SITE_NAME, C.SITE_NAME)
+        INTO @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME
+        FROM WSTE_CLCT_TRMT_TRANSACTION A
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+        LEFT JOIN COMP_SITE C ON A.COLLECTOR_SITE_ID = C.ID
+        LEFT JOIN COLLECTOR_BIDDING D ON A.COLLECTOR_BIDDING_ID = D.ID
+        LEFT JOIN COMP_SITE E ON D.COLLECTOR_ID = E.ID
+        WHERE
+			A.ID = @TRANSACTION_ID;
+            
+		SET @MSG = CONCAT('신청하신 [', @ORDER_CODE, ']로 요청하신 폐기물을 ',  @COLLECTOR_SITE_NAME,'님이 처리완료하였습니다. 보고서를 확인해주세요.');
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'	, ID, 
+					'FCM'		, FCM,
+					'MSG'		, @MSG
+				)
+			) 
+			INTO @TARGET_LIST
+			FROM USERS
+			WHERE 
+				ACTIVE 					= TRUE AND
+				PUSH_ENABLED			= TRUE AND
+                AFFILIATED_SITE			= @DISPOSER_SITE_ID;
+SELECT @TRANSACTION_ID, @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME, @MSG, @TARGET_LIST;
+*/
+
+/*
+SET @DISPOSER_SITE_ID = 243;
+SET @COLLECTOR_SITE_ID = 244;
+CALL sp_push_disposer_write_review(
+	@DISPOSER_SITE_ID, @COLLECTOR_SITE_ID, @PUSH_INFO
+);
+SELECT @DISPOSER_SITE_ID, @COLLECTOR_SITE_ID, @PUSH_INFO;
+*/
+
+/*
+SET @USER_ID = 243;
+SET @COLLECTOR_SITE_ID = 244;
+CALL sp_push_collector_dispose_new_wste(
+	@USER_ID, @COLLECTOR_SITE_ID, @PUSH_INFO
+);
+SELECT @USER_ID, @COLLECTOR_SITE_ID, @PUSH_INFO;
+*/
+

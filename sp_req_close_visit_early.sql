@@ -62,7 +62,7 @@ AUTHOR 			: Leo Nam
 						JSON_OBJECT(
 							'PUSH_INFO'	, @PUSH_INFO
 						)
-					);
+					) INTO @json_data;
 					SET @rtn_val = 0;
 					SET @msg_txt = 'success';
 				ELSE
@@ -100,7 +100,7 @@ AUTHOR 			: Leo Nam
 						JSON_OBJECT(
 							'PUSH_INFO'	, @PUSH_INFO
 						)
-					);
+					) INTO @json_data;
 					SET @rtn_val = 0;
 					SET @msg_txt = 'success';
 				ELSE

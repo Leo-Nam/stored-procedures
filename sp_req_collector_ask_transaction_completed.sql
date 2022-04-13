@@ -132,7 +132,15 @@ AUTHOR 			: Leo Nam
                                         /*방문일정이 존재하는 경우*/
 											IF @VISIT_END_AT <= @REG_DT THEN
 											/*방문일정 이후에 보고서를 작성한 경우에는 정상처리한다.*/
-												SET @json_data = NULL;
+												CALL sp_push_collector_ask_transaction_completed(
+													IN_TRANSACTION_ID,
+													@PUSH_INFO
+												);
+												SELECT JSON_ARRAYAGG(
+													JSON_OBJECT(
+														'PUSH_INFO'	, @PUSH_INFO
+													)
+												) INTO @json_data;
 												SET @rtn_val = 0;
 												SET @msg_txt = 'success';
 											ELSE
@@ -143,7 +151,15 @@ AUTHOR 			: Leo Nam
 											END IF;
                                         ELSE
                                         /*방문일정이 존재하지 않는 경우에는 정상처리한다.*/
-											SET @json_data = NULL;
+											CALL sp_push_collector_ask_transaction_completed(
+												IN_TRANSACTION_ID,
+												@PUSH_INFO
+											);
+											SELECT JSON_ARRAYAGG(
+												JSON_OBJECT(
+													'PUSH_INFO'	, @PUSH_INFO
+												)
+											) INTO @json_data;
 											SET @rtn_val = 0;
 											SET @msg_txt = 'success';
                                         END IF;

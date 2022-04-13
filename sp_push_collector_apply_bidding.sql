@@ -1,0 +1,56 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_collector_apply_bidding`(
+	IN IN_DISPOSER_ORDER_ID			BIGINT,
+    OUT OUT_TARGET_LIST				JSON
+)
+BEGIN
+	
+	SELECT COUNT(ID) 
+    INTO @ORDER_EXISTS
+    FROM SITE_WSTE_DISPOSAL_ORDER
+    WHERE 
+		ID = IN_DISPOSER_ORDER_ID AND
+        ACTIVE = TRUE;
+        
+    IF @ORDER_EXISTS = 1 THEN
+		SELECT ORDER_CODE, DISPOSER_ID, SITE_ID
+        INTO @ORDER_CODE, @DISPOSER_ID, @DISPOSER_SITE_ID
+        FROM SITE_WSTE_DISPOSAL_ORDER
+        WHERE
+			ID = IN_DISPOSER_ORDER_ID AND
+			ACTIVE = TRUE;
+		SET @MSG = CONCAT('신청하신 [', @ORDER_CODE, ']에 대하여 입찰이 등록되었습니다.');
+        IF @DISPOSER_SITE_ID = 0 THEN
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'	, ID, 
+					'FCM'		, FCM,
+					'MSG'		, @MSG
+				)
+			) 
+			INTO OUT_TARGET_LIST
+			FROM USERS 
+			WHERE 
+				ACTIVE 					= TRUE AND
+				PUSH_ENABLED			= TRUE AND
+                ID						= @DISPOSER_ID;
+        ELSE
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'	, A.ID, 
+					'FCM'		, A.FCM,
+					'MSG'		, @MSG
+				)
+			) 
+			INTO OUT_TARGET_LIST
+			FROM USERS A 
+			LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID
+			WHERE 
+				A.ACTIVE 					= TRUE AND
+				A.PUSH_ENABLED				= TRUE AND
+				B.ACTIVE 					= TRUE AND
+				B.ID 						= @DISPOSER_SITE_ID;
+        END IF;
+    ELSE
+		SET OUT_TARGET_LIST = NULL;
+    END IF;
+END

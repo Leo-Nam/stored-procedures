@@ -127,10 +127,28 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				);
 				IF @rtn_val = 0 THEN
 				/*프로시저 실행에 성공한 경우*/
-					CALL sp_get_collector_list_share_business_areas(
-						IN_KIKCD_B_CODE,
-                        @json_data
-                    );
+					IF IN_COLLECTOR_SITE_ID IS NULL THEN
+						CALL sp_push_collector_list_share_business_areas(
+							IN_KIKCD_B_CODE,
+							@PUSH_INFO
+						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						) INTO @json_data;
+                    ELSE
+						CALL sp_push_collector_dispose_new_wste(
+							IN_USER_ID,
+                            IN_COLLECTOR_SITE_ID,
+							@PUSH_INFO
+						);
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'PUSH_INFO'	, @PUSH_INFO
+							)
+						) INTO @json_data;
+                    END IF;
 					SET @rtn_val = 0;
 					SET @msg_txt = 'Success';
 				ELSE
@@ -172,16 +190,28 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					);
 					IF @rtn_val = 0 THEN
 					/*프로시저 실행에 성공한 경우*/
-						CALL sp_get_collector_list_share_business_areas(
-							IN_KIKCD_B_CODE,
-							@PUSH_INFO
-						);
-						SELECT JSON_ARRAYAGG(
-							JSON_OBJECT(
-								'PUSH_INFO'	, @PUSH_INFO
-							)
-						) 
-						INTO @json_data;
+						IF IN_COLLECTOR_SITE_ID IS NULL THEN
+							CALL sp_push_collector_list_share_business_areas(
+								IN_KIKCD_B_CODE,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							) INTO @json_data;
+						ELSE
+							CALL sp_push_collector_dispose_new_wste(
+								IN_USER_ID,
+								IN_COLLECTOR_SITE_ID,
+								@PUSH_INFO
+							);
+							SELECT JSON_ARRAYAGG(
+								JSON_OBJECT(
+									'PUSH_INFO'	, @PUSH_INFO
+								)
+							) INTO @json_data;
+						END IF;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE

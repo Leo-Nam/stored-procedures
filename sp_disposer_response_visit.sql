@@ -83,7 +83,7 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 							JSON_OBJECT(
 								'PUSH_INFO'	, @PUSH_INFO
 							)
-						);
+						) INTO @json_data;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE

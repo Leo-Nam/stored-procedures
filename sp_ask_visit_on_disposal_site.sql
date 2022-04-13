@@ -100,7 +100,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								JSON_OBJECT(
 									'PUSH_INFO'	, @PUSH_INFO
 								)
-							);
+							) INTO @json_data;
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success';
 						ELSE
@@ -130,7 +130,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								JSON_OBJECT(
 									'PUSH_INFO'	, @PUSH_INFO
 								)
-							);
+							) INTO @json_data;
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success77';
 						ELSE

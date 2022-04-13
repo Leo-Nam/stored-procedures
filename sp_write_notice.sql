@@ -18,6 +18,7 @@ AUTHOR 			: Leo Nam
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
+		SET @json_data 		= NULL;
 		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 	END;        
 	START TRANSACTION;							
@@ -42,8 +43,18 @@ AUTHOR 			: Leo Nam
 				@msg_txt,
 				@json_data
 			);
-			IF @rtn_val > 0 THEN
+			IF @rtn_val = 0 THEN
 			/*공지사항 작성에 실패한 경우 예외처리한다*/
+				CALL sp_push_system_notice(
+					IN_SUBJECT,
+					@PUSH_INFO
+				);
+				SELECT JSON_ARRAYAGG(
+					JSON_OBJECT(
+						'PUSH_INFO'	, @PUSH_INFO
+					)
+				) INTO @json_data;
+            ELSE
 				SIGNAL SQLSTATE '23000';
 			END IF;
 		ELSE
@@ -54,7 +65,6 @@ AUTHOR 			: Leo Nam
 		END IF;
     ELSE
     /*사용자가 존재하지 않는 경우 예외처리한다.*/
-		SET @json_data = NULL;
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;

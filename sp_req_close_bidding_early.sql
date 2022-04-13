@@ -68,10 +68,10 @@ AUTHOR 			: Leo Nam
                     );
                     IF @rtn_val = 0 THEN
                     /*수거자가 입찰한 기록이 존재하는 경우 정상처리한다.*/
-						SELECT COUNT(ID) INTO @COUNT_OF_REQUEST_OF_BIDDING FROM COLLECTOR_BIDDING WHERE DATE_OF_BIDDING IS NOT NULL AND DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;
+						/*SELECT COUNT(ID) INTO @COUNT_OF_REQUEST_OF_BIDDING FROM COLLECTOR_BIDDING WHERE DATE_OF_BIDDING IS NOT NULL AND DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;*/
 						/*입찰신청한 업체수를 계산하여 @COUNT_OF_REQUEST_OF_BIDDING을 통하여 반환한다.*/
 						
-						IF @COUNT_OF_REQUEST_OF_BIDDING > 0 THEN
+						/*IF @COUNT_OF_REQUEST_OF_BIDDING > 0 THEN*/
 						/*입찰신청한 업체가 1이상 존재하는 경우*/
 							UPDATE SITE_WSTE_DISPOSAL_ORDER 
 							SET 
@@ -90,6 +90,15 @@ AUTHOR 			: Leo Nam
 								CALL sp_calc_bidding_rank(
 									IN_DISPOSER_ORDER_ID
 								);
+								CALL sp_push_disposer_close_bidding_early(
+									IN_DISPOSER_ORDER_ID,
+									@PUSH_INFO
+								);
+								SELECT JSON_ARRAYAGG(
+									JSON_OBJECT(
+										'PUSH_INFO'	, @PUSH_INFO
+									)
+								) INTO @json_data;
 								SET @rtn_val = 0;
 								SET @msg_txt = 'success';
 							ELSE
@@ -98,12 +107,11 @@ AUTHOR 			: Leo Nam
 								SET @msg_txt = 'failure to close early';
 								SIGNAL SQLSTATE '23000';
 							END IF;
-                        ELSE
+                        /*ELSE*/
 						/*입찰신청한 업체가 존재하지 않는 경우*/
-							SET @rtn_val = 24504;
+						/*	SET @rtn_val = 24504;
 							SET @msg_txt = 'The company requested to bid does not exist';
-							SIGNAL SQLSTATE '23000';
-                        END IF;
+                        END IF;*/
                     ELSE
                     /*수거자가 입찰한 기록이 존재하지 않는 경우 예외처리한다.*/
 						SIGNAL SQLSTATE '23000';
@@ -129,6 +137,5 @@ AUTHOR 			: Leo Nam
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

@@ -115,6 +115,16 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
                                     CALL sp_calc_bidders(
 										@DISPOSAL_ORDER_ID
                                     );
+									CALL sp_push_collector_cancel_or_giveup_bidding(
+										IN_COLLECTOR_BIDDING_ID,
+										'취소',
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success1112233';
                                 ELSE
@@ -183,6 +193,16 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
                                     CALL sp_calc_bidders(
 										@DISPOSAL_ORDER_ID
                                     );
+									CALL sp_push_collector_cancel_or_giveup_bidding(
+										IN_COLLECTOR_BIDDING_ID,
+										'포기',
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success111223344';
                                 ELSE
@@ -214,6 +234,5 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-    SET @json_data = NULL;
     CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
 END

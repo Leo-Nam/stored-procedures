@@ -168,6 +168,15 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 															CALL sp_calc_bidding_rank(
 																IN_DISPOSAL_ORDER_ID
 															);
+															CALL sp_push_collector_apply_bidding(
+																IN_DISPOSAL_ORDER_ID,
+																@PUSH_INFO
+															);
+															SELECT JSON_ARRAYAGG(
+																JSON_OBJECT(
+																	'PUSH_INFO'	, @PUSH_INFO
+																)
+															) INTO @json_data;
 															SET @rtn_val 		= 0;
 															SET @msg_txt 		= 'Success1';
 														ELSE
@@ -247,6 +256,15 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 									CALL sp_calc_bidding_rank(
 										IN_DISPOSAL_ORDER_ID
 									);
+									CALL sp_push_collector_apply_bidding(
+										IN_DISPOSAL_ORDER_ID,
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success2';
                                 ELSE
@@ -284,6 +302,5 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

@@ -103,7 +103,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								JSON_OBJECT(
 									'PUSH_INFO'	, @PUSH_INFO
 								)
-							);
+							) INTO @json_data;
 							SET @rtn_val 		= 0;
 							SET @msg_txt 		= 'Success';
 						ELSE
@@ -145,7 +145,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									JSON_OBJECT(
 										'PUSH_INFO'	, @PUSH_INFO
 									)
-								);
+								) INTO @json_data;
 								SET @rtn_val 		= 0;
 								SET @msg_txt 		= 'Success';
 							ELSE

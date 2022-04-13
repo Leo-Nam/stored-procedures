@@ -127,6 +127,16 @@ AUTHOR 			: Leo Nam
 													WHERE ID 				= IN_TRANSACTION_ID;
 													IF ROW_COUNT() = 1 THEN
 													/*수거자의 최종승낙절차가 성공적으로 완료된 경우에는 정상처리한다.*/
+														CALL sp_push_collector_accept_ask_end(
+															IN_TRANSACTION_ID,
+															'수락',
+															@PUSH_INFO
+														);
+														SELECT JSON_ARRAYAGG(
+															JSON_OBJECT(
+																'PUSH_INFO'	, @PUSH_INFO
+															)
+														) INTO @json_data;
 														SET @rtn_val 		= 0;
 														SET @msg_txt 		= 'success';
 													ELSE
@@ -162,6 +172,16 @@ AUTHOR 			: Leo Nam
 								ELSE
 								/*수거업체가 배출자의 수거요청일을 거부하면서 거절하는 경우에는 계약이 체결되지 않는 상태로서 정상처리한다.*/
 								/*뭔가 처리할게 있을거 같은데.... .쩌업~~~*/
+									CALL sp_push_collector_accept_ask_end(
+										IN_TRANSACTION_ID,
+										'거절',
+										@PUSH_INFO
+									);
+									SELECT JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'PUSH_INFO'	, @PUSH_INFO
+										)
+									) INTO @json_data;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'success';
 								END IF;

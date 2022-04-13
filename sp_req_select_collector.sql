@@ -14,6 +14,16 @@ Update 			: 2022.01.24
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		/*ROLLBACK;*/
+        COMMIT;
+		SET @json_data 		= NULL;
+		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	END;        
+	START TRANSACTION;							
+    /*트랜잭션 시작*/  
 	
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
@@ -92,10 +102,26 @@ AUTHOR 			: Leo Nam
 													@rtn_val,
 													@msg_txt
 												);
+                                                IF @rtn_val = 0 THEN
+													CALL sp_push_disposer_close_visit_early(
+														IN_DISPOSER_ORDER_ID,
+														@PUSH_INFO
+													);
+													SELECT JSON_ARRAYAGG(
+														JSON_OBJECT(
+															'PUSH_INFO'	, @PUSH_INFO
+														)
+													) INTO @json_data;
+													SET @rtn_val = 0;
+													SET @msg_txt = 'success';
+                                                ELSE
+													SIGNAL SQLSTATE '23000';
+                                                END IF;
 											ELSE
 											/*1순위가 아직 결정할 시간이 존재하는 경우로서 불가능*/
 												SET @rtn_val = 24601;
 												SET @msg_txt = '1st place still has a choice';
+												SIGNAL SQLSTATE '23000';
 											END IF;
 										ELSE
 										/*1순위가 낙찰자를 포기한 경우로서 항상 가능*/
@@ -107,37 +133,55 @@ AUTHOR 			: Leo Nam
 												@rtn_val,
 												@msg_txt
 											);
+											IF @rtn_val = 0 THEN
+												CALL sp_push_disposer_close_visit_early(
+													IN_DISPOSER_ORDER_ID,
+													@PUSH_INFO
+												);
+												SELECT JSON_ARRAYAGG(
+													JSON_OBJECT(
+														'PUSH_INFO'	, @PUSH_INFO
+													)
+												) INTO @json_data;
+												SET @rtn_val = 0;
+												SET @msg_txt = 'success';
+											ELSE
+												SIGNAL SQLSTATE '23000';
+											END IF;
 										END IF;
 									END IF;
 								ELSE
 									SET @rtn_val = 24606;
 									SET @msg_txt = 'No 2nd placed bidder';
+									SIGNAL SQLSTATE '23000';
 								END IF;
                             END IF;
                         ELSE
                         /*배출자의 폐기물 입찰에 등록한 수거자의 입찰정보가 아닌 경우 예외처리한다.*/
 							SET @rtn_val = 24607;
 							SET @msg_txt = 'The collection company you want to select is an unbidden company';
+							SIGNAL SQLSTATE '23000';
                         END IF;
                     ELSE
                     /*입찰에 참여한 수거자의 입찰등록번호가 존재하지 않는 경우 예외처리한다.*/
 						SET @rtn_val = 24605;
 						SET @msg_txt = 'Collectors bidding information does not exist';
+						SIGNAL SQLSTATE '23000';
                     END IF;
 				ELSE
 				/*관리자가 정보를 변경할 권한이 없는 경우*/
 					SET @rtn_val = 24602;
 					SET @msg_txt = 'User does not have permission to change information';
+					SIGNAL SQLSTATE '23000';
 				END IF;
 			ELSE
 			/*사용자가 정보변경 대상이 되는 사이트에 소속한 관리자가 아닌 경우 예외처리한다.*/
 				SET @rtn_val = 24603;
 				SET @msg_txt = 'The user is not an administrator of the site';
+				SIGNAL SQLSTATE '23000';
 			END IF;
 		END IF;   
     END IF;
     COMMIT;  
-    
-	SET @json_data 		= NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
