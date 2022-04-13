@@ -196,7 +196,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
 					IN_VISIT_START_AT,
-					@VISIT_END_AT,
+					IF(IN_COLLECTOR_SITE_ID IS NULL, @VISIT_END_AT, IN_VISIT_END_AT),
 					IN_BIDDING_END_AT,
 					@OPEN_AT,
 					@CLOSE_AT,
