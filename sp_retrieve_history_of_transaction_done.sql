@@ -105,6 +105,7 @@ AUTHOR 			: Leo Nam
         
         CALL sp_get_disposal_img_lists(
 			CUR_DISPOSER_ORDER_ID,
+            '입찰',
             @DISPOSER_WSTE_IMG
 		);
         
@@ -126,14 +127,16 @@ AUTHOR 			: Leo Nam
 	)) 
     INTO @json_data FROM RETRIEVE_HISTORY_OF_TRANSACTION_DONE_TEMP;
     
-    IF vRowCount = 0 THEN
+	SET @rtn_val = 0;
+	SET @msg_txt = 'Success';
+/*    IF vRowCount = 0 THEN
 		SET @rtn_val = 29101;
 		SET @msg_txt = 'No data found';
 		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
 		SET @msg_txt = 'Success';
-    END IF;
+    END IF;*/
 	DROP TABLE IF EXISTS RETRIEVE_HISTORY_OF_TRANSACTION_DONE_TEMP;
     COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);

@@ -6075,4 +6075,77 @@ CALL sp_push_collector_dispose_new_wste(
 );
 SELECT @USER_ID, @COLLECTOR_SITE_ID, @PUSH_INFO;
 */
+/*
+SET @TRANSACTION_ID = 567;
+SET @WHAT = '수락';
 
+CALL sp_push_collector_accept_ask_end(
+	@TRANSACTION_ID,
+    @WHAT,
+    @PUSH_INFO
+);
+SELECT 
+	@TRANSACTION_ID,
+    @BIDDING_ID,
+    @PUSH_INFO;
+*/
+/*
+SET @POST_ID = 41;
+CALL sp_push_system_notice(@POST_ID, @PUSH_INFO);
+SELECT @POST_ID, @PUSH_INFO;
+*/
+/*
+SET @USER_ID = 244;
+CALL sp_req_fcm_token(
+	244
+);
+*/
+
+
+SET @USER_TYPE = 'person';
+	SELECT 
+		A.ID, 
+        A.ORDER_CODE, 
+        A.SITE_ID,        
+        A.VISIT_START_AT,
+        A.VISIT_END_AT,
+        A.BIDDING_END_AT,
+        A.OPEN_AT,
+        A.CLOSE_AT,
+        A.SERVICE_INSTRUCTION_ID,
+        A.VISIT_EARLY_CLOSING,
+        A.VISIT_EARLY_CLOSED_AT,
+        A.BIDDING_EARLY_CLOSING,
+        A.BIDDING_EARLY_CLOSED_AT,
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        B.STATE, 
+        B.STATE_CODE, 
+        B.STATE_CATEGORY_ID, 
+        B.STATE_CATEGORY, 
+        A.PROSPECTIVE_VISITORS, 
+        A.BIDDERS, 
+        A.COLLECTOR_ID, 
+        A.NOTE
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+    LEFT JOIN V_ORDER_STATE_NAME B ON A.ID = B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
+    LEFT JOIN COMPANY D ON C.COMP_ID = D.ID
+	WHERE 
+		B.STATE IS NOT NULL AND 
+        A.IS_DELETED = FALSE AND
+        IF (@USER_TYPE 		= 'Person', 
+			B.STATE_CODE 	<> 105 AND 
+            A.DISPOSER_ID 	= 189, 
+            B.STATE_CODE 	<> 105 AND 
+            C.ACTIVE 		= TRUE AND 
+            D.ACTIVE 		= TRUE AND 
+            A.SITE_ID 		IS NOT NULL AND 
+            A.SITE_ID 		IN (
+				SELECT AFFILIATED_SITE 
+                FROM USERS 
+                WHERE 
+					ID 		= 189 AND 
+                    ACTIVE 	= TRUE
+			)
+		);

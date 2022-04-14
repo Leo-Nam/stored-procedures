@@ -24,6 +24,7 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
     DECLARE CUR_COLLECTOR_CATEGORY_ID			INT;
     DECLARE CUR_COLLECTOR_CATEGORY				VARCHAR(20);
     DECLARE CUR_BIDDING_RANK					INT;
+    DECLARE CUR_TRANSACTION_STATE_CODE			INT;
     DECLARE TEMP_CURSOR		 					CURSOR FOR 
 	SELECT 
 		A.COLLECTOR_ID, 
@@ -41,6 +42,7 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
     LEFT JOIN COMP_SITE D ON A.COLLECTOR_ID = D.ID
     LEFT JOIN COMPANY E ON D.COMP_ID = E.ID
     LEFT JOIN SITE_WSTE_DISPOSAL_ORDER F ON A.DISPOSAL_ORDER_ID = F.ID
+    LEFT JOIN V_TRANSACTION_STATE G ON G.COLLECTOR_BIDDING_ID = A.ID
 	WHERE 
         C.ID = IN_USER_ID AND
         (C.CLASS = 201 OR C.CLASS = 202) AND
@@ -48,7 +50,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
         C.ACTIVE = TRUE AND
         D.ACTIVE = TRUE AND
         E.ACTIVE = TRUE AND
-        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249);
+        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249) AND
+        (G.TRANSACTION_STATE_CODE NOT IN (211) OR G.TRANSACTION_STATE_CODE IS NULL);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
             
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -192,14 +195,16 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 	)) 
     INTO @json_data FROM RETRIEVE_CURRENT_STATE_TEMP;
     
-    IF vRowCount = 0 THEN
+	SET @rtn_val = 0;
+	SET @msg_txt = 'Success';
+/*    IF vRowCount = 0 THEN
 		SET @rtn_val = 29101;
 		SET @msg_txt = 'No data found';
 		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
 		SET @msg_txt = 'Success';
-    END IF;
+    END IF;*/
 	DROP TABLE IF EXISTS RETRIEVE_CURRENT_STATE_TEMP;
     COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);

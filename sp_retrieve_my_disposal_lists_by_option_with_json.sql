@@ -67,20 +67,27 @@ AUTHOR 			: Leo Nam
         A.BIDDERS, 
         A.NOTE
     FROM SITE_WSTE_DISPOSAL_ORDER A 
-    LEFT JOIN V_ORDER_STATE_NAME B ON A.ID = B.DISPOSER_ORDER_ID
-    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
-    LEFT JOIN COMPANY D ON C.COMP_ID = D.ID
+    LEFT JOIN V_ORDER_STATE_NAME B 	ON A.ID 		= B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C 			ON A.SITE_ID 	= C.ID
+    LEFT JOIN COMPANY D 			ON C.COMP_ID 	= D.ID
 	WHERE 
-		B.STATE_CODE = IN_STATE_CODE AND 
-        A.IS_DELETED = FALSE AND
-        C.ACTIVE = TRUE AND
-        D.ACTIVE = TRUE AND
-        B.STATE_CODE <> 105 AND
-        IF (IN_USER_TYPE = 'Person',
-			(A.DISPOSER_ID = IN_USER_ID),            
-			(A.SITE_ID IS NOT NULL AND A.SITE_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = IN_USER_ID AND ACTIVE = TRUE)));
-            
-            
+		B.STATE_CODE 		= IN_STATE_CODE AND 
+        A.IS_DELETED 		= FALSE AND
+        B.STATE_CODE 		<> 105 AND
+        IF (IN_USER_TYPE	= 'Person', 
+            A.DISPOSER_ID 	= IN_USER_ID, 
+            C.ACTIVE 		= TRUE AND 
+            D.ACTIVE 		= TRUE AND 
+            A.SITE_ID 		IS NOT NULL AND 
+            A.SITE_ID 		IN (
+				SELECT AFFILIATED_SITE 
+                FROM USERS 
+                WHERE 
+					ID 		= IN_USER_ID AND 
+                    ACTIVE 	= TRUE
+			)
+		);
+        
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
     
 	CREATE TEMPORARY TABLE IF NOT EXISTS MY_DISPOSAL_LISTS_BY_OPTION_TEMP (
@@ -272,13 +279,15 @@ AUTHOR 			: Leo Nam
     INTO json_data 
     FROM MY_DISPOSAL_LISTS_BY_OPTION_TEMP;
     
-    IF vRowCount = 1 THEN
+	SET rtn_val 				= 0;
+	SET msg_txt 				= 'Success';
+/*    IF vRowCount = 1 THEN
 		SET json_data 				= NULL;
 		SET rtn_val 				= 30701;
 		SET msg_txt 				= 'No data found';
     ELSE
 		SET rtn_val 				= 0;
 		SET msg_txt 				= 'Success';
-    END IF;
+    END IF;*/
 	DROP TABLE IF EXISTS MY_DISPOSAL_LISTS_BY_OPTION_TEMP;
 END

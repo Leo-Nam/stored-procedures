@@ -74,12 +74,20 @@ AUTHOR 			: Leo Nam
 	WHERE 
 		B.STATE IS NOT NULL AND 
         A.IS_DELETED = FALSE AND
-        C.ACTIVE = TRUE AND
-        D.ACTIVE = TRUE AND
-        B.STATE_CODE <> 105 AND
-        IF (IN_USER_TYPE = 'Person',
-			(A.DISPOSER_ID = IN_USER_ID),            
-			(A.SITE_ID IS NOT NULL AND A.SITE_ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE ID = IN_USER_ID AND ACTIVE = TRUE)));
+		B.STATE_CODE 	<> 105 AND 
+        IF (IN_USER_TYPE	= 'Person', 
+            A.DISPOSER_ID 	= IN_USER_ID, 
+            C.ACTIVE 		= TRUE AND 
+            D.ACTIVE 		= TRUE AND 
+            A.SITE_ID 		IS NOT NULL AND 
+            A.SITE_ID 		IN (
+				SELECT AFFILIATED_SITE 
+                FROM USERS 
+                WHERE 
+					ID 		= IN_USER_ID AND 
+                    ACTIVE 	= TRUE
+			)
+		);
             
             
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
@@ -293,6 +301,6 @@ AUTHOR 			: Leo Nam
     ELSE
 		SET rtn_val 				= 0;
 		SET msg_txt 				= 'Success';
-    END IF;
+	END IF;
 	DROP TABLE IF EXISTS DISPOSAL_ORDER_LIST;
 END

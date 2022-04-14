@@ -188,14 +188,16 @@ AUTHOR 			: Leo Nam
 	)) 
     INTO @json_data FROM CURRENT_STATE_BY_OPTION;
     
-    IF vRowCount = 1 THEN
+	SET @rtn_val = 0;
+	SET @msg_txt = 'Success';
+/*    IF vRowCount = 1 THEN
 		SET @rtn_val = 29001;
 		SET @msg_txt = 'No data found';
 		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
 		SET @msg_txt = 'Success';
-    END IF;
+    END IF;*/
 	DROP TABLE IF EXISTS CURRENT_STATE_BY_OPTION;
     COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
