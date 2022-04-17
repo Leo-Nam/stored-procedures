@@ -17,15 +17,6 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				
 */
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-		SET @json_data 		= NULL;
-		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
-	END;        
-	START TRANSACTION;							
-    /*트랜잭션 시작*/  
-
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -44,13 +35,14 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			@DISPOSAL_ORDER_ID
 		);
 		
-		CALL sp_req_visit_date_expired(
-		/*방문마감일정이 남아 있는지 확인한다.*/
-			@DISPOSAL_ORDER_ID,
-			@rtn_val,
-			@msg_txt
-		);
-		IF @rtn_val = 26601 THEN
+		SELECT VISIT_END_AT
+		INTO @VISIT_END_AT
+		FROM SITE_WSTE_DISPOSAL_ORDER 
+		WHERE 
+			ID = @DISPOSAL_ORDER_ID AND 
+			ACTIVE = TRUE;
+            
+		IF @VISIT_END_AT >= @REG_DT THEN
 		/*방문마감일이 종료되지 않은 경우*/
 			SELECT COUNT(ID) INTO @ITEM_COUNT 
             FROM COLLECTOR_BIDDING 
@@ -96,21 +88,19 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								UPDATED_AT		 		= @REG_DT  
                             WHERE ID = @DISPOSAL_ORDER_ID;
 							CALL sp_push_cancel_visit(
+								IN_USER_ID,
 								IN_COLLECT_BIDDING_ID,
-								@PUSH_INFO
+								@PUSH_INFO,
+								@rtn_val,
+								@msg_txt
 							);
-							SELECT JSON_ARRAYAGG(
-								JSON_OBJECT(
-									'PUSH_INFO'	, @PUSH_INFO
-								)
-							) INTO @json_data;
-							SET @rtn_val 		= 0;
-							SET @msg_txt 		= 'Success';
+							IF @rtn_val = 0 THEN
+								SET @json_data = @PUSH_INFO;
+							END IF;
 						ELSE
 						/*데이타베이스 입력에 실패한 경우*/
 							SET @rtn_val 		= 25606;
 							SET @msg_txt 		= 'record cancellation error';
-							SIGNAL SQLSTATE '23000';
 						END IF;
                     ELSE
                     /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시한 경우*/
@@ -138,51 +128,41 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									UPDATED_AT		 		= @REG_DT
                                 WHERE ID = @DISPOSAL_ORDER_ID;
 								CALL sp_push_cancel_visit(
+									IN_USER_ID,
 									IN_COLLECT_BIDDING_ID,
-									@PUSH_INFO
+									@PUSH_INFO,
+									@rtn_val,
+									@msg_txt
 								);
-								SELECT JSON_ARRAYAGG(
-									JSON_OBJECT(
-										'PUSH_INFO'	, @PUSH_INFO
-									)
-								) INTO @json_data;
-								SET @rtn_val 		= 0;
-								SET @msg_txt 		= 'Success';
+                                IF @rtn_val = 0 THEN
+									SET @json_data = @PUSH_INFO;
+                                END IF;
 							ELSE
 							/*데이타베이스 입력에 실패한 경우*/
 								SET @rtn_val 		= 25601;
 								SET @msg_txt 		= 'record cancellation error';
-								SIGNAL SQLSTATE '23000';
 							END IF;
 						ELSE
 						/*배출자가 수거자의 방문신청에 대하여 거절의사를 이미 밝힌 경우에는 정상처리한다.*/
 							SET @rtn_val 		= 25605;
 							SET @msg_txt 		= 'The emitter has already refused to visit';
-							SIGNAL SQLSTATE '23000';
 						END IF;
                     END IF;
                 ELSE
 				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하는 경우 예외처리한다.*/
 					SET @rtn_val 		= 25604;
 					SET @msg_txt 		= 'The collector has already canceled the visit';
-					SIGNAL SQLSTATE '23000';
                 END IF;
             ELSE
             /*수거자가 방문신청을 한 사실이 존재하지 않는 경우 예외처리한다.*/
 				SET @rtn_val 		= 25603;
 				SET @msg_txt 		= 'No fact that the collector has requested a visit';
-				SIGNAL SQLSTATE '23000';
             END IF;
 		ELSE
 		/*방문마감일이 종료된 경우 예외처리한다.*/
 			SET @rtn_val 		= 25602;
 			SET @msg_txt 		= 'The visit date has already passed or No visit request plan';
-			SIGNAL SQLSTATE '23000';
 		END IF;
-    ELSE
-    /*사용자가 존재하지 않거나 유효하지 않은 경우*/
-		SIGNAL SQLSTATE '23000';
     END IF;
-    COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

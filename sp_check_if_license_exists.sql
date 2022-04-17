@@ -18,25 +18,18 @@ BEGIN
 		@msg_txt
     );
     IF @rtn_val = 0 THEN
-		CALL sp_req_site_id_of_user_reg_id(
-		/*사용자 고유등록번호로 사용자가 소속한 사이트의 고유등록번호를 반환한다.*/
-			IN_USER_ID,
-			@USER_SITE_ID,
-			@rtn_val,
-			@msg_txt
-		);
-		IF @rtn_val = 0 THEN
-			CALL sp_req_is_site_collector(
-			/*사이트가 수거업체인지 확인한다*/
-				@USER_SITE_ID,
-				@rtn_val,
-				@msg_txt
-			);
-			IF @rtn_val = 0 THEN
-				SELECT LICENSE_CONFIRMED INTO @LICENSE_CONFIRMED 
-                FROM COMP_SITE 
-                WHERE ID = @USER_SITE_ID;
-                
+		SELECT AFFILIATED_SITE 
+        INTO @AFFILIATED_SITE 
+        FROM USERS WHERE ID = IN_USER_ID;
+        IF @AFFILIATED_SITE > 0 THEN
+			SELECT B.PERMIT_REG_IMG_PATH, B.LICENSE_CONFIRMED
+            INTO @PERMIT_REG_IMG_PATH, @LICENSE_CONFIRMED
+            FROM USERS A 
+            LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID
+            WHERE A.ID = IN_USER_ID;
+            
+            IF @PERMIT_REG_IMG_PATH IS NOT NULL THEN
+            /*등록증 이미지가 업로드 된 경우*/
 				SELECT JSON_ARRAYAGG(
 					JSON_OBJECT(
 						'LICENSE_REGISTERED'		, TRUE, 
@@ -45,16 +38,16 @@ BEGIN
 				) 
 				INTO @json_data; 
             ELSE
+            /*등록증 이미지가 업로드 되지 않은 경우*/
 				SELECT JSON_ARRAYAGG(
 					JSON_OBJECT(
 						'LICENSE_REGISTERED'		, FALSE, 
-						'LICENSE_CONFIRMED'			, NULL
+						'LICENSE_CONFIRMED'			, @LICENSE_CONFIRMED
 					)
 				) 
 				INTO @json_data; 
-				SIGNAL SQLSTATE '23000';
-			END IF;
-		ELSE
+            END IF;
+        ELSE
 			SELECT JSON_ARRAYAGG(
 				JSON_OBJECT(
 					'LICENSE_REGISTERED'		, NULL, 
@@ -62,8 +55,7 @@ BEGIN
 				)
 			) 
 			INTO @json_data; 
-			SIGNAL SQLSTATE '23000';
-		END IF;
+        END IF;
     ELSE
 		SELECT JSON_ARRAYAGG(
 			JSON_OBJECT(
@@ -72,8 +64,9 @@ BEGIN
 			)
 		) 
 		INTO @json_data; 
-		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;   
+    SET @rtn_val = 0;   
+    SET @msg_txt = 'success';
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

@@ -15,12 +15,39 @@ Version			: 0.0.3
 AUTHOR 			: Leo Nam
 */
 
-	SELECT PERMIT_REG_CODE INTO @PERMIT_REG_CODE FROM COMP_SITE WHERE ID = IN_SITE_ID;
-    IF @PERMIT_REG_CODE IS NOT NULL THEN
-		SET rtn_val = 0;
-		SET msg_txt = 'Success';
+	SELECT PERMIT_REG_CODE, PERMIT_REG_IMG_PATH, LICENSE_CONFIRMED 
+    INTO @PERMIT_REG_CODE, @PERMIT_REG_IMG_PATH, @LICENSE_CONFIRMED
+    FROM COMP_SITE 
+    WHERE ID = IN_SITE_ID;
+    IF @PERMIT_REG_IMG_PATH IS NOT NULL THEN
+		IF @LICENSE_CONFIRMED = TRUE THEN
+			SET rtn_val = 0;
+			SET msg_txt = 'Success';
+		ELSE
+			SET rtn_val = 29703;
+			SET msg_txt = 'collector license is not confirmed';
+		END IF;
     ELSE
-		SET rtn_val = 29701;
-		SET msg_txt = 'The site does not have the collector license';
+		SET rtn_val = 29702;
+		SET msg_txt = 'collector license image file does not exist';
     END IF;
+/*    
+    IF @PERMIT_REG_IMG_PATH IS NOT NULL THEN
+		IF @PERMIT_REG_CODE IS NOT NULL THEN
+			IF @LICENSE_CONFIRMED = TRUE THEN
+				SET rtn_val = 0;
+				SET msg_txt = 'Success';
+			ELSE
+				SET rtn_val = 29703;
+				SET msg_txt = 'collector license is not confirmed';
+			END IF;
+		ELSE
+			SET rtn_val = 29701;
+			SET msg_txt = 'The site does not have the collector license';
+		END IF;
+    ELSE
+		SET rtn_val = 29702;
+		SET msg_txt = 'collector license image file does not exist';
+    END IF;
+*/
 END

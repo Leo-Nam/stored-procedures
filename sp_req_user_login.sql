@@ -1,6 +1,7 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_user_login`(
 	IN IN_USER_REG_ID		VARCHAR(50),		/*입력값 : 사용자 아이디*/
-	IN IN_PWD				VARCHAR(200)		/*입력값 : 사용자 등록 전화번호*/
+	IN IN_PWD				VARCHAR(200),		/*입력값 : 사용자 등록 전화번호*/
+	IN IN_FCM				VARCHAR(200)		/*입력값 : FCM*/
 )
 BEGIN
 
@@ -104,9 +105,22 @@ AUTHOR 			: Leo Nam
 					WHERE 
 						USER_ID 		= IN_USER_REG_ID AND 
 						ACTIVE 			= TRUE;
-						
-					SET @rtn_val = 0;
-					SET @msg_txt = 'success';
+					
+                    UPDATE USERS
+                    SET 
+						FCM 		= IN_FCM,
+                        UPDATED_AT 	= NOW()
+                    WHERE ID 		= IN_USER_ID;
+                    
+                    IF ROW_COUNT() = 1 THEN
+						SET @rtn_val = 0;
+						SET @msg_txt = 'success';
+                    ELSE
+						SET @rtn_val = 22104;
+						SET @msg_txt = 'Failed to change fcm imformation';
+						SIGNAL SQLSTATE '23000';
+                    END IF;
+                    
                 ELSE
                 /*사용자 정보변경에 실패한 경우 예외처리한다.*/
 					SET @rtn_val = 22104;

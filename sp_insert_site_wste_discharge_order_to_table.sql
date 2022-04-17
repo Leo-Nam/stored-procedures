@@ -16,6 +16,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_to_t
 	IN IN_LAT						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 위도값*/
 	IN IN_LNG						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 경도값*/
 	IN IN_REG_DT					DATETIME,					/*입력값 : 등록일자*/
+	OUT OUT_PUSH_INFO				JSON,						/*출력값 : 푸시정보*/
     OUT rtn_val 					INT,						/*출력값 : 처리결과 반환값*/
     OUT msg_txt 					VARCHAR(200)				/*출력값 : 처리결과 문자열*/
 )
@@ -144,10 +145,27 @@ BEGIN
         IF IN_COLLECTOR_SITE_ID IS NULL THEN
         /*일반 입찰거래인 경우*/
 			SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
+			CALL sp_push_collector_list_share_business_areas(
+				IN_USER_ID,
+				@WSTE_DISPOSAL_ORDER_ID,
+				IN_KIKCD_B_CODE,
+				@PUSH_INFO,
+				@rtn_val,
+				@msg_txt
+			);
         ELSE
         /*기존거래인 경우*/
 			SET @ASK_DISPOSAL_END_AT = IN_OPEN_AT;
+			CALL sp_push_collector_dispose_new_wste(
+				IN_USER_ID,
+                @WSTE_DISPOSAL_ORDER_ID,
+				IN_COLLECTOR_SITE_ID,
+				@PUSH_INFO,
+				@rtn_val,
+				@msg_txt
+			);
         END IF;
+        SET OUT_PUSH_INFO = @PUSH_INFO;
 		CALL sp_insert_clct_trmt_transaction(
 		/*폐기물배출작업을 생성한다.*/
 			IN_USER_ID,

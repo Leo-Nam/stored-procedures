@@ -16,6 +16,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_with
 	IN IN_LAT						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 위도값*/
 	IN IN_LNG						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 경도값*/
 	IN IN_REG_DT					DATETIME,					/*입력값 : 등록일자*/
+	OUT OUT_PUSH_INFO				JSON,						/*출력값 : 푸시정보*/
     OUT rtn_val 					INT,						/*출력값 : 처리결과 반환값*/
     OUT msg_txt 					VARCHAR(200)				/*출력값 : 처리결과 문자열*/
 )
@@ -110,11 +111,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 										IN_LAT,
 										IN_LNG,
 										IN_REG_DT,
+										@PUSH_INFO,
 										@rtn_val,
 										@msg_txt
                                     );
                                     IF @rtn_val = 0 THEN
                                     /*데이타 입력작업에 성공한 경우*/
+										SET OUT_PUSH_INFO = @PUSH_INFO;
 										SET rtn_val = 0;
 										SET msg_txt = 'Success';
                                     ELSE
@@ -140,7 +143,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					ELSE
 					/*방문종료일이 방문시작일 이전인 경우에는 예외처리한다.*/
 						SET rtn_val = 23005;
-						SET msg_txt = 'The end date of the visit must be after the start date of the visit';
+						SET msg_txt = CONCAT('The end date of the visit must be after the start date of the visit, ', IN_VISIT_END_AT, ', ', IN_VISIT_START_AT, ', ', IF(IN_VISIT_END_AT >= IN_VISIT_START_AT, 1, 0));
 					END IF;
                 ELSE
                 /*방문종료일이 결정되지 않은 경우*/
@@ -196,7 +199,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_KIKCD_B_CODE,
 					IN_ADDR,
 					IN_VISIT_START_AT,
-					IF(IN_COLLECTOR_SITE_ID IS NULL, @VISIT_END_AT, IN_VISIT_END_AT),
+					@VISIT_END_AT,
 					IN_BIDDING_END_AT,
 					@OPEN_AT,
 					@CLOSE_AT,
@@ -206,11 +209,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_LAT,
 					IN_LNG,
 					IN_REG_DT,
+					@PUSH_INFO,
 					@rtn_val,
 					@msg_txt
 				);
 				IF @rtn_val = 0 THEN
 				/*데이타 입력작업에 성공한 경우*/
+					SET OUT_PUSH_INFO = @PUSH_INFO;
 					SET rtn_val = 0;
 					SET msg_txt = 'Success';
 				ELSE

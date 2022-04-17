@@ -1,30 +1,21 @@
 <mxfile host="65bd71144e">
     <diagram id="NKuB78-2iF7RFg5ZVrHi" name="Page-1">
-        <mxGraphModel dx="2968" dy="1141" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="2482" dy="2014" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="uX54Qr66YurnJH-6QOxl-1" target="uX54Qr66YurnJH-6QOxl-2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-4" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uX54Qr66YurnJH-6QOxl-3" vertex="1" connectable="0">
-                    <mxGeometry x="-0.1701" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
+                <mxCell id="32" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="36" target="uX54Qr66YurnJH-6QOxl-19">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-810" y="-673"/>
+                            <mxPoint x="-810" y="265"/>
+                        </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="uX54Qr66YurnJH-6QOxl-1" target="uX54Qr66YurnJH-6QOxl-5" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-7" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uX54Qr66YurnJH-6QOxl-6" vertex="1" connectable="0">
-                    <mxGeometry x="-0.11" relative="1" as="geometry">
+                <mxCell id="33" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="32">
+                    <mxGeometry x="-0.8985" y="-3" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-1" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;현재진행중인 작업인가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;TRANSACTION.IN_PROGRESS&lt;br&gt;= TRUE&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="40" width="228" height="110" as="geometry"/>
-                </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-2" value="&lt;font style=&quot;font-size: 10px&quot;&gt;211&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;거래종료&lt;/font&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="65" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-5" target="uX54Qr66YurnJH-6QOxl-13" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -34,11 +25,11 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="uX54Qr66YurnJH-6QOxl-5" target="3" edge="1">
+                <mxCell id="uX54Qr66YurnJH-6QOxl-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="uX54Qr66YurnJH-6QOxl-5" target="uX54Qr66YurnJH-6QOxl-19" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="-790" y="285"/>
-                            <mxPoint x="-790" y="1035"/>
+                            <mxPoint x="-770" y="-305"/>
+                            <mxPoint x="-770" y="265"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -48,7 +39,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-5" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;방문종료일이 존재하는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.VISIT_END_AT&lt;/span&gt;&lt;br&gt;&lt;span&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="230" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="-360" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-13" target="uX54Qr66YurnJH-6QOxl-15" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -61,8 +52,8 @@
                 <mxCell id="uX54Qr66YurnJH-6QOxl-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="uX54Qr66YurnJH-6QOxl-13" target="uX54Qr66YurnJH-6QOxl-19" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="-650" y="475"/>
-                            <mxPoint x="-650" y="855"/>
+                            <mxPoint x="-730" y="-115"/>
+                            <mxPoint x="-730" y="265"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -72,7 +63,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-13" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;방문시작일이 존재하는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.VISIT_START_AT&lt;/span&gt;&lt;br&gt;&lt;span&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="420" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="-170" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-15" target="uX54Qr66YurnJH-6QOxl-19" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -86,7 +77,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-15" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;방문시작일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.VISIT_START_AT&lt;/span&gt;&lt;br&gt;&lt;span&gt;&amp;lt;= NOW()&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="610" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="20" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-19" target="uX54Qr66YurnJH-6QOxl-24" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -96,22 +87,32 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="uX54Qr66YurnJH-6QOxl-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="uX54Qr66YurnJH-6QOxl-19" target="3" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="uX54Qr66YurnJH-6QOxl-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="uX54Qr66YurnJH-6QOxl-19" target="uX54Qr66YurnJH-6QOxl-29" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-490" y="380" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-31" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" parent="uX54Qr66YurnJH-6QOxl-30" vertex="1" connectable="0">
                     <mxGeometry x="-0.2071" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
+                <mxCell id="34" value="" style="edgeStyle=none;html=1;" edge="1" source="36" target="39" parent="uX54Qr66YurnJH-6QOxl-30">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="34">
+                    <mxGeometry x="-0.3514" relative="1" as="geometry">
+                        <mxPoint x="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-19" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;방문종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.VISIT_END_AT&lt;/span&gt;&lt;br&gt;&lt;span&gt;&amp;lt;= NOW()&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="800" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="210" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-24" value="&lt;font style=&quot;font-size: 10px&quot;&gt;201&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="825" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-288" y="235" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-27" value="&lt;font style=&quot;font-size: 10px&quot;&gt;217&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;방문대기중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="635" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-288" y="45" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-29" target="uX54Qr66YurnJH-6QOxl-32" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -130,10 +131,10 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-29" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;보고서를 제출하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.COLLECTOR_REPORTED&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="1330" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="390" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-32" value="&lt;font style=&quot;font-size: 10px&quot;&gt;221&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;보고서작성중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="1355" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-288" y="415" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-35" target="uX54Qr66YurnJH-6QOxl-41" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -152,7 +153,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-35" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 보고서를 검토하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;CONFIRMED&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="1520" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="580" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" parent="1" source="uX54Qr66YurnJH-6QOxl-41" target="uX54Qr66YurnJH-6QOxl-44" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -171,82 +172,98 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-41" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;배출자가 보고서를 승인하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;CONFIRMED&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= TRUE&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-560" y="1710" width="228" height="110" as="geometry"/>
+                    <mxGeometry x="-650" y="770" width="228" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-44" value="&lt;font style=&quot;font-size: 10px&quot;&gt;246&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;보고서확인완료&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-506" y="1925" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-596" y="985" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-47" value="&lt;font style=&quot;font-size: 10px&quot;&gt;248&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;보고서반려&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="1735" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-288" y="795" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="uX54Qr66YurnJH-6QOxl-53" value="&lt;font style=&quot;font-size: 10px&quot;&gt;247&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;보고서확인중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-198" y="1545" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-288" y="605" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="3" target="4">
+                <mxCell id="22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" source="24" target="25" parent="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="5">
-                    <mxGeometry x="-0.2594" y="-1" relative="1" as="geometry">
+                <mxCell id="23" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="22">
+                    <mxGeometry x="-0.1701" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="10" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="3" target="9">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="11" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="10">
-                    <mxGeometry x="-0.3514" relative="1" as="geometry">
-                        <mxPoint x="6" as="offset"/>
+                <mxCell id="26" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="24" target="36">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-440" y="-730" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="3" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청에 응답하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.ACCEPT_ASK_END&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-560" y="980" width="228" height="110" as="geometry"/>
-                </mxCell>
-                <mxCell id="7" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="4" target="uX54Qr66YurnJH-6QOxl-29">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="8" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="7">
-                    <mxGeometry x="-0.3637" y="-1" relative="1" as="geometry">
+                <mxCell id="27" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="26">
+                    <mxGeometry x="-0.1611" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="13" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="12">
+                <mxCell id="24" value="&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;현재진행중인 작업인가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;TRANSACTION.IN_PROGRESS&lt;br&gt;= TRUE&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-650" y="-910" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&lt;font style=&quot;font-size: 10px&quot;&gt;211&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;거래종료&lt;/font&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-288" y="-885" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="36" target="48">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="13">
-                    <mxGeometry x="-0.1599" relative="1" as="geometry">
+                <mxCell id="43" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="42">
+                    <mxGeometry x="-0.1693" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="4" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청을 수락하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.ACCEPT_ASK_END&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= TRUE&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-560" y="1160" width="228" height="110" as="geometry"/>
+                <mxCell id="36" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청에 응답하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.ACCEPT_ASK_END&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;IS NOT NULL&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-650" y="-727.69" width="228" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="9" target="16">
+                <mxCell id="37" value="" style="edgeStyle=none;html=1;" edge="1" source="39" target="40" parent="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="17">
+                <mxCell id="38" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="37">
                     <mxGeometry x="-0.3382" y="1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="20" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="9" target="19">
+                <mxCell id="44" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="39" target="41">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="21" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="20">
-                    <mxGeometry x="-0.2933" y="1" relative="1" as="geometry">
+                <mxCell id="45" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="44">
+                    <mxGeometry x="-0.241" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="9" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 요청에 &lt;br&gt;응답해야할 기한이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;MAX_DECISION_AT&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-252" y="980" width="228" height="110" as="geometry"/>
+                <mxCell id="39" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 요청에 &lt;br&gt;응답해야할 기한이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;MAX_DECISION_AT&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&amp;lt;= NOW()&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-342" y="-727.69" width="228" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" value="&lt;font style=&quot;font-size: 10px&quot;&gt;251&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청거절&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-770" y="1185" width="120" height="60" as="geometry"/>
+                <mxCell id="40" value="&lt;font style=&quot;font-size: 10px&quot;&gt;252&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청수락중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-40" y="-702.69" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="&lt;font style=&quot;font-size: 10px&quot;&gt;252&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청수락중&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="1005" width="120" height="60" as="geometry"/>
+                <mxCell id="41" value="&lt;font style=&quot;font-size: 10px&quot;&gt;250&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-40" y="-885" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" value="&lt;font style=&quot;font-size: 10px&quot;&gt;250&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청포기&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-198" y="1185" width="120" height="60" as="geometry"/>
+                <mxCell id="46" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="48" target="49" parent="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="FALSE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="46">
+                    <mxGeometry x="-0.1599" relative="1" as="geometry">
+                        <mxPoint x="-4" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="48" target="uX54Qr66YurnJH-6QOxl-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="TRUE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="50">
+                    <mxGeometry x="-0.2546" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;수거자가 배출자의 &lt;br&gt;요청을 수락하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;TRANSACTION.ACCEPT_ASK_END&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;= TRUE&lt;/span&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-650" y="-550" width="228" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="&lt;font style=&quot;font-size: 10px&quot;&gt;251&lt;br&gt;&lt;/font&gt;&lt;table style=&quot;font-size: 10px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;수거요청거절&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-288" y="-525" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

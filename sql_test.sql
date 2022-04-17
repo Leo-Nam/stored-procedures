@@ -6101,7 +6101,8 @@ CALL sp_req_fcm_token(
 );
 */
 
-
+/*
+SET @USER_ID = 189;
 SET @USER_TYPE = 'person';
 	SELECT 
 		A.ID, 
@@ -6136,7 +6137,7 @@ SET @USER_TYPE = 'person';
         A.IS_DELETED = FALSE AND
         IF (@USER_TYPE 		= 'Person', 
 			B.STATE_CODE 	<> 105 AND 
-            A.DISPOSER_ID 	= 189, 
+            A.DISPOSER_ID 	= @USER_ID, 
             B.STATE_CODE 	<> 105 AND 
             C.ACTIVE 		= TRUE AND 
             D.ACTIVE 		= TRUE AND 
@@ -6145,7 +6146,178 @@ SET @USER_TYPE = 'person';
 				SELECT AFFILIATED_SITE 
                 FROM USERS 
                 WHERE 
-					ID 		= 189 AND 
+					ID 		= @USER_ID AND 
                     ACTIVE 	= TRUE
 			)
 		);
+*/
+
+
+/*
+SET @BIDDING_ID = 380;
+CALL sp_test(
+    @BIDDING_ID,
+    @PUSH_INFO,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+    @BIDDING_ID,
+    @PUSH_INFO,
+    @rtn_val,
+    @msg_txt;
+*/
+/*
+call sp_req_fcm_token(243);
+*/
+
+
+/*
+call sp_cancel_visiting(
+	190,
+    400
+);
+*/
+/*
+							CALL sp_push_cancel_visit(
+								397,
+								@PUSH_INFO,
+								@rtn_val,
+								@msg_txt
+							);
+                            SELECT 
+								@PUSH_INFO,
+								@rtn_val,
+								@msg_txt;
+*/
+/*	
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'				, ID, 
+					'SUBJECTS'				, '111',
+					'CONTENTS'				, '222',
+					'ORDER_ID'				, 333, 
+					'BIDDING_ID'			, 397, 
+					'TRANSACTION_ID'		, NULL, 
+					'REPORT_ID'				, NULL
+				)
+			) 
+			INTO @TARGET_LIST
+			FROM USERS 
+			WHERE 
+				ACTIVE 					= TRUE AND
+				PUSH_ENABLED			= TRUE AND
+                ID						= 106;
+                
+                SELECT '111',@TARGET_LIST;
+*/
+
+/*
+	SELECT 
+		A.ID, 
+		A.COLLECTOR_ID, 
+		A.ORDER_CODE, 
+        A.SITE_ID,
+        B.COMP_SITE_SI_DO,
+        B.COMP_SITE_SI_GUN_GU,
+        B.COMP_SITE_EUP_MYEON_DONG,
+        B.COMP_SITE_DONG_RI,
+        B.COMP_SITE_ADDR,
+        C.STATE, 
+        C.STATE_CODE,
+        A.NOTE,
+        B.COMP_SITE_KIKCD_B_CODE,
+        D.SI_DO,
+        D.SI_GUN_GU,
+        D.EUP_MYEON_DONG,
+        D.DONG_RI,
+        A.KIKCD_B_CODE,
+        A.ADDR,
+        A.CREATED_AT,
+        A.CLOSE_AT,
+        C.STATE_CATEGORY_ID,
+        A.TRANSACTION_ID,
+        A.LAT,
+        A.LNG
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+    LEFT JOIN V_COMP_SITE B ON A.SITE_ID = B.COMP_SITE_ID
+    LEFT JOIN V_ORDER_STATE_NAME C ON A.ID = C.DISPOSER_ORDER_ID
+    LEFT JOIN KIKCD_B D ON A.KIKCD_B_CODE = D.B_CODE
+    LEFT JOIN COMP_SITE E ON A.SITE_ID = E.ID
+    LEFT JOIN COMPANY F ON E.COMP_ID = F.ID
+	WHERE 
+		A.ID = 602 AND
+        E.ACTIVE = TRUE AND
+        F.ACTIVE = TRUE;
+*/
+
+
+/*
+SET @USER_ID = 'whdmsckacl1234';
+SET @PWD = '1234';
+SET @FCM = 'fcm1234!';
+CALL sp_test(
+	@USER_ID,
+    @PWD,
+    @FCM
+);
+*/
+
+
+/*
+SET @USER_ID = 'whdmsckacl1234';
+		SELECT COUNT(ID) 
+		INTO @USER_LOGIN_SUCCESS 
+		FROM USERS 
+		WHERE 
+			USER_ID = 'whdmsckacl1234' AND 
+			ACTIVE = TRUE;	
+            
+        
+        
+			SELECT COUNT(ID) 
+			INTO @PWD_MATCH
+			FROM USERS 
+			WHERE 
+				USER_ID = 'whdmsckacl1234' AND 
+				ACTIVE = TRUE AND 
+				PWD = '1234';
+				SELECT AFFILIATED_SITE INTO @USER_SITE FROM USERS WHERE USER_ID = 'whdmsckacl1234';	
+					SELECT USER_TYPE INTO @USER_TYPE FROM V_USERS WHERE USER_ID = 'whdmsckacl1234';
+		SELECT @USER_TYPE ;
+*/
+
+/*
+SET @USER_ID = 243;
+SET @COLLECTOR_SITE_ID = 244;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+SET @VISIT_START_AT = '2022-04-15';
+SET @VISIT_END_AT = '2022-04-16';
+SET @BIDDING_END_AT = NULL;
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "빨리 해결해주세요";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@LNG,
+	@LAT,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);
+*/
