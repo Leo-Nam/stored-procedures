@@ -17,6 +17,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				
 */
 
+	SET @PUSH_CATEGORY_ID = 4;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -90,13 +91,11 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 							CALL sp_push_cancel_visit(
 								IN_USER_ID,
 								IN_COLLECT_BIDDING_ID,
-								@PUSH_INFO,
+                                @PUSH_CATEGORY_ID,
+								@json_data,
 								@rtn_val,
 								@msg_txt
 							);
-							IF @rtn_val = 0 THEN
-								SET @json_data = @PUSH_INFO;
-							END IF;
 						ELSE
 						/*데이타베이스 입력에 실패한 경우*/
 							SET @rtn_val 		= 25606;
@@ -130,13 +129,11 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								CALL sp_push_cancel_visit(
 									IN_USER_ID,
 									IN_COLLECT_BIDDING_ID,
-									@PUSH_INFO,
+                                    @PUSH_CATEGORY_ID,
+									@json_data,
 									@rtn_val,
 									@msg_txt
 								);
-                                IF @rtn_val = 0 THEN
-									SET @json_data = @PUSH_INFO;
-                                END IF;
 							ELSE
 							/*데이타베이스 입력에 실패한 경우*/
 								SET @rtn_val 		= 25601;

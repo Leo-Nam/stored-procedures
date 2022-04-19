@@ -24,6 +24,7 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 	
+	SET @PUSH_CATEGORY_ID = 2;
     CALL sp_req_current_time(@REG_DT);
     
 	CALL sp_req_user_exists_by_id(
@@ -76,14 +77,12 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 							@DISPOSER_ORDER_ID
 						);
 						CALL sp_push_disposer_response_visit_1(
+							@DISPOSER_ORDER_ID,
 							IN_COLLECTOR_BIDDING_ID,
-							@PUSH_INFO
+							@json_data,
+							@rtn_val,
+							@msg_txt
 						);
-						SELECT JSON_ARRAYAGG(
-							JSON_OBJECT(
-								'PUSH_INFO'	, @PUSH_INFO
-							)
-						) INTO @json_data;
 						SET @rtn_val = 0;
 						SET @msg_txt = 'Success';
 					ELSE

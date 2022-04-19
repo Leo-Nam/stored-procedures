@@ -1,5 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_to_table`(
-	IN IN_USER_ID					BIGINT,						/*입력값 : 폐기물 배출 주체의 고유등록번호(USERS.ID)*/
+	IN IN_USER_ID					BIGINT,						/*입력값 : 폐기물 배출 주체의 고유등록번호1(USERS.ID)*/
 	IN IN_COLLECTOR_SITE_ID			BIGINT,						/*입력값 : 폐기물 수거자의 고유등록번호(COMP_SITE.ID)*/
 	IN IN_DISPOSER_SITE_ID			BIGINT,						/*입력값 : 폐기물 배출 사이트의 고유등록번호(COMP_SITE.ID)*/
 	IN IN_DISPOSER_TYPE				ENUM('person','company'),	/*입력값 : 폐기물 배출 주체의 종류*/
@@ -133,7 +133,7 @@ BEGIN
 	);
 	
     SELECT LAST_INSERT_ID() INTO @WSTE_DISPOSAL_ORDER_ID;
-    /*직전 INSERT 작업에서 AUTO INCREMENT로 생성된 최종 ID를 반환한다.*/
+    /*직전 INSERT 작업에서 AUTO INCREMENT로 생성된 최종 ID를 반환한다.1*/
     
 	IF ROW_COUNT() = 1 THEN
 	/*자료 등록작업에 성공한 경우에는 후속작업을 정상진행한다.*/
@@ -145,10 +145,12 @@ BEGIN
         IF IN_COLLECTOR_SITE_ID IS NULL THEN
         /*일반 입찰거래인 경우*/
 			SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
+            
 			CALL sp_push_collector_list_share_business_areas(
 				IN_USER_ID,
 				@WSTE_DISPOSAL_ORDER_ID,
 				IN_KIKCD_B_CODE,
+                1,
 				@PUSH_INFO,
 				@rtn_val,
 				@msg_txt
@@ -156,10 +158,12 @@ BEGIN
         ELSE
         /*기존거래인 경우*/
 			SET @ASK_DISPOSAL_END_AT = IN_OPEN_AT;
+            
 			CALL sp_push_collector_dispose_new_wste(
 				IN_USER_ID,
                 @WSTE_DISPOSAL_ORDER_ID,
 				IN_COLLECTOR_SITE_ID,
+                1,
 				@PUSH_INFO,
 				@rtn_val,
 				@msg_txt

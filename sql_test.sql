@@ -6321,3 +6321,239 @@ CALL sp_create_site_wste_discharge_order(
 	@NOTE
 );
 */
+
+/*
+CALL sp_req_current_time(@REG_DT);
+
+SET @USER_ID = 215;
+SET @TRANSACTION_ID = 671;
+SET @WSTE_CODE = '51';
+SET @QUANTITY = 3500;
+SET @COMPLETED_AT = '2022-04-25';
+SET @PRICE = 52000000;
+SET @UNIT = 'Kg';
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 4.35}]';
+
+CALL sp_test(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@COMPLETED_AT,
+	@PRICE,
+	@UNIT,
+	@TRMT_METHOD,
+	@IMG_LIST
+);  
+*/
+/*
+SET @USER_ID = 244;
+SET @ORDER_ID = 702;
+
+CALL sp_retrieve_push_history(
+	@USER_ID
+);
+*/
+/*
+SET @ORDER_ID = 668;
+			CALL sp_get_disposal_order_info(
+				@ORDER_ID,
+				@ORDER_INFO
+			);
+SELECT @ORDER_ID, @ORDER_INFO;
+*/
+/*
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'ID'				, A.ID, 
+			'ORDER_CODE'		, A.ORDER_CODE, 
+			'SITE_ID'			, A.SITE_ID, 
+			'SITE_NAME'			, B.SITE_NAME, 
+			'B_CODE'			, A.KIKCD_B_CODE, 
+			'SI_DO'				, C.SI_DO,
+			'SI_GUN_GU'			, C.SI_GUN_GU,
+			'EUP_MYEON_DONG'	, C.EUP_MYEON_DONG,
+			'DONG_RI'			, C.DONG_RI,
+			'ADDR'				, A.ADDR,
+			'ASK_END_AT'		, D.COLLECT_ASK_END_AT,
+			'NOTE'				, A.NOTE,
+			'VISIT_START_AT'	, A.VISIT_START_AT,
+			'VISIT_END_AT'		, A.VISIT_END_AT,
+			'BIDDING_END_AT'	, A.BIDDING_END_AT,
+			'DISPOSER_ID'		, A.DISPOSER_ID,
+			'AVATAR_PATH'		, E.AVATAR_PATH,
+			'PHONE'				, E.PHONE
+		)
+	) 
+	INTO @DISPOSAL_ORDER_INFO 
+	FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+    LEFT JOIN KIKCD_B C ON A.KIKCD_B_CODE = C.B_CODE
+    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.ID = D.DISPOSAL_ORDER_ID
+    LEFT JOIN USERS E ON A.SITE_ID = E.AFFILIATED_SITE
+	WHERE 
+		A.ID = @ORDER_ID AND
+        E.CLASS = 201 AND
+        E.ACTIVE = TRUE;
+        
+        SELECT @ORDER_ID, @DISPOSAL_ORDER_INFO
+*/
+/*
+SET @HISTORY_ID = 244;
+SET @OFFSET_SIZE = 3;
+SET @PAGE_SIZE = 3;
+CALL sp_retrieve_push_history(
+	@HISTORY_ID,
+	@OFFSET_SIZE,
+	@PAGE_SIZE
+);
+*/
+/*
+SET @ORDER_ID = 752;
+SET @BIDDING_ID = 488;
+	SELECT COUNT(ID) INTO @ID_COUNT
+    FROM SITE_WSTE_DISPOSAL_ORDER
+    WHERE 
+		ID = @ORDER_ID AND
+        BIDDERS > 1 AND
+        SECOND_PLACE = @BIDDING_ID AND
+        COLLECTOR_SELECTION_CONFIRMED <> TRUE AND 
+        COLLECTOR_MAX_DECISION2_AT > NOW() AND
+        COLLECTOR_SELECTION_CONFIRMED2 IS NULL;
+        
+SELECT @ID_COUNT;
+*/
+/*
+
+			CALL sp_push_collector_list_share_business_areas(
+				244,
+				700,
+				'4182000000',
+                1,
+				@PUSH_INFO,
+				@rtn_val,
+				@msg_txt
+			);
+            
+            select 
+				@rtn_val,
+				@msg_txt,
+				@PUSH_INFO
+*/
+
+
+/*
+SET @USER_ID = 243;
+SET @COLLECTOR_SITE_ID = 244;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+SET @VISIT_START_AT = '2022-04-17';
+SET @VISIT_END_AT = '2022-04-19';
+SET @BIDDING_END_AT = NULL;
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"51", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}, {"WSTE_CLASS_CODE":"91", "WSTE_APPEARANCE":2, "UNIT": "Kg", "QUANTITY": 222}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"img_0002_path", "FILE_SIZE": 4.35}]';
+SET @NOTE = "빨리 해결해주세요";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@LNG,
+	@LAT,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);       
+*/
+/*
+SET @USER_ID = 190;
+SET @BIDDING_ID = 490;
+CALL sp_cancel_bidding(
+	@USER_ID,
+    @BIDDING_ID
+);     
+*/
+/*
+CALL sp_req_collector_bidding_details(490);   
+*/
+
+/*
+SET @SIGUNGU_CODE = '4182000000';
+SELECT RIGHT(@SIGUNGU_CODE, 8);
+*/
+/*
+SET @USER_ID = 244;
+SET @SIGUNGU = '3600000000';
+SET @IS_DEFAULT = 1;
+CALL sp_add_sigungu(
+	@USER_ID,
+	@SIGUNGU,
+    @IS_DEFAULT
+);
+*/
+
+
+
+/*
+SET @HISTORY_ID = 244;
+SET @OFFSET_SIZE = 3;
+SET @PAGE_SIZE = 3;
+CALL sp_retrieve_push_history(
+	@HISTORY_ID,
+	@OFFSET_SIZE,
+	@PAGE_SIZE
+);
+*/
+
+/*
+		SELECT B.ID, B.ORDER_CODE, B.SITE_ID, B.DISPOSER_ID, C.SITE_NAME
+        INTO @ORDER_ID, @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME
+        FROM COLLECTOR_BIDDING A
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+        LEFT JOIN COMP_SITE C ON A.COLLECTOR_ID = C.ID
+        WHERE
+			A.ID = 524;    
+		SELECT @ORDER_ID, @ORDER_CODE, @DISPOSER_SITE_ID, @DISPOSER_ID, @COLLECTOR_SITE_NAME
+        */
+/*
+SET @USER_ID = 190;
+SET @ORDER_ID = 866;
+SET @VISIT_DATE = NULL;
+
+call sp_ask_visit_on_disposal_site(
+	@USER_ID,
+    @ORDER_ID,
+    @VISIT_DATE
+);
+*/
+
+SET @USER_ID = 244;
+SET @ORDER_ID = 750;
+SET @PUSH_CATEGORY_ID = 3;
+CALL sp_push_new_visitor_come(
+	@USER_ID,
+	@ORDER_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt

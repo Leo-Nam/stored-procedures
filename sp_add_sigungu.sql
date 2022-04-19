@@ -51,62 +51,17 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
             );
             IF @rtn_val = 0 THEN
             /*사이트가 수거자 종류이면*/
-				CALL sp_req_sigungu_is_already_added(
-                /*검사하고자 하는 시군구가 이미 사이트에 등록되어 있는지 검사한다*/
+				CALL sp_add_business_area(
+					IN_SIGUNGU_CODE,
+					IN_IS_DEFAULT,
 					@SITE_ID,
-                    IN_SIGUNGU_CODE,
 					@rtn_val,
-					@msg_txt
-                );
-                IF @rtn_val = 0 THEN
-                /*시군구가 사이트에 등록되어 있지 않은 경우*/
-                    IF IN_IS_DEFAULT = TRUE THEN
-                    /*무료 추가인 경우*/
-						SELECT COUNT(ID) INTO @AREA_COUNT
-						FROM BUSINESS_AREA
-						WHERE 
-							SITE_ID = @SITE_ID AND
-							IS_DEFAULT <> 0 AND
-                            ACTIVE = TRUE;
-						/*무료로 가입시킨 지역의 개수를 구하여 @AREA_COUNT에 반환한다.*/
-						CALL sp_req_policy_direction(
-							'max_selection_duration',
-							@max_selection_duration
-						);
-						IF @AREA_COUNT < @max_selection_duration THEN
-							CALL sp_add_sigungu_without_handler(
-								IN_SIGUNGU_CODE,
-                                IN_IS_DEFAULT,
-								@rtn_val,
-								@msg_txt                                
-                            );							
-							IF @rtn_val > 0 THEN
-							/*레코드가 정상적으로 생성되지 않았다면*/
-								SIGNAL SQLSTATE '23000';
-							END IF;
-						ELSE
-						/*정책으로 결정된 무료사이트가입 개수를 넘긴 경우에는 예외처리한다.*/
-							SET @rtn_val 		= 24001;
-							SET @msg_txt 		= 'Exceeding the number of free areas of interest';
-							SIGNAL SQLSTATE '23000';
-						END IF;
-                    ELSE
-                    /*유료 추가인 경우*/
-						CALL sp_add_sigungu_without_handler(
-							IN_SIGUNGU_CODE,
-							IN_IS_DEFAULT,
-							@rtn_val,
-							@msg_txt                                
-						);							
-						IF @rtn_val > 0 THEN
-						/*레코드가 정상적으로 생성되지 않았다면*/
-							SIGNAL SQLSTATE '23000';
-						END IF;
-                    END IF;
-                ELSE
-                /*시군구가 사이트에 이미 등록되어 있는 경우*/
+					@msg_txt                                
+				);							
+				IF @rtn_val > 0 THEN
+				/*레코드가 정상적으로 생성되지 않았다면*/
 					SIGNAL SQLSTATE '23000';
-                END IF;
+				END IF;
             ELSE
             /*사이트가 수거자 종류가 아니면*/
 				SIGNAL SQLSTATE '23000';

@@ -55,9 +55,10 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
     IF @rtn_val = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
 		IF IN_VISIT_END_AT IS NOT NULL THEN
-			SET @VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:59') AS DATETIME);
+			SET @VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:55') AS DATETIME);
 			SET @REF_DATE = @VISIT_END_AT;
 		ELSE
+			SET @VISIT_END_AT = NULL;
 			SET @REF_DATE = @REG_DT;
         END IF;
         

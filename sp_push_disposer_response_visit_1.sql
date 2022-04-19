@@ -1,6 +1,9 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_disposer_response_visit_1`(
-	IN IN_COLLECTOR_BIDDING_ID		BIGINT,
-    OUT OUT_TARGET_LIST				JSON
+	IN IN_ORDER_ID					BIGINT,
+	IN IN_BIDDING_ID				BIGINT,
+    OUT OUT_TARGET_LIST				JSON,
+    OUT rtn_val 					INT,				/*출력값 : 처리결과 반환값*/
+    OUT msg_txt 					VARCHAR(200)		/*출력값 : 처리결과 문자열*/
 )
 BEGIN
 	
@@ -8,54 +11,72 @@ BEGIN
     INTO @BIDDING_EXISTS
     FROM COLLECTOR_BIDDING
     WHERE 
-		ID = IN_COLLECTOR_BIDDING_ID AND
+		ID = IN_BIDDING_ID AND
         DELETED = FALSE AND
         CANCEL_VISIT = FALSE AND
         ACTIVE = TRUE;
         
     IF @BIDDING_EXISTS = 1 THEN
 		SELECT B.ORDER_CODE, A.COLLECTOR_ID, A.RESPONSE_VISIT
-        INTO @ORDER_CODE, @SITE_ID, @RESPONSE_VISIT
+        INTO @ORDER_CODE, @COLLECTOR_SITE_ID, @RESPONSE_VISIT
         FROM COLLECTOR_BIDDING A
         LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
         WHERE
-			A.ID = IN_COLLECTOR_BIDDING_ID;
+			A.ID = IN_BIDDING_ID;
 		IF @RESPONSE_VISIT = TRUE THEN
 			SET @STR_RESPONSE = '수락';
+            SET @CATEGORY_ID = 2;
         ELSE
 			SET @STR_RESPONSE = '거절';
+            SET @CATEGORY_ID = 5;
         END IF;
-		SET @MSG = CONCAT('신청하신 [', @ORDER_CODE, ']에 대한 방문신청이 ', @STR_RESPONSE, '되었습니다.');
-        IF @SITE_ID = 0 THEN
-			SELECT JSON_ARRAYAGG(
-				JSON_OBJECT(
-					'USER_ID'	, ID, 
-					'FCM'		, FCM,
-					'MSG'		, @MSG
-				)
-			) 
-			INTO OUT_TARGET_LIST
-			FROM USERS 
-			WHERE 
-				ACTIVE 					= TRUE AND
-				PUSH_ENABLED			= TRUE AND
-                AFFILIATED_SITE			= @SITE_ID;
-        ELSE
-			SELECT JSON_ARRAYAGG(
-				JSON_OBJECT(
-					'USER_ID'	, ID, 
-					'FCM'		, FCM,
-					'MSG'		, @MSG
-				)
-			) 
-			INTO OUT_TARGET_LIST
-			FROM USERS
-			WHERE 
-				ACTIVE 					= TRUE AND
-				PUSH_ENABLED			= TRUE AND
-                AFFILIATED_SITE			= @SITE_ID;
-        END IF;
+		SET @TITLE = CONCAT('[', @ORDER_CODE, ']방문신청', @STR_RESPONSE);
+		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']에 대한 방문신청이 ', @STR_RESPONSE, '되었습니다.');
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'				, ID, 
+				'USER_NAME'				, USER_NAME, 
+				'FCM'					, FCM, 
+				'AVATAR_PATH'			, AVATAR_PATH,
+				'TITLE'					, @TITLE,
+				'BODY'					, @BODY,
+				'ORDER_ID'				, IN_ORDER_ID, 
+				'BIDDING_ID'			, IN_BIDDING_ID, 
+				'TRANSACTION_ID'		, NULL, 
+				'REPORT_ID'				, NULL, 
+				'CATEGORY_ID'			, @CATEGORY_ID,
+				'CREATED_AT'			, @REG_DT
+			)
+		) 
+		INTO @PUSH_INFO
+		FROM USERS
+		WHERE 
+			ACTIVE 					= TRUE AND
+			PUSH_ENABLED			= TRUE AND
+			AFFILIATED_SITE			= @COLLECTOR_SITE_ID;
+        
+        CALL sp_insert_push(
+			0,
+			@PUSH_INFO,
+			rtn_val,
+			msg_txt
+        );
+    
+		CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_INFO_TEMP (
+			PUSH_INFO						JSON
+		);     
+		INSERT PUSH_INFO_TEMP(PUSH_INFO) VALUES(@PUSH_INFO);
+		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'PUSH_INFO'			, PUSH_INFO
+		)) 
+		INTO OUT_TARGET_LIST
+		FROM PUSH_INFO_TEMP;  
+		DROP TABLE IF EXISTS PUSH_INFO_TEMP;  
+		SET rtn_val = 0;
+        SET msg_txt = 'success1';
     ELSE
+		SET rtn_val = 0;
+        SET msg_txt = 'success222';
 		SET OUT_TARGET_LIST = NULL;
     END IF;
 END

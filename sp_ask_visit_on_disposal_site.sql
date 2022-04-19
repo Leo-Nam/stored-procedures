@@ -29,6 +29,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 
+	SET @PUSH_CATEGORY_ID = 3;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
 
@@ -93,16 +94,16 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 						IF ROW_COUNT() = 1 THEN
 						/*정상적으로 변경완료된 경우*/
 							CALL sp_push_new_visitor_come(
+								IN_USER_ID,
 								IN_DISPOSER_ORDER_ID,
-								@PUSH_INFO
+                                @PUSH_CATEGORY_ID,
+								@json_data,
+								@rtn_val,
+								@msg_txt
 							);
-							SELECT JSON_ARRAYAGG(
-								JSON_OBJECT(
-									'PUSH_INFO'	, @PUSH_INFO
-								)
-							) INTO @json_data;
-							SET @rtn_val 		= 0;
-							SET @msg_txt 		= 'Success';
+                            IF @rtn_val > 0 THEN
+								SIGNAL SQLSTATE '23000';
+                            END IF;
 						ELSE
 						/*정상적으로 변경되지 않은 경우*/
 							SET @rtn_val 		= 23104;
@@ -123,16 +124,16 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 						IF @rtn_val = 0 THEN
 						/*정상적으로 입력완료된 경우*/
 							CALL sp_push_new_visitor_come(
+								IN_USER_ID,
 								IN_DISPOSER_ORDER_ID,
-								@PUSH_INFO
+                                @PUSH_CATEGORY_ID,
+								@json_data,
+								@rtn_val,
+								@msg_txt
 							);
-							SELECT JSON_ARRAYAGG(
-								JSON_OBJECT(
-									'PUSH_INFO'	, @PUSH_INFO
-								)
-							) INTO @json_data;
-							SET @rtn_val 		= 0;
-							SET @msg_txt 		= 'Success77';
+                            IF @rtn_val > 0 THEN
+								SIGNAL SQLSTATE '23000';
+                            END IF;
 						ELSE
 						/*정상적으로 입력되지 않은 경우*/
 							SIGNAL SQLSTATE '23000';

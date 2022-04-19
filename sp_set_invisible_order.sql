@@ -73,7 +73,7 @@ AUTHOR 			: Leo Nam
 						SELECT STATE_CODE INTO @CURRENT_STATE_CODE
                         FROM V_BIDDING_STATE
                         WHERE COLLECTOR_BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
-                        IF @CURRENT_STATE_CODE IN (203, 213, 230, 231, 232) THEN
+                        IF @CURRENT_STATE_CODE IN (203, 213, 214, 230, 231, 232) THEN
                         /*현재 상태가 나열된 상태에 포함된 경우에는 정상처리한다.*/
 							UPDATE COLLECTOR_BIDDING
 							SET 
