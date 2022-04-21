@@ -7,13 +7,14 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_ask_transaction_complet
 	IN IN_PRICE						INT,								/*입렦값 : 폐기물 처리가격*/
 	IN IN_UNIT						ENUM('Kg','m3','식','전체견적가'),		/*입렦값 : 폐기물 처리단위*/
 	IN IN_TRMT_METHOD				VARCHAR(4),							/*입렦값 : 폐기물 처리방법(WSTE_TRMT_METHOD.CODE)*/
+	IN IN_WSTE_APPEARANCE			INT,								/*입렦값 : 폐기물 성상(WSTE_APPEARANCE.ID)으로서 1:고상, 2:액상*/
 	IN IN_IMG_LIST					JSON								/*입렦값 : 폐기물 처리사진*/
 )
 BEGIN
 
 /*
 Procedure Name 	: sp_req_collector_ask_transaction_completed
-Input param 	: 9개
+Input param 	: 10개
 Job 			: 폐기물처리보고서를 작성한다
 Update 			: 2022.03.24
 Version			: 0.0.1
@@ -32,6 +33,7 @@ AUTHOR 			: Leo Nam
 	SET @rtn_val 		= NULL;
 	SET @msg_txt 		= NULL;
 	SET @json_data 		= NULL;
+	SET @PUSH_CATEGORY_ID = 25;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -97,7 +99,8 @@ AUTHOR 			: Leo Nam
 									CREATED_AT,
 									UPDATED_AT,
 									DISPOSER_ORDER_ID,
-                                    TRMT_METHOD
+                                    TRMT_METHOD,
+                                    WSTE_APPEARANCE
 								) VALUES (
 									IN_TRANSACTION_ID,
 									@COLLECTOR_SITE_ID,
@@ -111,7 +114,8 @@ AUTHOR 			: Leo Nam
 									@REG_DT,
 									@REG_DT,
 									@DISPOSER_ORDER_ID,
-                                    IN_TRMT_METHOD
+                                    IN_TRMT_METHOD,
+                                    IN_WSTE_APPEARANCE
 								);
 								IF ROW_COUNT() = 1 THEN   
 									SELECT DISPOSAL_ORDER_ID 
@@ -133,16 +137,18 @@ AUTHOR 			: Leo Nam
 											IF @VISIT_END_AT <= @REG_DT THEN
 											/*방문일정 이후에 보고서를 작성한 경우에는 정상처리한다.*/
 												CALL sp_push_collector_ask_transaction_completed(
+													IN_USER_ID,
+													@DISPOSER_ORDER_ID,
+													NULL,
 													IN_TRANSACTION_ID,
-													@PUSH_INFO
+													@PUSH_CATEGORY_ID,
+													@json_data,
+													@rtn_val,
+													@msg_txt
 												);
-												SELECT JSON_ARRAYAGG(
-													JSON_OBJECT(
-														'PUSH_INFO'	, @PUSH_INFO
-													)
-												) INTO @json_data;
-												SET @rtn_val = 0;
-												SET @msg_txt = 'success';
+												IF @rtn_val > 0 THEN
+													SIGNAL SQLSTATE '23000';
+												END IF;
 											ELSE
 											/*방문일정중에 보고서를 작성한 경우에는 예외처리한다.*/
 												SET @rtn_val = 25408;
@@ -152,16 +158,18 @@ AUTHOR 			: Leo Nam
                                         ELSE
                                         /*방문일정이 존재하지 않는 경우에는 정상처리한다.*/
 											CALL sp_push_collector_ask_transaction_completed(
+												IN_USER_ID,
+												@DISPOSER_ORDER_ID,
+												NULL,
 												IN_TRANSACTION_ID,
-												@PUSH_INFO
+												@PUSH_CATEGORY_ID,
+												@json_data,
+												@rtn_val,
+												@msg_txt
 											);
-											SELECT JSON_ARRAYAGG(
-												JSON_OBJECT(
-													'PUSH_INFO'	, @PUSH_INFO
-												)
-											) INTO @json_data;
-											SET @rtn_val = 0;
-											SET @msg_txt = 'success';
+											IF @rtn_val > 0 THEN
+												SIGNAL SQLSTATE '23000';
+											END IF;
                                         END IF;
 									ELSE
 										SIGNAL SQLSTATE '23000';

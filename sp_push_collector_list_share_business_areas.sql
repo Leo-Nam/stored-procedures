@@ -27,6 +27,12 @@ BEGIN
         WHERE ID = IN_ORDER_ID;
         SET @ORDER_ID = IN_ORDER_ID;  
     
+		SELECT ID INTO @TRANSACTION_ID
+		FROM WSTE_CLCT_TRMT_TRANSACTION
+		WHERE 
+			DISPOSAL_ORDER_ID = IN_ORDER_ID AND
+			IN_PROGRESS = TRUE;  
+    
 		SET @TITLE = CONCAT('[', @ORDER_CODE, ']신규 폐기물 등록');
 		SET @BODY = CONCAT(@SI_DO, ' ', @SI_GUN_GU, '에 신규 폐기물이 등록되었습니다.');
 		SELECT JSON_ARRAYAGG(
@@ -39,7 +45,7 @@ BEGIN
 				'BODY'					, @BODY,
 				'ORDER_ID'				, @ORDER_ID, 
 				'BIDDING_ID'			, NULL, 
-				'TRANSACTION_ID'		, NULL, 
+				'TRANSACTION_ID'		, @TRANSACTION_ID, 
 				'REPORT_ID'				, NULL, 
 				'CATEGORY_ID'			, IN_CATEGORY_ID,
 				'CREATED_AT'			, @REG_DT
@@ -57,7 +63,7 @@ BEGIN
 			LEFT(A.KIKCD_B_CODE, 5) 	= LEFT(IN_B_CODE, 5);
         
         CALL sp_insert_push(
-			0,
+			IN_USER_ID,
 			@PUSH_INFO,
 			rtn_val,
 			msg_txt

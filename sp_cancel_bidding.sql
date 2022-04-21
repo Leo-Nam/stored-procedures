@@ -28,6 +28,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
+	SET @PUSH_CATEGORY_ID = 13;
     CALL sp_req_current_time(@REG_DT);
     
 	CALL sp_req_user_exists_by_id(
@@ -57,15 +58,24 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
             FROM USERS 
             WHERE ID = IN_USER_ID;
             IF @USER_SITE_ID IS NOT NULL THEN
-				CALL sp_req_site_already_bid(
-				/*이전에 입찰한 사실이 존재하는지 확인한다.*/
-					@USER_SITE_ID,
-					@DISPOSAL_ORDER_ID,
-					@rtn_val,
-					@msg_txt
-				);
-				IF @rtn_val > 0 THEN
+				SELECT COUNT(ID) 
+				INTO @CHK_COUNT 
+				FROM COLLECTOR_BIDDING 
+				WHERE 
+					ID = IN_COLLECT_BIDDING_ID AND
+					DATE_OF_BIDDING IS NOT NULL;
+				IF @CHK_COUNT= 1 THEN
 				/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
+					SET @PUSH_CATEGORY_ID = 15;
+					CALL sp_push_collector_cancel_or_giveup_bidding(
+						IN_USER_ID,
+						@DISPOSAL_ORDER_ID,
+						IN_COLLECT_BIDDING_ID,
+						@PUSH_CATEGORY_ID,
+						@json_data,
+						@rtn_val,
+						@msg_txt
+					);
 					SELECT GIVEUP_BIDDING INTO @GIVEUP_BIDDING 
                     FROM COLLECTOR_BIDDING 
                     WHERE ID = IN_COLLECT_BIDDING_ID;
@@ -115,19 +125,6 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
                                     CALL sp_calc_bidders(
 										@DISPOSAL_ORDER_ID
                                     );
-									CALL sp_push_collector_cancel_or_giveup_bidding(
-										IN_COLLECTOR_BIDDING_ID,
-										'취소',
-										@PUSH_INFO
-									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success1112233';
-                                ELSE
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success11122';
                                 END IF;
@@ -144,6 +141,16 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
                     END IF;
 				ELSE
 				/*사이트가 이전에 입찰한 사실이 없는 경우에는 입찰권을 포기하게 함*/
+					SET @PUSH_CATEGORY_ID = 13;
+					CALL sp_push_collector_cancel_or_giveup_bidding(
+						IN_USER_ID,
+						@DISPOSAL_ORDER_ID,
+						IN_COLLECT_BIDDING_ID,
+						@PUSH_CATEGORY_ID,
+						@json_data,
+						@rtn_val,
+						@msg_txt
+					);
 					SELECT CANCEL_BIDDING INTO @CANCEL_BIDDING 
                     FROM COLLECTOR_BIDDING 
                     WHERE ID = IN_COLLECT_BIDDING_ID;
@@ -193,19 +200,6 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
                                     CALL sp_calc_bidders(
 										@DISPOSAL_ORDER_ID
                                     );
-									CALL sp_push_collector_cancel_or_giveup_bidding(
-										IN_COLLECTOR_BIDDING_ID,
-										'포기',
-										@PUSH_INFO
-									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success111223344';
-                                ELSE
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success11122765';
                                 END IF;
@@ -224,6 +218,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
             ELSE
 				SET @rtn_val 		= 23803;
 				SET @msg_txt 		= 'user site does not exist';
+				SIGNAL SQLSTATE '23000';
             END IF;
 		ELSE
 		/*입찰마감일이 종료된 경우 예외처리한다.*/

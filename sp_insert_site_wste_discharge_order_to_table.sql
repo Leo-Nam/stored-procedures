@@ -82,151 +82,175 @@ BEGIN
 	/*기존거래인 경우에는 OPEN_AT(폐기물수거요청일)로부터 @max_disposal_duration을 
     합산한 날짜를 계약종료일로 정하고 입찰거래인 경우에는 CLOSE_AT을 그대로 사용한다.*/
     
-	INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
-		DISPOSER_ID,
-		COLLECTOR_ID,
-		SITE_ID,
-		DISPOSER_TYPE,
-		ACTIVE,
-		VISIT_START_AT,
-		VISIT_END_AT,
-		BIDDING_END_AT,
-		OPEN_AT,
-		CLOSE_AT,
-		SERVICE_INSTRUCTION_ID,
-		ORDER_CODE,
-		NOTE,
-		CREATED_AT,
-		UPDATED_AT,
-		KIKCD_B_CODE,
-		MAX_SELECT_AT,
-		MAX_SELECT2_AT,
-        LAT,
-        LNG,
-        ADDR,
-        COLLECTOR_MAX_DECISION_AT,
-        COLLECTOR_MAX_DECISION2_AT
-	) VALUES(
-		IN_USER_ID,
-		IN_COLLECTOR_SITE_ID,
-		IN_DISPOSER_SITE_ID,
-		IN_DISPOSER_TYPE,
-		TRUE,
-		IN_VISIT_START_AT,
-		IN_VISIT_END_AT,
-		IN_BIDDING_END_AT,
-		IN_OPEN_AT,
-		@CLOSE_AT, 
-		@SERVICE_INSTRUCTION_ID,
-		@ORDER_CODE,
-		IN_NOTE,
-		IN_REG_DT,
-		IN_REG_DT,
-        IN_KIKCD_B_CODE,
-        @MAX_SELECT_AT,
-        @MAX_SELECT2_AT,
-        IN_LAT,
-        IN_LNG,
-        IN_ADDR,
-        @COLLECTOR_MAX_DECISION_AT,
-        @COLLECTOR_MAX_DECISION2_AT
-	);
-	
-    SELECT LAST_INSERT_ID() INTO @WSTE_DISPOSAL_ORDER_ID;
-    /*직전 INSERT 작업에서 AUTO INCREMENT로 생성된 최종 ID를 반환한다.1*/
+    IF IN_COLLECTOR_SITE_ID = 0 THEN
+		SET IN_COLLECTOR_SITE_ID = NULL;
+    END IF;
     
-	IF ROW_COUNT() = 1 THEN
-	/*자료 등록작업에 성공한 경우에는 후속작업을 정상진행한다.*/
-		CALL sp_req_policy_direction(
-			'min_disposal_duration',
-			@min_disposal_duration
-		);
-		/*SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);*/
-        IF IN_COLLECTOR_SITE_ID IS NULL THEN
-        /*일반 입찰거래인 경우*/
-			SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
-            
-			CALL sp_push_collector_list_share_business_areas(
-				IN_USER_ID,
-				@WSTE_DISPOSAL_ORDER_ID,
-				IN_KIKCD_B_CODE,
-                1,
-				@PUSH_INFO,
-				@rtn_val,
-				@msg_txt
-			);
-        ELSE
-        /*기존거래인 경우*/
-			SET @ASK_DISPOSAL_END_AT = IN_OPEN_AT;
-            
-			CALL sp_push_collector_dispose_new_wste(
-				IN_USER_ID,
-                @WSTE_DISPOSAL_ORDER_ID,
-				IN_COLLECTOR_SITE_ID,
-                1,
-				@PUSH_INFO,
-				@rtn_val,
-				@msg_txt
-			);
-        END IF;
-        SET OUT_PUSH_INFO = @PUSH_INFO;
-		CALL sp_insert_clct_trmt_transaction(
-		/*폐기물배출작업을 생성한다.*/
-			IN_USER_ID,
-			@WSTE_DISPOSAL_ORDER_ID,
-            IN_COLLECTOR_SITE_ID,
-            IN_VISIT_START_AT,
-            IN_VISIT_END_AT,
-            @ASK_DISPOSAL_END_AT,
-            @rtn_val,
-            @msg_txt
-		);
-		IF @rtn_val = 0 THEN
-        /*폐기물배출작업 생성에 성공한 경우*/
         
-			CALL sp_create_site_wste_discharged(
-			/*처리할 폐기물 목록을 저장한다.*/
-				@WSTE_DISPOSAL_ORDER_ID,
-				IN_REG_DT,
-				IN_WSTE_CLASS,
-				@rtn_val,
-				@msg_txt
-			);
-			IF @rtn_val = 0 THEN
-			/*폐기물 종류 목록 등록에 성공한 경우*/
-				CALL sp_create_site_wste_photo_information(
-				/*폐기물 사진을 등록한다.*/
-					@WSTE_DISPOSAL_ORDER_ID,
-                    NULL,
+	IF IN_ADDR IS NULL THEN
+		IF IN_KIKCD_B_CODE IS NULL THEN
+			CALL sp_check_if_bcode_valid(
+				IN_KIKCD_B_CODE,
+                @BCODE_EXISTS
+            );
+			IF @BCODE_EXISTS = 1 THEN
+				INSERT INTO SITE_WSTE_DISPOSAL_ORDER(
+					DISPOSER_ID,
+					COLLECTOR_ID,
+					SITE_ID,
+					DISPOSER_TYPE,
+					ACTIVE,
+					VISIT_START_AT,
+					VISIT_END_AT,
+					BIDDING_END_AT,
+					OPEN_AT,
+					CLOSE_AT,
+					SERVICE_INSTRUCTION_ID,
+					ORDER_CODE,
+					NOTE,
+					CREATED_AT,
+					UPDATED_AT,
+					KIKCD_B_CODE,
+					MAX_SELECT_AT,
+					MAX_SELECT2_AT,
+					LAT,
+					LNG,
+					ADDR,
+					COLLECTOR_MAX_DECISION_AT,
+					COLLECTOR_MAX_DECISION2_AT
+				) VALUES(
+					IN_USER_ID,
+					IN_COLLECTOR_SITE_ID,
+					IN_DISPOSER_SITE_ID,
+					IN_DISPOSER_TYPE,
+					TRUE,
+					IN_VISIT_START_AT,
+					IN_VISIT_END_AT,
+					IN_BIDDING_END_AT,
+					IN_OPEN_AT,
+					@CLOSE_AT, 
+					@SERVICE_INSTRUCTION_ID,
+					@ORDER_CODE,
+					IN_NOTE,
 					IN_REG_DT,
-					'입찰',
-					IN_PHOTO_LIST,
-					@rtn_val,
-					@msg_txt
+					IN_REG_DT,
+					IN_KIKCD_B_CODE,
+					@MAX_SELECT_AT,
+					@MAX_SELECT2_AT,
+					IN_LAT,
+					IN_LNG,
+					IN_ADDR,
+					@COLLECTOR_MAX_DECISION_AT,
+					@COLLECTOR_MAX_DECISION2_AT
 				);
-				IF @rtn_val = 0 THEN
-				/*폐기물 사진 등록에 성공한 경우*/
-					SET rtn_val = 0;
-					SET msg_txt = 'Success';
+				
+				SELECT LAST_INSERT_ID() INTO @WSTE_DISPOSAL_ORDER_ID;
+				/*직전 INSERT 작업에서 AUTO INCREMENT로 생성된 최종 ID를 반환한다.*/
+				
+				IF ROW_COUNT() = 1 THEN
+				/*자료 등록작업에 성공한 경우에는 후속작업을 정상진행한다.*/
+					CALL sp_req_policy_direction(
+						'min_disposal_duration',
+						@min_disposal_duration
+					);
+					/*SET @ASK_DISPOSAL_END_AT = DATE_ADD(IN_OPEN_AT, INTERVAL @min_disposal_duration DAY);*/
+					IF IN_COLLECTOR_SITE_ID IS NULL THEN
+					/*일반 입찰거래인 경우*/
+						SET @ASK_DISPOSAL_END_AT = NULL;		/*폐기물배출등록을 하는 경우에는 수거요청일을 결정하지 않기로 함 2022-03-25*/
+						
+						CALL sp_push_collector_list_share_business_areas(
+							IN_USER_ID,
+							@WSTE_DISPOSAL_ORDER_ID,
+							IN_KIKCD_B_CODE,
+							1,
+							@PUSH_INFO,
+							@rtn_val,
+							@msg_txt
+						);
+					ELSE
+					/*기존거래인 경우*/
+						SET @ASK_DISPOSAL_END_AT = IN_OPEN_AT;
+						
+						CALL sp_push_collector_dispose_new_wste(
+							IN_USER_ID,
+							@WSTE_DISPOSAL_ORDER_ID,
+							IN_COLLECTOR_SITE_ID,
+							28,
+							@PUSH_INFO,
+							@rtn_val,
+							@msg_txt
+						);
+					END IF;
+					SET OUT_PUSH_INFO = @PUSH_INFO;
+					CALL sp_insert_clct_trmt_transaction(
+					/*폐기물배출작업을 생성한다.*/
+						IN_USER_ID,
+						@WSTE_DISPOSAL_ORDER_ID,
+						IN_COLLECTOR_SITE_ID,
+						IN_VISIT_START_AT,
+						IN_VISIT_END_AT,
+						@ASK_DISPOSAL_END_AT,
+						@rtn_val,
+						@msg_txt
+					);
+					IF @rtn_val = 0 THEN
+					/*폐기물배출작업 생성에 성공한 경우*/
+					
+						CALL sp_create_site_wste_discharged(
+						/*처리할 폐기물 목록을 저장한다.*/
+							@WSTE_DISPOSAL_ORDER_ID,
+							IN_REG_DT,
+							IN_WSTE_CLASS,
+							@rtn_val,
+							@msg_txt
+						);
+						IF @rtn_val = 0 THEN
+						/*폐기물 종류 목록 등록에 성공한 경우*/
+							CALL sp_create_site_wste_photo_information(
+							/*폐기물 사진을 등록한다.*/
+								@WSTE_DISPOSAL_ORDER_ID,
+								NULL,
+								IN_REG_DT,
+								'입찰',
+								IN_PHOTO_LIST,
+								@rtn_val,
+								@msg_txt
+							);
+							IF @rtn_val = 0 THEN
+							/*폐기물 사진 등록에 성공한 경우*/
+								SET rtn_val = 0;
+								SET msg_txt = 'Success';
+							ELSE
+							/*폐기물 사진 등록에 실패한 경우 예외처리한다.*/
+								SET rtn_val = @rtn_val;
+								SET msg_txt = @msg_txt;
+							END IF;
+						ELSE
+						/*폐기물 종류 목록 등록에 실패한 경우 예외처리한다.*/
+							SET rtn_val = @rtn_val;
+							SET msg_txt = @msg_txt;
+						END IF;
+					ELSE
+					/*폐기물배출작업 생성에 실패한 경우 예외처리한다.*/
+						SET rtn_val = @rtn_val;
+						SET msg_txt = @msg_txt;
+					END IF;
 				ELSE
-				/*폐기물 사진 등록에 실패한 경우 예외처리한다.*/
-					SET rtn_val = @rtn_val;
-					SET msg_txt = @msg_txt;
+				/*자료 등록작업에 실패한 경우에는 예외처리한다.*/
+					SET rtn_val = 30901;
+					SET msg_txt = 'Failed to enter waste discharge data';
 				END IF;
 			ELSE
-			/*폐기물 종류 목록 등록에 실패한 경우 예외처리한다.*/
-				SET rtn_val = @rtn_val;
-				SET msg_txt = @msg_txt;
+				SET rtn_val = 30902;
+				SET msg_txt = 'b_code not valid';
 			END IF;
-        ELSE
-        /*폐기물배출작업 생성에 실패한 경우 예외처리한다.*/
-			SET rtn_val = @rtn_val;
-			SET msg_txt = @msg_txt;
-        END IF;
-	ELSE
-	/*자료 등록작업에 실패한 경우에는 예외처리한다.*/
-		SET rtn_val = 30901;
-		SET msg_txt = 'Failed to enter waste discharge data';
-	END IF;
+		ELSE
+			SET rtn_val = 30903;
+			SET msg_txt = 'b_code should not be empty';
+		END IF;
+    ELSE
+		SET rtn_val = 30904;
+		SET msg_txt = 'address should not be empty';
+    END IF;
 
 END

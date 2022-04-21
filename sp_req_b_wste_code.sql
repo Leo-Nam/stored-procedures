@@ -17,6 +17,7 @@ BEGIN
 	) 
 	INTO @json_data 
 	FROM V_WSTE_CODE
+    WHERE DISPLAY = 1
 	ORDER BY CODE_4;
 	SET @rtn_val = 0;
 	SET @msg_txt = 'Success';

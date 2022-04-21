@@ -24,6 +24,7 @@ AUTHOR 			: Leo Nam
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
+	SET @PUSH_CATEGORY_ID = 32;
 	CALL sp_req_user_exists_by_id(
 		IN_USER_ID,
         TRUE,
@@ -47,13 +48,13 @@ AUTHOR 			: Leo Nam
 			/*공지사항 작성에 실패한 경우 예외처리한다*/
 				CALL sp_push_system_notice(
 					IN_SUBJECT,
-					@PUSH_INFO
+					@json_data,
+					@rtn_val,
+					@msg_txt
 				);
-				SELECT JSON_ARRAYAGG(
-					JSON_OBJECT(
-						'PUSH_INFO'	, @PUSH_INFO
-					)
-				) INTO @json_data;
+				IF @rtn_val > 0 THEN
+					SIGNAL SQLSTATE '23000';
+				END IF;
             ELSE
 				SIGNAL SQLSTATE '23000';
 			END IF;

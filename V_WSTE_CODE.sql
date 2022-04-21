@@ -12,6 +12,7 @@ VIEW `chiumdev_2`.`V_WSTE_CODE` AS
         `A`.`NAME` AS `NAME`,
         `A`.`LAW_REV` AS `LAW_REV`,
         `A`.`WSTE_REPT_CLS_CODE` AS `WSTE_REPT_CLS_CODE`,
+        `A`.`DISPLAY` AS `DISPLAY`,
         `B`.`NAME` AS `WSTE_REPT_CLS_NM`,
         `C`.`ID` AS `CLASS_ID`,
         `C`.`CLASS_NAME` AS `CLASS_NAME`

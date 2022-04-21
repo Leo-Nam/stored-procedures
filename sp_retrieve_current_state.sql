@@ -52,7 +52,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
         C.ACTIVE = TRUE AND
         D.ACTIVE = TRUE AND
         E.ACTIVE = TRUE AND
-        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249) AND
+        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249) AND 
+        IF(F.IS_DELETED = TRUE, B.STATE_CODE NOT IN (202, 207, 210, 229, 239, 244), B.STATE_CODE NOT IN (0)) AND
         (G.TRANSACTION_STATE_CODE NOT IN (211) OR G.TRANSACTION_STATE_CODE IS NULL);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
             
@@ -82,7 +83,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
         IMG_PATH						JSON,
         WSTE_GEO_INFO					JSON,
         DISPOSER_ORDER_INFO				JSON,
-        TRANSACTION_INFO				JSON
+        TRANSACTION_INFO				JSON,
+        SECOND_PLACE_ON					TINYINT
         
 	);        
 	
@@ -156,6 +158,12 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
 			CUR_TRANSACTION_ID,
 			@RETRIEVE_CURRENT_STATE_TRANSACTION_INFO
 		);
+        
+        CALL sp_check_if_second_place_on(
+			CUR_DISPOSER_ORDER_ID,
+            CUR_COLLECTOR_BIDDING_ID,
+            @SECOND_PLACE_ON
+        );
             
 		CALL sp_set_display_time_for_collector(
 			CUR_DISPOSER_ORDER_ID,
@@ -182,7 +190,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
             WSTE_GEO_INFO 		= @RETRIEVE_CURRENT_STATE_WSTE_GEO_INFO, 
             DISPOSER_ORDER_INFO	= @RETRIEVE_CURRENT_STATE_DISPOSER_ORDER_INFO,
             DISPLAY_DATE 		= @RETRIEVE_CURRENT_STATE_DISPLAY_DATE,
-            TRANSACTION_INFO	= @RETRIEVE_CURRENT_STATE_TRANSACTION_INFO 
+            TRANSACTION_INFO	= @RETRIEVE_CURRENT_STATE_TRANSACTION_INFO ,
+            SECOND_PLACE_ON		= @SECOND_PLACE_ON 
         WHERE COLLECTOR_BIDDING_ID = CUR_COLLECTOR_BIDDING_ID;
 	END LOOP;   
 	CLOSE TEMP_CURSOR;
@@ -202,7 +211,8 @@ Change			: 폐기물 리스트와 폐기물 사진에 대한 정보는 JSON 타�
         'WSTE_LIST'					, WSTE_LIST, 
         'WSTE_GEO_INFO'				, WSTE_GEO_INFO, 
         'DISPOSER_ORDER_INFO'		, DISPOSER_ORDER_INFO, 
-        'TRANSACTION_INFO'			, TRANSACTION_INFO
+        'TRANSACTION_INFO'			, TRANSACTION_INFO, 
+        'SECOND_PLACE_ON'			, SECOND_PLACE_ON
 	)) 
     INTO @json_data FROM RETRIEVE_CURRENT_STATE_TEMP;
     

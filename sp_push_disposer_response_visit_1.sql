@@ -1,4 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_disposer_response_visit_1`(
+	IN IN_USER_ID					BIGINT,
 	IN IN_ORDER_ID					BIGINT,
 	IN IN_BIDDING_ID				BIGINT,
     OUT OUT_TARGET_LIST				JSON,
@@ -30,6 +31,13 @@ BEGIN
 			SET @STR_RESPONSE = '거절';
             SET @CATEGORY_ID = 5;
         END IF;
+    
+		SELECT ID INTO @TRANSACTION_ID
+		FROM WSTE_CLCT_TRMT_TRANSACTION
+		WHERE 
+			DISPOSAL_ORDER_ID = IN_ORDER_ID AND
+			IN_PROGRESS = TRUE;  
+            
 		SET @TITLE = CONCAT('[', @ORDER_CODE, ']방문신청', @STR_RESPONSE);
 		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']에 대한 방문신청이 ', @STR_RESPONSE, '되었습니다.');
 		SELECT JSON_ARRAYAGG(
@@ -42,7 +50,7 @@ BEGIN
 				'BODY'					, @BODY,
 				'ORDER_ID'				, IN_ORDER_ID, 
 				'BIDDING_ID'			, IN_BIDDING_ID, 
-				'TRANSACTION_ID'		, NULL, 
+				'TRANSACTION_ID'		, @TRANSACTION_ID, 
 				'REPORT_ID'				, NULL, 
 				'CATEGORY_ID'			, @CATEGORY_ID,
 				'CREATED_AT'			, @REG_DT
@@ -56,7 +64,7 @@ BEGIN
 			AFFILIATED_SITE			= @COLLECTOR_SITE_ID;
         
         CALL sp_insert_push(
-			0,
+			IN_USER_ID,
 			@PUSH_INFO,
 			rtn_val,
 			msg_txt

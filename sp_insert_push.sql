@@ -82,39 +82,49 @@ AUTHOR 			: Leo Nam
 				SET msg_txt = 'Success';
 				LEAVE cloop;
 			END IF;
-			
-			INSERT INTO PUSH_HISTORY(
-				USER_ID,
-				TITLE,
-				BODY,
-				CREATED_AT,
-				SENDER_ID,
-				ORDER_ID,
-				BIDDING_ID,
-				TRANSACTION_ID,
-				REPORT_ID,
-				CATEGORY_ID
-			) VALUES (
-				CUR_USER_ID,
-				CUR_TITLE,
-				CUR_BODY,
-				CUR_CREATED_AT,
-				IN_SENDER_ID,
-				CUR_ORDER_ID,
-				CUR_BIDDING_ID,
-				CUR_TRANSACTION_ID,
-				CUR_REPORT_ID,
-				CUR_CATEGORY_ID
-			);
-			
-			IF ROW_COUNT() = 0 THEN
-				SET rtn_val = 37701;
-				SET msg_txt = 'Failed to insert push lists';
-				LEAVE cloop;
-			ELSE
-				SET rtn_val = 0;
-				SET msg_txt = 'Success';
-			END IF;
+			IF 
+				CUR_USER_ID IS NOT NULL AND
+				CUR_TITLE IS NOT NULL AND
+				CUR_BODY IS NOT NULL AND
+				CUR_CREATED_AT IS NOT NULL AND
+				IN_SENDER_ID IS NOT NULL AND
+				CUR_ORDER_ID IS NOT NULL AND
+				CUR_TRANSACTION_ID IS NOT NULL AND
+				CUR_CATEGORY_ID IS NOT NULL
+            THEN
+				INSERT INTO PUSH_HISTORY(
+					USER_ID,
+					TITLE,
+					BODY,
+					CREATED_AT,
+					SENDER_ID,
+					ORDER_ID,
+					BIDDING_ID,
+					TRANSACTION_ID,
+					REPORT_ID,
+					CATEGORY_ID
+				) VALUES (
+					CUR_USER_ID,
+					CUR_TITLE,
+					CUR_BODY,
+					CUR_CREATED_AT,
+					IN_SENDER_ID,
+					CUR_ORDER_ID,
+					CUR_BIDDING_ID,
+					CUR_TRANSACTION_ID,
+					CUR_REPORT_ID,
+					CUR_CATEGORY_ID
+				);
+				
+				IF ROW_COUNT() = 0 THEN
+					SET rtn_val = 37701;
+					SET msg_txt = 'Failed to insert push lists';
+					LEAVE cloop;
+				ELSE
+					SET rtn_val = 0;
+					SET msg_txt = 'Success';
+				END IF;
+            END IF;
 		END LOOP;   
 		CLOSE PUSH_CURSOR;
     ELSE

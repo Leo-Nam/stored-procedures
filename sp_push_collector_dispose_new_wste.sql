@@ -8,6 +8,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_collector_dispose_new_wste`(
     OUT msg_txt 					VARCHAR(200)		/*출력값 : 처리결과 문자열*/
 )
 BEGIN
+    CALL sp_req_current_time(@REG_DT);
 	SELECT IF(A.AFFILIATED_SITE = 0, A.USER_NAME, B.SITE_NAME)
     INTO @DISPOSER_NAME
 	FROM USERS A
@@ -45,7 +46,8 @@ BEGIN
 			'BIDDING_ID'			, NULL, 
 			'TRANSACTION_ID'		, @TRANSACTION_ID, 
 			'REPORT_ID'				, NULL, 
-			'CATEGORY_ID'			, IN_CATEGORY_ID
+			'CATEGORY_ID'			, IN_CATEGORY_ID,
+            'CREATED_AT'			, @REG_DT
 		)
 	) 
 	INTO @PUSH_INFO
@@ -56,7 +58,7 @@ BEGIN
 		AFFILIATED_SITE			= IN_COLLECTOR_SITE_ID;
         
 	CALL sp_insert_push(
-		0,
+		IN_USER_ID,
 		@PUSH_INFO,
 		rtn_val,
 		msg_txt

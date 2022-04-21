@@ -29,9 +29,11 @@ AUTHOR 			: Leo Nam
         ACTIVE = TRUE;
         
     IF @BIDDING_EXISTS = 1 THEN
-		SELECT B.ID INTO @ORDER_ID
+		SELECT B.ID, B.ORDER_CODE, C.SITE_NAME
+        INTO @ORDER_ID, @ORDER_CODE, @COLLECTOR_SITE_NAME
         FROM COLLECTOR_BIDDING A
         LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+        LEFT JOIN COMP_SITE C ON A.COLLECTOR_ID = C.ID
         WHERE
 			A.ID = IN_COLLECTOR_BIDDING_ID;    
             
@@ -51,7 +53,7 @@ AUTHOR 			: Leo Nam
 					'TRANSACTION_ID'		, NULL, 
 					'REPORT_ID'				, NULL, 
 					'CATEGORY_ID'			, IN_CATEGORY_ID,
-					'CRREATED_AT'			, @REG_DT
+					'CREATED_AT'			, @REG_DT
 				)
 			) 
 			INTO @PUSH_INFO
@@ -76,7 +78,7 @@ AUTHOR 			: Leo Nam
 					'TRANSACTION_ID'		, NULL, 
 					'REPORT_ID'				, NULL, 
 					'CATEGORY_ID'			, IN_CATEGORY_ID,
-					'CRREATED_AT'			, @REG_DT
+					'CREATED_AT'			, @REG_DT
 				)
 			) 
 			INTO @PUSH_INFO
@@ -90,8 +92,8 @@ AUTHOR 			: Leo Nam
         END IF;
         
         CALL sp_insert_push(
-			0,
-			OUT_TARGET_LIST,
+			IN_USER_ID,
+			@PUSH_INFO,
 			rtn_val,
 			msg_txt
         );

@@ -14,6 +14,12 @@ BEGIN
     WHERE 
 		ID = IN_ORDER_ID AND
         ACTIVE = TRUE;
+    
+	SELECT ID INTO @TRANSACTION_ID
+	FROM WSTE_CLCT_TRMT_TRANSACTION
+	WHERE 
+		DISPOSAL_ORDER_ID = IN_ORDER_ID AND
+		IN_PROGRESS = TRUE;  
         
     IF @ORDER_EXISTS = 1 THEN
 		SELECT ORDER_CODE, DISPOSER_ID, SITE_ID
@@ -35,7 +41,7 @@ BEGIN
 					'BODY'					, @BODY,
 					'ORDER_ID'				, IN_ORDER_ID, 
 					'BIDDING_ID'			, NULL, 
-					'TRANSACTION_ID'		, NULL, 
+					'TRANSACTION_ID'		, @TRANSACTION_ID, 
 					'REPORT_ID'				, NULL, 
 					'CATEGORY_ID'			, IN_CATEGORY_ID,
 					'CREATED_AT'			, @REG_DT
@@ -58,7 +64,7 @@ BEGIN
 					'BODY'					, @BODY,
 					'ORDER_ID'				, IN_ORDER_ID, 
 					'BIDDING_ID'			, NULL, 
-					'TRANSACTION_ID'		, NULL, 
+					'TRANSACTION_ID'		, @TRANSACTION_ID, 
 					'REPORT_ID'				, NULL, 
 					'CATEGORY_ID'			, IN_CATEGORY_ID,
 					'CREATED_AT'			, @REG_DT
@@ -75,7 +81,7 @@ BEGIN
         END IF;
         
         CALL sp_insert_push(
-			0,
+			IN_USER_ID,
 			@PUSH_INFO,
 			rtn_val,
 			msg_txt

@@ -88,7 +88,8 @@ AUTHOR 			: Leo Nam
 		STATE_CATEGORY						VARCHAR(20),   		/*오더 대구분 상태*/
 		STATE_CATEGORY_ID					INT,    			/*오더 대구분 상태 코드*/
 		AVATAR_PATH							VARCHAR(255),		/*수거자 아바타 경로*/
-        SITE_INFO							JSON
+        SITE_INFO							JSON,
+        REPORT_INFO							JSON
 	);         
 	
 	OPEN TEMP_CURSOR;	
@@ -165,8 +166,15 @@ AUTHOR 			: Leo Nam
 			);
 		END IF;
 		
+        CALL sp_get_transaction_report(
+			CUR_REPORT_ID,
+            @REPORT_INFO
+        );
+        
 		UPDATE PAST_TRANSACTIONS
-		SET SITE_INFO = @SITE_INFO
+		SET 
+			SITE_INFO 	= @SITE_INFO,
+			REPORT_INFO = @REPORT_INFO
 		WHERE REPORT_ID = CUR_REPORT_ID;
 		
 	END LOOP;   
@@ -189,7 +197,8 @@ AUTHOR 			: Leo Nam
 			'STATE_CATEGORY'				, STATE_CATEGORY, 
 			'STATE_CATEGORY_ID'				, STATE_CATEGORY_ID, 
 			'AVATAR_PATH'					, AVATAR_PATH, 
-			'SITE_INFO'						, SITE_INFO
+			'SITE_INFO'						, SITE_INFO, 
+			'REPORT_INFO'					, REPORT_INFO
 		)
 	) 
 	INTO @json_data 

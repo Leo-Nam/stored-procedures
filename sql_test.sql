@@ -6537,7 +6537,7 @@ call sp_ask_visit_on_disposal_site(
     @VISIT_DATE
 );
 */
-
+/*
 SET @USER_ID = 244;
 SET @ORDER_ID = 750;
 SET @PUSH_CATEGORY_ID = 3;
@@ -6557,3 +6557,212 @@ SELECT
     @TARGET_LIST,
     @rtn_val,
     @msg_txt
+*/
+
+/*
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'				, ID, 
+				'USER_NAME'				, USER_NAME, 
+				'FCM'					, FCM, 
+				'AVATAR_PATH'			, @AVATAR_PATH,
+				'TITLE'					, @TITLE,
+				'BODY'					, @BODY,
+				'ORDER_ID'				, IN_ORDER_ID, 
+				'BIDDING_ID'			, NULL, 
+				'TRANSACTION_ID'		, NULL, 
+				'REPORT_ID'				, NULL, 
+				'CATEGORY_ID'			, IN_CATEGORY_ID,
+				'CREATED_AT'			, @REG_DT
+			)
+		) 
+		INTO @PUSH_INFO
+		FROM USERS A
+        LEFT JOIN COLLECTOR_BIDDING B ON A.AFFILIATED_SITE = B.COLLECTOR_ID
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER C ON B.DISPOSAL_ORDER_ID = C.ID
+		WHERE 
+			A.ACTIVE 				= TRUE AND
+			A.PUSH_ENABLED			= TRUE AND
+			C.ID					= 881 AND
+            B.ACTIVE				= TRUE AND
+            B.DELETED				= FALSE AND
+            B.RESPONSE_VISIT		= TRUE AND
+            B.CANCEL_VISIT			= FALSE AND
+            B.REJECT_BIDDING_APPLY	= FALSE;    
+SELECT @PUSH_INFO;
+*/
+
+/*
+SET @USER_ID = 246;
+SET @BIDDING_ID = 566;
+CALL sp_cancel_bidding(
+	@USER_ID,
+    @BIDDING_ID
+);
+*/
+/*
+SET @USER_ID = 246;
+SET @ORDER_ID = 882;
+SET @BIDDING_ID = 566;
+SET @PUSH_CATEGORY_ID = 13;
+CALL sp_push_collector_cancel_or_giveup_bidding(
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+*/
+
+
+/*
+SET @USER_ID = 246;
+SET @ORDER_ID = 882;
+SET @BIDDING_ID = 566;
+SET @PUSH_CATEGORY_ID = 14;
+CALL sp_push_collector_apply_bidding(
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+*/
+
+
+/*
+SET @USER_ID = 246;
+SET @ORDER_ID = 930;
+SET @BIDDING_ID = 581;
+SET @PUSH_CATEGORY_ID = 13;
+CALL sp_push_collector_cancel_or_giveup_bidding(
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+*/
+
+
+/*
+SET @USER_ID = 246;
+SET @BIDDING_ID = 601;
+CALL sp_cancel_bidding(
+	@USER_ID,
+    @BIDDING_ID
+);
+*/
+
+
+/*
+SET @USER_ID = 246;
+SET @ORDER_ID = 957;
+SET @BIDDING_ID = 605;
+SET @PUSH_CATEGORY_ID = 21;
+CALL sp_push_disposer_select_collector(
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+*/
+
+/*
+	SELECT 
+        A.ID,
+        A.TITLE,
+        A.BODY,
+        A.CATEGORY_ID,
+        B.AVATAR_PATH
+    FROM PUSH_HISTORY A
+    LEFT JOIN USERS B ON A.SENDER_ID = B.ID
+    WHERE A.USER_ID = 188
+    ORDER BY A.CREATED_AT DESC
+*/
+/*
+CALL sp_req_change_read_state_of_history(
+	188,
+    5626
+);   
+*/
+
+/*
+	SELECT 
+        A.ID,
+        A.TITLE,
+        A.BODY,
+        A.CATEGORY_ID,
+        B.AVATAR_PATH
+    FROM PUSH_HISTORY A
+    LEFT JOIN USERS B ON A.SENDER_ID = B.ID
+    WHERE A.USER_ID = 188
+    ORDER BY A.CREATED_AT DESC 
+*/
+/*
+SET @USER_REG_ID = 'taehyeki';
+SET @USER_NAME = '김태현';
+SET @PHONE = '010-7226-0145';
+CALL sp_check_user_auth(
+	@USER_REG_ID,
+	@USER_NAME,
+	@PHONE
+);
+*/
+
+
+
+SET @USER_ID = 238;
+SET @COLLECTOR_BIDDING_ID = 612;
+SET @RES = 1;
+
+CALL sp_disposer_response_visit(
+	@USER_ID,
+    @COLLECTOR_BIDDING_ID,
+    @RES
+);

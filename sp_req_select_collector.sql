@@ -25,6 +25,7 @@ AUTHOR 			: Leo Nam
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 	
+	SET @PUSH_CATEGORY_ID = 21;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -104,16 +105,14 @@ AUTHOR 			: Leo Nam
 												);
                                                 IF @rtn_val = 0 THEN
 													CALL sp_push_disposer_close_visit_early(
+														IN_USER_ID,
 														IN_DISPOSER_ORDER_ID,
-														@PUSH_INFO
+														IN_COLLECTOR_BIDDING_ID,
+														@PUSH_CATEGORY_ID,
+														@json_data,
+														@rtn_val,
+														@msg_txt
 													);
-													SELECT JSON_ARRAYAGG(
-														JSON_OBJECT(
-															'PUSH_INFO'	, @PUSH_INFO
-														)
-													) INTO @json_data;
-													SET @rtn_val = 0;
-													SET @msg_txt = 'success';
                                                 ELSE
 													SIGNAL SQLSTATE '23000';
                                                 END IF;
@@ -135,16 +134,14 @@ AUTHOR 			: Leo Nam
 											);
 											IF @rtn_val = 0 THEN
 												CALL sp_push_disposer_close_visit_early(
+													IN_USER_ID,
 													IN_DISPOSER_ORDER_ID,
-													@PUSH_INFO
+													IN_COLLECTOR_BIDDING_ID,
+													@PUSH_CATEGORY_ID,
+													@json_data,
+													@rtn_val,
+													@msg_txt
 												);
-												SELECT JSON_ARRAYAGG(
-													JSON_OBJECT(
-														'PUSH_INFO'	, @PUSH_INFO
-													)
-												) INTO @json_data;
-												SET @rtn_val = 0;
-												SET @msg_txt = 'success';
 											ELSE
 												SIGNAL SQLSTATE '23000';
 											END IF;

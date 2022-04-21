@@ -30,6 +30,7 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 	
+	SET @PUSH_CATEGORY_ID = 14;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
@@ -169,16 +170,14 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 																IN_DISPOSAL_ORDER_ID
 															);
 															CALL sp_push_collector_apply_bidding(
+																IN_USER_ID,
 																IN_DISPOSAL_ORDER_ID,
-																@PUSH_INFO
+                                                                @COLLECTOR_BIDDING_ID,
+																@PUSH_CATEGORY_ID,
+																@json_data,
+																@rtn_val,
+																@msg_txt
 															);
-															SELECT JSON_ARRAYAGG(
-																JSON_OBJECT(
-																	'PUSH_INFO'	, @PUSH_INFO
-																)
-															) INTO @json_data;
-															SET @rtn_val 		= 0;
-															SET @msg_txt 		= 'Success1';
 														ELSE
 														/*데이타 입력에 실패하였다면 예외처리한다.*/
 															SET @rtn_val 		= 23401;
@@ -257,16 +256,14 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 										IN_DISPOSAL_ORDER_ID
 									);
 									CALL sp_push_collector_apply_bidding(
+										IN_USER_ID,
 										IN_DISPOSAL_ORDER_ID,
-										@PUSH_INFO
+										@COLLECTOR_BIDDING_ID,
+										@PUSH_CATEGORY_ID,
+										@json_data,
+										@rtn_val,
+										@msg_txt
 									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success2';
                                 ELSE
 									SET @rtn_val 		= 23404;
 									SET @msg_txt 		= 'Failed to create final bidder management rocord';

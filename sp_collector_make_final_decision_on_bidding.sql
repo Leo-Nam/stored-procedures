@@ -109,18 +109,20 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
                                     IN_PROGRESS			= TRUE;
 								IF ROW_COUNT() = 1 THEN
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+									SET @PUSH_CATEGORY_ID = 23;
 									CALL sp_push_collector_make_final_decision(
+										IN_USER_ID,
+										@DISPOSAL_ORDER_ID,
 										IN_COLLECTOR_BIDDING_ID,
-                                        '승인',
-										@PUSH_INFO
+										NULL,
+										@PUSH_CATEGORY_ID,
+										@json_data,
+										@rtn_val,
+										@msg_txt
 									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= CONCAT('Success102: ', @DISPOSAL_ORDER_ID);
+                                    IF @rtn_val > 0 THEN
+										SIGNAL SQLSTATE '23000';
+                                    END IF;
 								ELSE
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
 									SET @rtn_val 		= 24102;
@@ -128,18 +130,20 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									SIGNAL SQLSTATE '23000';
 								END IF;
 							ELSE
+								SET @PUSH_CATEGORY_ID = 24;
 								CALL sp_push_collector_make_final_decision(
+									IN_USER_ID,
+									@DISPOSAL_ORDER_ID,
 									IN_COLLECTOR_BIDDING_ID,
-									'거절',
-									@PUSH_INFO
+									NULL,
+									@PUSH_CATEGORY_ID,
+									@json_data,
+									@rtn_val,
+									@msg_txt
 								);
-								SELECT JSON_ARRAYAGG(
-									JSON_OBJECT(
-										'PUSH_INFO'	, @PUSH_INFO
-									)
-								) INTO @json_data;
-								SET @rtn_val 		= 0;
-								SET @msg_txt 		= 'Success101';
+								IF @rtn_val > 0 THEN
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							END IF;
 						ELSE
 							SET @rtn_val 		= 24104;
@@ -172,18 +176,20 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										IN_PROGRESS			= TRUE;
 									IF ROW_COUNT() = 1 THEN
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
+										SET @PUSH_CATEGORY_ID = 23;
 										CALL sp_push_collector_make_final_decision(
+											IN_USER_ID,
+											@DISPOSAL_ORDER_ID,
 											IN_COLLECTOR_BIDDING_ID,
-											'승인',
-											@PUSH_INFO
+											NULL,
+											@PUSH_CATEGORY_ID,
+											@json_data,
+											@rtn_val,
+											@msg_txt
 										);
-										SELECT JSON_ARRAYAGG(
-											JSON_OBJECT(
-												'PUSH_INFO'	, @PUSH_INFO
-											)
-										) INTO @json_data;
-										SET @rtn_val 		= 0;
-										SET @msg_txt 		= 'Success202';
+										IF @rtn_val > 0 THEN
+											SIGNAL SQLSTATE '23000';
+										END IF;
 									ELSE
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
 										SET @rtn_val 		= 24107;
@@ -191,18 +197,20 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										SIGNAL SQLSTATE '23000';
 									END IF;
 								ELSE
+									SET @PUSH_CATEGORY_ID = 24;
 									CALL sp_push_collector_make_final_decision(
+										IN_USER_ID,
+										@DISPOSAL_ORDER_ID,
 										IN_COLLECTOR_BIDDING_ID,
-										'거절',
-										@PUSH_INFO
+										NULL,
+										@PUSH_CATEGORY_ID,
+										@json_data,
+										@rtn_val,
+										@msg_txt
 									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success201';
+									IF @rtn_val > 0 THEN
+										SIGNAL SQLSTATE '23000';
+									END IF;
 								END IF;
 							ELSE
 								SET @rtn_val 		= 24106;

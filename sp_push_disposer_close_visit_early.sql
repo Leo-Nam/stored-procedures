@@ -19,7 +19,13 @@ BEGIN
 		SELECT ORDER_CODE
         INTO @ORDER_CODE
         FROM SITE_WSTE_DISPOSAL_ORDER
-        WHERE ID = IN_ORDER_ID;
+        WHERE ID = IN_ORDER_ID; 
+    
+		SELECT ID INTO @TRANSACTION_ID
+		FROM WSTE_CLCT_TRMT_TRANSACTION
+		WHERE 
+			DISPOSAL_ORDER_ID = IN_ORDER_ID AND
+			IN_PROGRESS = TRUE;  
         
 		SET @TITLE = CONCAT('[', @ORDER_CODE, ']방문조기마감');
 		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']이 조기마감되어서 입찰이 시작되었습니다.');
@@ -33,7 +39,7 @@ BEGIN
 				'BODY'					, @BODY,
 				'ORDER_ID'				, IN_ORDER_ID, 
 				'BIDDING_ID'			, NULL, 
-				'TRANSACTION_ID'		, NULL, 
+				'TRANSACTION_ID'		, @TRANSACTION_ID, 
 				'REPORT_ID'				, NULL, 
 				'CATEGORY_ID'			, IN_CATEGORY_ID,
 				'CREATED_AT'			, @REG_DT
@@ -54,7 +60,7 @@ BEGIN
             B.REJECT_BIDDING_APPLY	= FALSE;
         
         CALL sp_insert_push(
-			0,
+			IN_USER_ID,
 			@PUSH_INFO,
 			rtn_val,
 			msg_txt

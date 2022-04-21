@@ -27,6 +27,7 @@ AUTHOR 			: Leo Nam
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
     
+	SET @PUSH_CATEGORY_ID = 27;
 	CALL sp_req_user_exists_by_id(
 		IN_USER_ID,
         TRUE,
@@ -72,17 +73,17 @@ AUTHOR 			: Leo Nam
 							);
 							IF @rtn_val = 0 THEN
 								CALL sp_push_disposer_write_review(
-									@DISPOSER_SITE_ID,
-                                    IN_SITE_ID,
-									@PUSH_INFO
+									IN_USER_ID,
+									IN_DISPOSER_ORDER_ID,
+									IN_SITE_ID,
+									@PUSH_CATEGORY_ID,
+									@json_data,
+									@rtn_val,
+									@msg_txt
 								);
-								SELECT JSON_ARRAYAGG(
-									JSON_OBJECT(
-										'PUSH_INFO'	, @PUSH_INFO
-									)
-								) INTO @json_data;
-								SET @rtn_val = 0;
-								SET @msg_txt = 'success';
+								IF @rtn_val > 0 THEN
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							ELSE
 							/*공지사항 작성에 실패한 경우 예외처리한다*/
 								SET @rtn_val = 33806;
@@ -121,17 +122,17 @@ AUTHOR 			: Leo Nam
 						);
 						IF @rtn_val = 0 THEN
 							CALL sp_push_disposer_write_review(
-								@DISPOSER_SITE_ID,
+								IN_USER_ID,
+								IN_DISPOSER_ORDER_ID,
 								IN_SITE_ID,
-								@PUSH_INFO
+								@PUSH_CATEGORY_ID,
+								@json_data,
+								@rtn_val,
+								@msg_txt
 							);
-							SELECT JSON_ARRAYAGG(
-								JSON_OBJECT(
-									'PUSH_INFO'	, @PUSH_INFO
-								)
-							) INTO @json_data;
-							SET @rtn_val = 0;
-							SET @msg_txt = 'success';
+							IF @rtn_val > 0 THEN
+								SIGNAL SQLSTATE '23000';
+							END IF;
 						ELSE
 						/*공지사항 작성에 실패한 경우 예외처리한다*/
 							SET @rtn_val = 33804;
@@ -162,5 +163,6 @@ AUTHOR 			: Leo Nam
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
+    SET @json_data = NULL;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

@@ -75,17 +75,18 @@ AUTHOR 			: Leo Nam
 								IF @USER_CLASS = 201 OR @USER_CLASS = 202 THEN
 								/*사용자에게 권한이 있는 경우 정상처리한다.*/
 									CALL sp_push_collector_accept_ask_end(
+										IN_USER_ID,
+										@DISPOSAL_ORDER_ID,
+										NULL,
 										IN_TRANSACTION_ID,
-										'수락',
-										@PUSH_INFO
+										29,
+										@json_data,
+										@rtn_val,
+										@msg_txt
 									);
-									SELECT JSON_ARRAYAGG(
-										JSON_OBJECT(
-											'PUSH_INFO'	, @PUSH_INFO
-										)
-									) INTO @json_data;
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'success';
+									IF @rtn_val > 0 THEN
+										SIGNAL SQLSTATE '23000';
+									END IF;
 								ELSE
 								/*사용자에게 권한이 없는 경우 예외처리한다.*/
 									SET @rtn_val 		= 34805;
@@ -107,22 +108,19 @@ AUTHOR 			: Leo Nam
 					ELSE
 					/*수거업체가 배출자의 수거요청일을 거부하면서 거절하는 경우에는 계약이 체결되지 않는 상태로서 정상처리한다.*/
 					/*뭔가 처리할게 있을거 같은데.... .쩌업~~~*/
-					
 						CALL sp_push_collector_accept_ask_end(
+							IN_USER_ID,
+							@DISPOSAL_ORDER_ID,
+							NULL,
 							IN_TRANSACTION_ID,
-							'거절',
-							@PUSH_INFO
+							30,
+							@json_data,
+							@rtn_val,
+							@msg_txt
 						);
-						SELECT JSON_ARRAYAGG(
-							JSON_OBJECT(
-								'PUSH_INFO'	, @PUSH_INFO
-							)
-						) INTO @json_data;
-						SET @rtn_val 		= 0;
-						SET @msg_txt 		= 'success';
-					
-						SET @rtn_val 		= 0;
-						SET @msg_txt 		= 'success';
+						IF @rtn_val > 0 THEN
+							SIGNAL SQLSTATE '23000';
+						END IF;
 					END IF;
 				ELSE
 				/*IN_RESPONSE가 NULL인 경우에는 예외처리한다*/
