@@ -43,73 +43,43 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 			ID = @DISPOSAL_ORDER_ID AND 
 			ACTIVE = TRUE;
             
-		IF @VISIT_END_AT >= @REG_DT THEN
-		/*방문마감일이 종료되지 않은 경우*/
-			SELECT COUNT(ID) INTO @ITEM_COUNT 
-            FROM COLLECTOR_BIDDING 
-            WHERE 
-				ID 				= IN_COLLECT_BIDDING_ID AND 
-                DATE_OF_VISIT 	IS NOT NULL;
-            /*수거자가 방문신청을 한 사실이 있는지 확인하여 그 결과를 @TEMP_COUNT에 반환한다*/
-            IF @ITEM_COUNT = 1 THEN
-            /*수거자가 방문신청을 한 사실이 존재하는 경우 정상처리한다.*/
-				SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED 
-                FROM COLLECTOR_BIDDING 
-                WHERE 
+		SELECT COUNT(A.ID) INTO @BIDDING_EXISTS
+        FROM COLLECTOR_BIDDING A
+        LEFT JOIN USERS B ON A.COLLECTOR_ID = B.AFFILIATED_SITE
+        WHERE
+			A.ID = IN_COLLECT_BIDDING_ID AND
+            B.ID = IN_USER_ID;
+		IF @BIDDING_EXISTS = 1 THEN
+		/*BIDDING이 존재하는 경우 정상처리한다.*/
+			IF @VISIT_END_AT >= @REG_DT THEN
+			/*방문마감일이 종료되지 않은 경우*/
+				SELECT COUNT(ID) INTO @ITEM_COUNT 
+				FROM COLLECTOR_BIDDING 
+				WHERE 
 					ID 				= IN_COLLECT_BIDDING_ID AND 
-                    CANCEL_VISIT 	= TRUE;
-				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 있는지 확인하여 그 결과를 @IS_ALREADY_CANCELED 반환한다. 방문취소한 사실이 존재하는 경우 1, 그렇지 않으면 0*/
-                IF @IS_ALREADY_CANCELED = 0 THEN
-				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하지 않는 경우 정상처리한다.*/
-					SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT 
-                    FROM COLLECTOR_BIDDING 
-                    WHERE ID = IN_COLLECT_BIDDING_ID;
-                    /*배출자가 수거자의 방문신청에 대한 수락 또는 거절의사를 확인하여 그 결과를 @EMITTOR_RESPONSE_FOR_VISIT에 반환한다.*/
-                    IF @EMITTOR_RESPONSE_FOR_VISIT IS NULL THEN
-                    /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시하지 않은 대기상태인 경우*/
-						UPDATE COLLECTOR_BIDDING 
-						SET 
-							CANCEL_VISIT 		= TRUE, 
-							CANCEL_VISIT_AT 	= @REG_DT, 
-							UPDATED_AT		 	= @REG_DT 
+					DATE_OF_VISIT 	IS NOT NULL;
+				/*수거자가 방문신청을 한 사실이 있는지 확인하여 그 결과를 @TEMP_COUNT에 반환한다*/
+				IF @ITEM_COUNT = 1 THEN
+				/*수거자가 방문신청을 한 사실이 존재하는 경우 정상처리한다.*/
+					SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED 
+					FROM COLLECTOR_BIDDING 
+					WHERE 
+						ID 				= IN_COLLECT_BIDDING_ID AND 
+						CANCEL_VISIT 	= TRUE;
+					/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 있는지 확인하여 그 결과를 @IS_ALREADY_CANCELED 반환한다. 방문취소한 사실이 존재하는 경우 1, 그렇지 않으면 0*/
+					IF @IS_ALREADY_CANCELED = 0 THEN
+					/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하지 않는 경우 정상처리한다.*/
+						SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT 
+						FROM COLLECTOR_BIDDING 
 						WHERE ID = IN_COLLECT_BIDDING_ID;
-						/*방문신청을 취소상태(비활성상태)로 변경한다.*/
-						IF ROW_COUNT() = 1 THEN
-						/*데이타베이스 입력에 성공한 경우*/
-							SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
-							FROM COLLECTOR_BIDDING 
-							WHERE 
-								DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
-								DATE_OF_VISIT 			IS NOT NULL AND
-								CANCEL_VISIT 			= FALSE AND
-								RESPONSE_VISIT 			= TRUE;
-							UPDATE SITE_WSTE_DISPOSAL_ORDER 
-                            SET 
-								PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS, 
-								UPDATED_AT		 		= @REG_DT  
-                            WHERE ID = @DISPOSAL_ORDER_ID;
-							CALL sp_push_cancel_visit(
-								IN_USER_ID,
-								IN_COLLECT_BIDDING_ID,
-                                @PUSH_CATEGORY_ID,
-								@json_data,
-								@rtn_val,
-								@msg_txt
-							);
-						ELSE
-						/*데이타베이스 입력에 실패한 경우*/
-							SET @rtn_val 		= 25606;
-							SET @msg_txt 		= 'record cancellation error';
-						END IF;
-                    ELSE
-                    /*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시한 경우*/
-						IF @EMITTOR_RESPONSE_FOR_VISIT <> 0 THEN
-						/*배출자가 수거자의 방문신청에 대하여 거절의사를 밝힌 경우가 아닌 경우에는 정상처리한다.*/
+						/*배출자가 수거자의 방문신청에 대한 수락 또는 거절의사를 확인하여 그 결과를 @EMITTOR_RESPONSE_FOR_VISIT에 반환한다.*/
+						IF @EMITTOR_RESPONSE_FOR_VISIT IS NULL THEN
+						/*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시하지 않은 대기상태인 경우*/
 							UPDATE COLLECTOR_BIDDING 
 							SET 
-								CANCEL_VISIT 			= TRUE, 
-								CANCEL_VISIT_AT 		= @REG_DT, 
-								UPDATED_AT		 		= @REG_DT   
+								CANCEL_VISIT 		= TRUE, 
+								CANCEL_VISIT_AT 	= @REG_DT, 
+								UPDATED_AT		 	= @REG_DT 
 							WHERE ID = IN_COLLECT_BIDDING_ID;
 							/*방문신청을 취소상태(비활성상태)로 변경한다.*/
 							IF ROW_COUNT() = 1 THEN
@@ -122,44 +92,87 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									CANCEL_VISIT 			= FALSE AND
 									RESPONSE_VISIT 			= TRUE;
 								UPDATE SITE_WSTE_DISPOSAL_ORDER 
-                                SET 
-									PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS , 
-									UPDATED_AT		 		= @REG_DT
-                                WHERE ID = @DISPOSAL_ORDER_ID;
+								SET 
+									PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS, 
+									UPDATED_AT		 		= @REG_DT  
+								WHERE ID = @DISPOSAL_ORDER_ID;
 								CALL sp_push_cancel_visit(
 									IN_USER_ID,
 									IN_COLLECT_BIDDING_ID,
-                                    @PUSH_CATEGORY_ID,
+									@PUSH_CATEGORY_ID,
 									@json_data,
 									@rtn_val,
 									@msg_txt
 								);
 							ELSE
 							/*데이타베이스 입력에 실패한 경우*/
-								SET @rtn_val 		= 25601;
+								SET @rtn_val 		= 25606;
 								SET @msg_txt 		= 'record cancellation error';
 							END IF;
 						ELSE
-						/*배출자가 수거자의 방문신청에 대하여 거절의사를 이미 밝힌 경우에는 정상처리한다.*/
-							SET @rtn_val 		= 25605;
-							SET @msg_txt 		= 'The emitter has already refused to visit';
+						/*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시한 경우*/
+							IF @EMITTOR_RESPONSE_FOR_VISIT <> 0 THEN
+							/*배출자가 수거자의 방문신청에 대하여 거절의사를 밝힌 경우가 아닌 경우에는 정상처리한다.*/
+								UPDATE COLLECTOR_BIDDING 
+								SET 
+									CANCEL_VISIT 			= TRUE, 
+									CANCEL_VISIT_AT 		= @REG_DT, 
+									UPDATED_AT		 		= @REG_DT   
+								WHERE ID = IN_COLLECT_BIDDING_ID;
+								/*방문신청을 취소상태(비활성상태)로 변경한다.*/
+								IF ROW_COUNT() = 1 THEN
+								/*데이타베이스 입력에 성공한 경우*/
+									SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
+									FROM COLLECTOR_BIDDING 
+									WHERE 
+										DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
+										DATE_OF_VISIT 			IS NOT NULL AND
+										CANCEL_VISIT 			= FALSE AND
+										RESPONSE_VISIT 			= TRUE;
+									UPDATE SITE_WSTE_DISPOSAL_ORDER 
+									SET 
+										PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS , 
+										UPDATED_AT		 		= @REG_DT
+									WHERE ID = @DISPOSAL_ORDER_ID;
+									CALL sp_push_cancel_visit(
+										IN_USER_ID,
+										IN_COLLECT_BIDDING_ID,
+										@PUSH_CATEGORY_ID,
+										@json_data,
+										@rtn_val,
+										@msg_txt
+									);
+								ELSE
+								/*데이타베이스 입력에 실패한 경우*/
+									SET @rtn_val 		= 25601;
+									SET @msg_txt 		= 'record cancellation error';
+								END IF;
+							ELSE
+							/*배출자가 수거자의 방문신청에 대하여 거절의사를 이미 밝힌 경우에는 정상처리한다.*/
+								SET @rtn_val 		= 25605;
+								SET @msg_txt 		= 'The emitter has already refused to visit';
+							END IF;
 						END IF;
-                    END IF;
-                ELSE
-				/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하는 경우 예외처리한다.*/
-					SET @rtn_val 		= 25604;
-					SET @msg_txt 		= 'The collector has already canceled the visit';
-                END IF;
-            ELSE
-            /*수거자가 방문신청을 한 사실이 존재하지 않는 경우 예외처리한다.*/
-				SET @rtn_val 		= 25603;
-				SET @msg_txt 		= 'No fact that the collector has requested a visit';
-            END IF;
-		ELSE
-		/*방문마감일이 종료된 경우 예외처리한다.*/
-			SET @rtn_val 		= 25602;
-			SET @msg_txt 		= 'The visit date has already passed or No visit request plan';
-		END IF;
+					ELSE
+					/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하는 경우 예외처리한다.*/
+						SET @rtn_val 		= 25604;
+						SET @msg_txt 		= 'The collector has already canceled the visit';
+					END IF;
+				ELSE
+				/*수거자가 방문신청을 한 사실이 존재하지 않는 경우 예외처리한다.*/
+					SET @rtn_val 		= 25603;
+					SET @msg_txt 		= 'No fact that the collector has requested a visit';
+				END IF;
+			ELSE
+			/*방문마감일이 종료된 경우 예외처리한다.*/
+				SET @rtn_val 		= 25602;
+				SET @msg_txt 		= 'The visit date has already passed or No visit request plan';
+			END IF;
+        ELSE
+		/*BIDDING이 존재하지 않는 경우 예외처리한다.*/
+			SET @rtn_val 		= 25607;
+			SET @msg_txt 		= 'bidding does not exist';
+        END IF;
     END IF;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END
