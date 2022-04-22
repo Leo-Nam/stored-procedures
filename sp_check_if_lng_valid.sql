@@ -1,0 +1,12 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_check_if_lng_valid`(
+	IN IN_LNG				DECIMAL(12,9),
+    OUT OUT_VALID			TINYINT
+)
+BEGIN
+	IF IN_LNG <> 0 AND IN_LNG IS NOT NULL THEN
+		SET OUT_VALID = 1;
+    ELSE
+		SET OUT_VALID = 0;
+    END IF;
+
+END

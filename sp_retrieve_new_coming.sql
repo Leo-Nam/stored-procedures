@@ -33,7 +33,7 @@ Change			: 기존거래를 위한 칼럼(SITE_WSTE_DISPOSAL_ORDER.COLLECTOR_ID)�
     DECLARE CUR_STATE_CATEGORY_ID				INT;	
     DECLARE CUR_STATE_PID						INT;	
     DECLARE WSTE_CODE_CURSOR 					CURSOR FOR 
-SELECT 
+	SELECT 
 		A.ID, 
         A.ORDER_CODE, 
         A.VISIT_START_AT,
@@ -54,8 +54,12 @@ SELECT
     FROM SITE_WSTE_DISPOSAL_ORDER A 
     LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
     LEFT JOIN V_ORDER_STATE_NAME C ON A.ID = C.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE D ON A.SITE_ID = D.ID
+    LEFT JOIN COMPANY E ON D.COMP_ID = E.ID
     WHERE 
 		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 				/*0.0.2에서 새롭게 추가한 부분*/
+        D.ACTIVE = TRUE AND
+        E.ACTIVE = TRUE AND
         IF(A.VISIT_END_AT IS NOT NULL, 
 			A.VISIT_END_AT >= NOW(), 
             A.BIDDING_END_AT >= NOW()
@@ -237,14 +241,16 @@ SELECT
     INTO @json_data 
     FROM NEW_COMING;
     
-    IF vRowCount = 0 THEN
+	SET @rtn_val = 0;
+	SET @msg_txt = 'Success11';
+/*    IF vRowCount = 0 THEN
 		SET @rtn_val = 28601;
 		SET @msg_txt = 'No data found';
 		SIGNAL SQLSTATE '23000';
     ELSE
 		SET @rtn_val = 0;
 		SET @msg_txt = 'Success11';
-    END IF;
+    END IF;*/
     DROP TABLE IF EXISTS NEW_COMING;
     COMMIT;
 	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);

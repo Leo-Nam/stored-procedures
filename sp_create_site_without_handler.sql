@@ -32,68 +32,102 @@ AUTHOR 			: Leo Nam
 */
 
 	SET @MAX_SITE_ID = IN_SITE_ID;
-    
-	INSERT INTO COMP_SITE(
-		ID,
-		COMP_ID,
-		KIKCD_B_CODE,
-		ADDR,
-		CONTACT,
-		LNG,
-		LAT,
-		SITE_NAME,
-		ACTIVE,
-		TRMT_BIZ_CODE,
-		CREATOR_ID,
-		HEAD_OFFICE,
-		CREATED_AT,
-		UPDATED_AT
-	) VALUES (
-		@MAX_SITE_ID,
-		IN_COMP_ID,
-		IN_KIKCD_B_CODE,
-		IN_ADDR,
-		IN_CONTACT,
-		IN_LNG,
+    CALL sp_check_if_lat_valid(
 		IN_LAT,
-		IN_SITE_NAME,
-		TRUE,
-		IN_TRMT_BIZ_CODE,
-		IN_USER_ID,
-		IN_HEAD_OFFICE,
-		IN_REG_DT,
-		IN_REG_DT
-	);
-	
-	IF ROW_COUNT() = 1 THEN
-	/*사이트 개설에 성공한 경우*/
-		INSERT INTO BUSINESS_AREA (
-			SITE_ID, 
-			KIKCD_B_CODE, 
-			IS_DEFAULT, 
-			CREATED_AT
-		) 
-		VALUES (
-			@MAX_SITE_ID, 
-			CONCAT(LEFT(IN_KIKCD_B_CODE, 5), '00000'), 
-			2, 		/*디폴트: 2, 무료: 1, 유료: 0*/
-			@REG_DT
+        @LAT_VALID
+    );
+    IF @LAT_VALID = 1 THEN
+		CALL sp_check_if_lng_valid(
+			IN_LNG,
+			@LNG_VALID
 		);
-        IF ROW_COUNT() = 1 THEN
-        /*영업지역에 대한 저장이 성공적인 경우*/
-			SET OUT_SITE_REG_ID = @MAX_SITE_ID;
-			SET rtn_val = 0;
-			SET msg_txt = 'success';
-        ELSE
-        /*영업지역에 대한 저장에 실패한 경우 예외처리한다.*/
+		IF @LNG_VALID = 1 THEN
+			CALL sp_check_if_bcode_valid(
+				IN_KIKCD_B_CODE,
+				@BCODE_VALID
+			);
+			IF @BCODE_VALID = 1 THEN
+				CALL sp_check_if_trmt_biz_code_valid(
+					IN_TRMT_BIZ_CODE,
+					@TRMT_BIZ_CODE_VALID
+				);
+				IF @TRMT_BIZ_CODE_VALID = 1 THEN
+					INSERT INTO COMP_SITE(
+						ID,
+						COMP_ID,
+						KIKCD_B_CODE,
+						ADDR,
+						CONTACT,
+						LNG,
+						LAT,
+						SITE_NAME,
+						ACTIVE,
+						TRMT_BIZ_CODE,
+						CREATOR_ID,
+						HEAD_OFFICE,
+						CREATED_AT,
+						UPDATED_AT
+					) VALUES (
+						@MAX_SITE_ID,
+						IN_COMP_ID,
+						IN_KIKCD_B_CODE,
+						IN_ADDR,
+						IN_CONTACT,
+						IN_LNG,
+						IN_LAT,
+						IN_SITE_NAME,
+						TRUE,
+						IN_TRMT_BIZ_CODE,
+						IN_USER_ID,
+						IN_HEAD_OFFICE,
+						IN_REG_DT,
+						IN_REG_DT
+					);
+					
+					IF ROW_COUNT() = 1 THEN
+					/*사이트 개설에 성공한 경우*/
+						CALL sp_insert_sigungu(
+							@MAX_SITE_ID, 
+							CONCAT(LEFT(IN_KIKCD_B_CODE, 5), '00000'), 
+							2, 		/*디폴트: 2, 무료: 1, 유료: 0*/
+							@REG_DT,
+							@add_success
+						);
+						IF @add_success = 1 THEN
+						/*영업지역에 대한 저장이 성공적인 경우*/
+							SET OUT_SITE_REG_ID = @MAX_SITE_ID;
+							SET rtn_val = 0;
+							SET msg_txt = 'success';
+						ELSE
+						/*영업지역에 대한 저장에 실패한 경우 예외처리한다.*/
+							SET OUT_SITE_REG_ID = 0;
+							SET rtn_val = 22402;
+							SET msg_txt = 'Failed to set default region';
+						END IF;
+					ELSE
+					/*사이트 개설에 실패한 경우*/
+						SET OUT_SITE_REG_ID = 0;
+						SET rtn_val = 22401;
+						SET msg_txt = 'Failed to open site';
+					END IF;
+				ELSE
+					SET OUT_SITE_REG_ID = 0;
+					SET rtn_val = 22403;
+					SET msg_txt = 'treatment business code is not valid';
+				END IF;
+            ELSE
+				SET OUT_SITE_REG_ID = 0;
+				SET rtn_val = 22404;
+				SET msg_txt = 'bcode is not valid';
+            END IF;
+		ELSE
 			SET OUT_SITE_REG_ID = 0;
-			SET rtn_val = 22402;
-			SET msg_txt = 'Failed to set default region';
-        END IF;
-	ELSE
-	/*사이트 개설에 실패한 경우*/
+			SET rtn_val = 22405;
+			SET msg_txt = 'Longitude is not valid';
+		END IF;
+    ELSE
 		SET OUT_SITE_REG_ID = 0;
-		SET rtn_val = 22401;
-		SET msg_txt = 'Failed to open site';
-	END IF;
+		SET rtn_val = 22406;
+		SET msg_txt = 'Latitue is not valid';
+    END IF;
 END
