@@ -67,8 +67,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 		ELSE
 			CALL sp_req_policy_direction(
 			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.1*/
-				'bidding_end_date_after_the_visit_early_closing',
-				@bidding_end_date_after_the_visit_early_closing
+				'bidding_end_date_after_the_visit_closing',
+				@bidding_end_date_after_the_visit_closing
 			);
 			SET @BIDDING_END_AT = ADDTIME(
 				@REF_DATE, 

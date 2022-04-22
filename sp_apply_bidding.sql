@@ -178,6 +178,23 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 																@rtn_val,
 																@msg_txt
 															);
+                                                            IF @rtn_val = 0 THEN
+																CALL sp_req_last_bidder_set_bidding_end_date_now(
+																	IN_DISPOSAL_ORDER_ID,
+																	@COLLECTOR_BIDDING_ID,
+																	@rtn_val,
+																	@msg_txt
+																);
+																IF @rtn_val = 0 THEN
+																	CALL sp_calc_bidder_and_prospective_visitors(
+																		IN_DISPOSAL_ORDER_ID
+																	);
+																ELSE
+																	SIGNAL SQLSTATE '23000';
+																END IF;
+                                                            ELSE
+																SIGNAL SQLSTATE '23000';
+                                                            END IF;
 														ELSE
 														/*데이타 입력에 실패하였다면 예외처리한다.*/
 															SET @rtn_val 		= 23401;
@@ -264,6 +281,23 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 										@rtn_val,
 										@msg_txt
 									);
+									IF @rtn_val = 0 THEN
+										CALL sp_req_last_bidder_set_bidding_end_date_now(
+											IN_DISPOSAL_ORDER_ID,
+											@COLLECTOR_BIDDING_ID,
+											@rtn_val,
+											@msg_txt
+										);
+										IF @rtn_val = 0 THEN
+											CALL sp_calc_bidder_and_prospective_visitors(
+												IN_DISPOSAL_ORDER_ID
+											);
+										ELSE
+											SIGNAL SQLSTATE '23000';
+										END IF;
+									ELSE
+										SIGNAL SQLSTATE '23000';
+									END IF;
                                 ELSE
 									SET @rtn_val 		= 23404;
 									SET @msg_txt 		= 'Failed to create final bidder management rocord';

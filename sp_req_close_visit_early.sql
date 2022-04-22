@@ -102,6 +102,9 @@ AUTHOR 			: Leo Nam
 						@msg_txt
 					);
                     IF @rtn_val > 0 THEN
+						CALL sp_calc_bidder_and_prospective_visitors(
+							IN_DISPOSER_ORDER_ID
+						);
 						SIGNAL SQLSTATE '23000';
                     END IF;
 				ELSE

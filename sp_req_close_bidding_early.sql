@@ -90,17 +90,21 @@ AUTHOR 			: Leo Nam
 								CALL sp_calc_bidding_rank(
 									IN_DISPOSER_ORDER_ID
 								);
-								CALL sp_push_disposer_close_bidding_early(
-									IN_DISPOSER_ORDER_ID,
-									@PUSH_INFO
+								CALL sp_calc_bidder_and_prospective_visitors(
+									IN_DISPOSER_ORDER_ID
 								);
-								SELECT JSON_ARRAYAGG(
-									JSON_OBJECT(
-										'PUSH_INFO'	, @PUSH_INFO
-									)
-								) INTO @json_data;
-								SET @rtn_val = 0;
-								SET @msg_txt = 'success';
+								SET @PUSH_CATEGORY_ID = 18;
+								CALL sp_push_disposer_close_bidding_early(
+									IN_USER_ID,
+									IN_DISPOSER_ORDER_ID,
+									@PUSH_CATEGORY_ID,
+									@json_data,
+									@rtn_val,
+									@msg_txt
+								);
+								IF @rtn_val > 0 THEN
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							ELSE
 							/*정보변경에 실패했다면 예외처리한다.*/
 								SET @rtn_val = 24501;

@@ -6756,7 +6756,7 @@ CALL sp_check_user_auth(
 */
 
 
-
+/*
 SET @USER_ID = 238;
 SET @COLLECTOR_BIDDING_ID = 612;
 SET @RES = 1;
@@ -6766,3 +6766,213 @@ CALL sp_disposer_response_visit(
     @COLLECTOR_BIDDING_ID,
     @RES
 );
+*/
+/*
+SET @ITEM_LIST = '"HELLO", "HELLO2", "HELLO3"';
+CALL sp_count_items_in_list(@ITEM_LIST, @OUTLIST, @OUT1, @OUT2, @OUT3);
+SELECT @ITEM_LIST, @OUTLIST, @OUT1, @OUT2, @OUT3
+*/
+/*
+CALL sp_retrieve_existing_transactions(188)
+*/
+
+
+/*
+SET @USER_ID = 246;
+SET @SIGUNGU_LIST = '2824500000';
+CALL sp_add_sigungu(
+	@USER_ID,
+    @SIGUNGU_LIST,
+    1
+);
+*/
+
+
+/*
+SET @SITE_ID = 245;
+SET @SIGUNGU_LIST = '2824500000';
+CALL sp_parse_and_insert_sigungu_list(
+	@SITE_ID,
+    @SIGUNGU_LIST,
+    1,
+    @OUT_COUNT
+);
+
+SELECT 
+	@SITE_ID,
+    @SIGUNGU_LIST,
+    1,
+    @OUT_COUNT
+    */
+/*
+SET @USER_ID = 246;
+SET @ORDER_ID = 989;
+SET @BIDDING_ID = NULL;
+SET @TRANSACTION_ID = 940;
+SET @PUSH_CATEGORY_ID = 25;
+
+CALL sp_push_collector_ask_transaction_completed(
+	@USER_ID,
+	@ORDER_ID,
+    @BIDDING_ID,
+	@TRANSACTION_ID,
+	@PUSH_CATEGORY_ID,
+	@json_data,
+	@rtn_val,
+	@msg_txt
+);  
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+    @BIDDING_ID,
+	@TRANSACTION_ID,
+	@PUSH_CATEGORY_ID,
+	@json_data,
+	@rtn_val,
+	@msg_txt
+*/
+/*
+CALL sp_req_current_time(@REG_DT);
+SET @USER_ID = 246;
+SET @TRANSACTION_ID = 940;
+SET @WSTE_CODE = '51';
+SET @QUANTITY = 3500;
+SET @COMPLETED_AT = '2022-04-25';
+SET @PRICE = 52000000;
+SET @UNIT = 'Kg';
+SET @TRMT_METHOD = '1001';
+SET @IMG_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 2.35}, {"FILE_NAME":"img_0002", "IMG_PATH":"https://chium.s3.ap-northeast-2.amazonaws.com/temp/880b30b4-8933-41e7-90b1-af147ce11e51.png", "FILE_SIZE": 4.35}]';
+
+CALL sp_req_collector_ask_transaction_completed(
+	@USER_ID,
+	@TRANSACTION_ID,
+	@WSTE_CODE,
+	@QUANTITY,
+	@COMPLETED_AT,
+	@PRICE,
+	@UNIT,
+	@TRMT_METHOD,
+	@IMG_LIST
+);  
+*/
+
+
+/*	
+	SELECT IF(A.SITE_ID = 0, C.USER_NAME, B.SITE_NAME)
+    INTO @DISPOSER_NAME
+	FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+    LEFT JOIN USERS C ON A.DISPOSER_ID = C.ID
+	WHERE A.ID = 985;
+    SELECT @DISPOSER_NAME;
+*/
+
+/*
+	SELECT *
+	FROM USERS
+	WHERE 
+		ACTIVE 					= TRUE AND
+		PUSH_ENABLED			= TRUE AND
+		AFFILIATED_SITE			= 245;  
+*/
+
+/*
+SET @USER_ID=238;
+SET @CONTENTS='리뷰 컨텐츠';
+SET @SITE_ID=245;
+SET @PID=0;
+SET @RATING=4.5;
+SET @DISPOSER_ORDER_ID=989;
+call sp_write_review(
+	@USER_ID,
+	@CONTENTS,
+	@SITE_ID,
+	@PID,
+	@RATING,
+	@DISPOSER_ORDER_ID
+);
+*/
+/*
+		SELECT COUNT(A.ID) INTO @BIDDING_EXISTS
+        FROM COLLECTOR_BIDDING A
+        LEFT JOIN USERS B ON A.COLLECTOR_ID = B.AFFILIATED_SITE
+        WHERE
+			A.ID = 1 AND
+            B.ID = 2;
+		SELECT @BIDDING_EXISTS
+*/     /*   
+        CALL sp_cancel_visiting(1,2)
+        */
+/* 
+SET @USER_ID = 238;
+SET @ORDER_ID = 1041;
+SET @CATEGORY_ID = 18;
+
+CALL sp_push_disposer_close_bidding_early(
+    @USER_ID,
+    @ORDER_ID,
+    @CATEGORY_ID,
+    @PUSH_INFO,
+    @rtn_val,
+    @msg_txt
+);
+SELECT 
+    @USER_ID,
+    @ORDER_ID,
+    @CATEGORY_ID,
+    @PUSH_INFO,
+    @rtn_val,
+    @msg_txt
+*/
+
+/*  
+		SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
+		FROM COLLECTOR_BIDDING 
+		WHERE 
+			DISPOSAL_ORDER_ID 	= 1059 AND 
+			DATE_OF_VISIT 		IS NOT NULL AND
+			CANCEL_VISIT 		= FALSE AND
+			RESPONSE_VISIT 		= TRUE;
+            SELECT @PROSPECTIVE_VISITORS;
+            
+
+		SELECT COUNT(ID) INTO @PROSPECTIVE_BIDDERS 
+		FROM COLLECTOR_BIDDING 
+		WHERE 
+			DISPOSAL_ORDER_ID 	= 1059 AND 
+			(
+				ACTIVE		 			= FALSE OR
+				DELETED 				= TRUE OR
+				DATE_OF_VISIT 			IS NULL OR
+				RESPONSE_VISIT 			= FALSE OR
+				CANCEL_VISIT 			= TRUE OR
+				REJECT_BIDDING_APPLY 	= TRUE OR
+				CANCEL_BIDDING 			= TRUE OR
+				REJECT_BIDDING 			= TRUE
+			);
+			
+            SELECT @PROSPECTIVE_BIDDERS;
+*/
+
+CALL sp_calc_bidder_and_prospective_visitors();
+
+
+
+/*
+	SELECT COUNT(ID) INTO @UNABLED_BIDDERS 
+	FROM COLLECTOR_BIDDING 
+	WHERE 
+		DISPOSAL_ORDER_ID 	= 1073 AND 
+		(
+			ACTIVE		 			= FALSE OR
+			DELETED 				= TRUE OR
+			DATE_OF_VISIT 			IS NULL OR
+			RESPONSE_VISIT 			= FALSE OR
+			CANCEL_VISIT 			= TRUE OR
+			REJECT_BIDDING_APPLY 	= TRUE OR
+			GIVEUP_BIDDING 			= TRUE OR
+			CANCEL_BIDDING 			= TRUE OR
+			REJECT_BIDDING 			= TRUE
+		);
+        SELECT @UNABLED_BIDDERS
+*/

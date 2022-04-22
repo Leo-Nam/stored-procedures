@@ -73,9 +73,6 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 						SELECT DISPOSAL_ORDER_ID INTO @DISPOSER_ORDER_ID 
                         FROM COLLECTOR_BIDDING 
                         WHERE ID = IN_COLLECTOR_BIDDING_ID;
-						CALL sp_calc_prospective_visitors(
-							@DISPOSER_ORDER_ID
-						);
 						CALL sp_push_disposer_response_visit_1(
 							IN_USER_ID,
 							@DISPOSER_ORDER_ID,
@@ -83,6 +80,9 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 							@json_data,
 							@rtn_val,
 							@msg_txt
+						);
+						CALL sp_calc_bidder_and_prospective_visitors(
+							@DISPOSER_ORDER_ID
 						);
 					ELSE
 					/*정보변경에 실패한 경우 예외처리한다.*/

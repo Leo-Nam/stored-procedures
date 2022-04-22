@@ -36,8 +36,8 @@ BEGIN
 				/*방문시작이 된 경우에는 정상처리한다.*/
 					CALL sp_req_policy_direction(
 					/*조기마감이 된 배출신청에 등록된 입찰마감일자를 반환한다.*/
-						'bidding_end_date_after_the_visit_early_closing',
-						@bidding_end_date_after_the_visit_early_closing
+						'bidding_end_date_after_the_visit_closing',
+						@bidding_end_date_after_the_visit_closing
 					);
                     
 					UPDATE SITE_WSTE_DISPOSAL_ORDER 

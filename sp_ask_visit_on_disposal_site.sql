@@ -101,7 +101,11 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								@rtn_val,
 								@msg_txt
 							);
-                            IF @rtn_val > 0 THEN
+                            IF @rtn_val = 0 THEN
+								CALL sp_calc_bidder_and_prospective_visitors(
+									IN_DISPOSER_ORDER_ID
+								);
+							ELSE
 								SIGNAL SQLSTATE '23000';
                             END IF;
 						ELSE
@@ -131,7 +135,11 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								@rtn_val,
 								@msg_txt
 							);
-                            IF @rtn_val > 0 THEN
+                            IF @rtn_val = 0 THEN
+								CALL sp_calc_bidder_and_prospective_visitors(
+									IN_DISPOSER_ORDER_ID
+								);
+							ELSE
 								SIGNAL SQLSTATE '23000';
                             END IF;
 						ELSE

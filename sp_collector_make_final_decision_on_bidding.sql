@@ -120,7 +120,17 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										@rtn_val,
 										@msg_txt
 									);
-                                    IF @rtn_val > 0 THEN
+                                    IF @rtn_val = 0 THEN
+										CALL sp_req_last_bidder_set_bidding_end_date_now(
+											@DISPOSAL_ORDER_ID,
+                                            IN_COLLECTOR_BIDDING_ID,
+											@rtn_val,
+											@msg_txt
+                                        );
+                                        IF @rtn_val > 0 THEN
+											SIGNAL SQLSTATE '23000';
+                                        END IF;
+                                    ELSE
 										SIGNAL SQLSTATE '23000';
                                     END IF;
 								ELSE
@@ -141,7 +151,17 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									@rtn_val,
 									@msg_txt
 								);
-								IF @rtn_val > 0 THEN
+								IF @rtn_val = 0 THEN
+									CALL sp_req_last_bidder_set_bidding_end_date_now(
+										@DISPOSAL_ORDER_ID,
+										IN_COLLECTOR_BIDDING_ID,
+										@rtn_val,
+										@msg_txt
+									);
+									IF @rtn_val > 0 THEN
+										SIGNAL SQLSTATE '23000';
+									END IF;
+								ELSE
 									SIGNAL SQLSTATE '23000';
 								END IF;
 							END IF;
@@ -187,7 +207,17 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 											@rtn_val,
 											@msg_txt
 										);
-										IF @rtn_val > 0 THEN
+										IF @rtn_val = 0 THEN
+											CALL sp_req_last_bidder_set_bidding_end_date_now(
+												@DISPOSAL_ORDER_ID,
+												IN_COLLECTOR_BIDDING_ID,
+												@rtn_val,
+												@msg_txt
+											);
+											IF @rtn_val > 0 THEN
+												SIGNAL SQLSTATE '23000';
+											END IF;
+										ELSE
 											SIGNAL SQLSTATE '23000';
 										END IF;
 									ELSE
@@ -208,9 +238,19 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										@rtn_val,
 										@msg_txt
 									);
-									IF @rtn_val > 0 THEN
+                                    IF @rtn_val = 0 THEN
+										CALL sp_req_last_bidder_set_bidding_end_date_now(
+											@DISPOSAL_ORDER_ID,
+                                            IN_COLLECTOR_BIDDING_ID,
+											@rtn_val,
+											@msg_txt
+                                        );
+                                        IF @rtn_val > 0 THEN
+											SIGNAL SQLSTATE '23000';
+                                        END IF;
+                                    ELSE
 										SIGNAL SQLSTATE '23000';
-									END IF;
+                                    END IF;
 								END IF;
 							ELSE
 								SET @rtn_val 		= 24106;

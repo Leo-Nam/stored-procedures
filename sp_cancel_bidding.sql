@@ -122,12 +122,24 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 										MAX_DECISION_AT = @REG_DT,
 										UPDATED_AT		= @REG_DT
 									WHERE ID = IN_COLLECT_BIDDING_ID;
-                                    CALL sp_calc_bidders(
-										@DISPOSAL_ORDER_ID
-                                    );
 									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success11122';
+									SET @msg_txt 		= 'Success';
                                 END IF;
+								CALL sp_req_last_bidder_set_bidding_end_date_now(
+									@DISPOSAL_ORDER_ID,
+									IN_COLLECTOR_BIDDING_ID,
+									@rtn_val,
+									@msg_txt
+								);
+								IF @rtn_val = 0 THEN
+									CALL sp_calc_bidder_and_prospective_visitors(
+										@DISPOSER_ORDER_ID
+									);
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success';
+								ELSE
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							END IF;
                         ELSE
 							SET @rtn_val 		= 23805;
@@ -197,12 +209,24 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 										MAX_DECISION_AT = @REG_DT,
 										UPDATED_AT		= @REG_DT
 									WHERE ID = IN_COLLECT_BIDDING_ID;
-                                    CALL sp_calc_bidders(
-										@DISPOSAL_ORDER_ID
-                                    );
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success11122765';
                                 END IF;
+								CALL sp_req_last_bidder_set_bidding_end_date_now(
+									@DISPOSAL_ORDER_ID,
+									IN_COLLECTOR_BIDDING_ID,
+									@rtn_val,
+									@msg_txt
+								);
+								IF @rtn_val = 0 THEN
+									CALL sp_calc_bidder_and_prospective_visitors(
+										@DISPOSAL_ORDER_ID
+									);
+									SET @rtn_val 		= 0;
+									SET @msg_txt 		= 'Success';
+								ELSE
+									SIGNAL SQLSTATE '23000';
+								END IF;
 							END IF;
                         ELSE
 							SET @rtn_val 		= 23807;
