@@ -146,7 +146,23 @@ AUTHOR 			: Leo Nam
 													@rtn_val,
 													@msg_txt
 												);
-												IF @rtn_val > 0 THEN
+												IF @rtn_val = 0 THEN
+													SELECT VISIT_END_AT INTO @TRANSACTION_VISIT_END_AT
+                                                    FROM WSTE_CLCT_TRMT_TRANSACTION
+                                                    WHERE ID = IN_TRANSACTION_ID;
+                                                    IF @TRANSACTION_VISIT_END_AT IS NOT NULL THEN
+														IF @TRANSACTION_VISIT_END_AT >= @REG_DT THEN
+															UPDATE WSTE_CLCT_TRMT_TRANSACTION
+															SET VISIT_END_AT = @REG_DT
+															WHERE ID = IN_TRANSACTION_ID;
+															IF ROW_COUNT() = 0 THEN
+																SET @rtn_val = 25409;
+																SET @msg_txt = 'failed to set visit end date now';
+																SIGNAL SQLSTATE '23000';
+															END IF;
+                                                        END IF;
+                                                    END IF;
+                                                ELSE
 													SIGNAL SQLSTATE '23000';
 												END IF;
 											ELSE

@@ -94,6 +94,9 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 							UPDATED_AT 							= @REG_DT
 						WHERE ID 								= @DISPOSAL_ORDER_ID;
 						IF ROW_COUNT() = 1 THEN
+							CALL sp_calc_bidder_and_prospective_visitors(
+								@DISPOSAL_ORDER_ID
+							);
 							IF IN_FINAL_DECISION = TRUE THEN
 							/*최종결정을 수락한 경우에는 CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업을 UPDATE한다.*/
 								UPDATE WSTE_CLCT_TRMT_TRANSACTION
@@ -120,17 +123,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										@rtn_val,
 										@msg_txt
 									);
-                                    IF @rtn_val = 0 THEN
-										CALL sp_req_last_bidder_set_bidding_end_date_now(
-											@DISPOSAL_ORDER_ID,
-                                            IN_COLLECTOR_BIDDING_ID,
-											@rtn_val,
-											@msg_txt
-                                        );
-                                        IF @rtn_val > 0 THEN
-											SIGNAL SQLSTATE '23000';
-                                        END IF;
-                                    ELSE
+                                    IF @rtn_val > 0 THEN
 										SIGNAL SQLSTATE '23000';
                                     END IF;
 								ELSE
@@ -151,17 +144,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									@rtn_val,
 									@msg_txt
 								);
-								IF @rtn_val = 0 THEN
-									CALL sp_req_last_bidder_set_bidding_end_date_now(
-										@DISPOSAL_ORDER_ID,
-										IN_COLLECTOR_BIDDING_ID,
-										@rtn_val,
-										@msg_txt
-									);
-									IF @rtn_val > 0 THEN
-										SIGNAL SQLSTATE '23000';
-									END IF;
-								ELSE
+								IF @rtn_val > 0 THEN
 									SIGNAL SQLSTATE '23000';
 								END IF;
 							END IF;
@@ -207,17 +190,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 											@rtn_val,
 											@msg_txt
 										);
-										IF @rtn_val = 0 THEN
-											CALL sp_req_last_bidder_set_bidding_end_date_now(
-												@DISPOSAL_ORDER_ID,
-												IN_COLLECTOR_BIDDING_ID,
-												@rtn_val,
-												@msg_txt
-											);
-											IF @rtn_val > 0 THEN
-												SIGNAL SQLSTATE '23000';
-											END IF;
-										ELSE
+										IF @rtn_val > 0 THEN
 											SIGNAL SQLSTATE '23000';
 										END IF;
 									ELSE
@@ -238,17 +211,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										@rtn_val,
 										@msg_txt
 									);
-                                    IF @rtn_val = 0 THEN
-										CALL sp_req_last_bidder_set_bidding_end_date_now(
-											@DISPOSAL_ORDER_ID,
-                                            IN_COLLECTOR_BIDDING_ID,
-											@rtn_val,
-											@msg_txt
-                                        );
-                                        IF @rtn_val > 0 THEN
-											SIGNAL SQLSTATE '23000';
-                                        END IF;
-                                    ELSE
+                                    IF @rtn_val > 0 THEN
 										SIGNAL SQLSTATE '23000';
                                     END IF;
 								END IF;

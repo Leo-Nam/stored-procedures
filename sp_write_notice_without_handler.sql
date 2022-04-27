@@ -4,7 +4,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_write_notice_without_handler`(
 	IN IN_CONTENTS				TEXT,				/*입력값 : 내용*/
     OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 				VARCHAR(100),		/*출력값 : 처리결과 문자열*/
-    OUT json_data 				JSON
+    OUT last_id 				BIGINT
 )
 BEGIN
 
@@ -34,17 +34,12 @@ AUTHOR 			: Leo Nam
 		@last_insert_id
 	);
 	IF @rtn_val = 0 THEN
-		SELECT JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'LAST_ID', @last_insert_id
-			)
-		) 
-		INTO json_data;
+		SET last_id = @last_insert_id;
 		SET rtn_val = @rtn_val;
 		SET msg_txt = @msg_txt;
 	ELSE
 	/*posting이 비정상적으로 종료된 경우 예외처리한다.*/
-		SET json_data = NULL;
+		SET last_id = NULL;
 		SET rtn_val = @rtn_val;
 		SET msg_txt = @msg_txt;
 	END IF;

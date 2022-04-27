@@ -85,7 +85,6 @@ AUTHOR 			: Leo Nam
 			IF 
 				CUR_USER_ID IS NOT NULL AND
 				CUR_TITLE IS NOT NULL AND
-				CUR_BODY IS NOT NULL AND
 				CUR_CREATED_AT IS NOT NULL AND
 				IN_SENDER_ID IS NOT NULL AND
 				CUR_ORDER_ID IS NOT NULL AND
@@ -122,13 +121,13 @@ AUTHOR 			: Leo Nam
 					LEAVE cloop;
 				ELSE
 					SET rtn_val = 0;
-					SET msg_txt = 'Success';
+					SET msg_txt = 'Success to insert push hisotry1';
 				END IF;
             END IF;
 		END LOOP;   
 		CLOSE PUSH_CURSOR;
     ELSE
 		SET rtn_val = 0;
-		SET msg_txt = 'Success';
+		SET msg_txt = 'Success to insert push hisotry2';
     END IF;
 END

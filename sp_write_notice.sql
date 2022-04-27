@@ -48,6 +48,7 @@ AUTHOR 			: Leo Nam
 			/*공지사항 작성에 실패한 경우 예외처리한다*/
 				CALL sp_push_system_notice(
 					IN_SUBJECT,
+					@PUSH_CATEGORY_ID,
 					@json_data,
 					@rtn_val,
 					@msg_txt

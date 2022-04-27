@@ -30,7 +30,15 @@ AUTHOR 			: Leo Nam
 		WHERE ID 			= IN_USER_ID;
 			
 		IF ROW_COUNT() = 1 THEN
-		/*모든 트랜잭션이 성공한 경우에만 로그를 한다.*/
+		/*모든 트랜잭션이 성공한 경우에만 로그를 한다.*/				
+			UPDATE SITE_WSTE_DISPOSAL_ORDER
+			SET 
+				IS_DELETED = TRUE,
+				ACTIVE = FALSE,
+				UPDATED_AT = IN_REG_DT
+			WHERE 
+				DISPOSER_ID = IN_USER_ID AND
+                SITE_ID = 0;
 			SET rtn_val = 0;
 			SET msg_txt = 'Success';
 		ELSE

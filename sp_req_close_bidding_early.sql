@@ -90,9 +90,6 @@ AUTHOR 			: Leo Nam
 								CALL sp_calc_bidding_rank(
 									IN_DISPOSER_ORDER_ID
 								);
-								CALL sp_calc_bidder_and_prospective_visitors(
-									IN_DISPOSER_ORDER_ID
-								);
 								SET @PUSH_CATEGORY_ID = 18;
 								CALL sp_push_disposer_close_bidding_early(
 									IN_USER_ID,

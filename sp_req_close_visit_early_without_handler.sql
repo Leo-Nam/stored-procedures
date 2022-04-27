@@ -23,28 +23,27 @@ BEGIN
 		
 		IF @COUNT_OF_REQUEST_OF_VISIT > 0 THEN
 		/*방문신청한 업체가 1이상 존재하는 경우*/
-			SELECT COUNT(ID) INTO @COUNT_OF_VISIT_CONFIRMED 
-			FROM COLLECTOR_BIDDING 
+			SELECT PROSPECTIVE_VISITORS INTO @PROSPECTIVE_VISITORS 
+			FROM SITE_WSTE_DISPOSAL_ORDER 
 			WHERE 
-				RESPONSE_VISIT = TRUE AND 			/*방문승낙을 받은 업체가 존재하는 경우*/
-				DISPOSAL_ORDER_ID = IN_DISPOSER_ORDER_ID;
+				ID = IN_DISPOSER_ORDER_ID;
 			/*방문승낙 받은 업체수를 계산하여 @COUNT_OF_VISIT_CONFIRMED을 통하여 반환한다.*/
-			IF @COUNT_OF_VISIT_CONFIRMED > 0 THEN
+			IF @PROSPECTIVE_VISITORS > 0 THEN
 			/*방문승낙 받은 업체가 1이상 존재하는 경우*/
 				SELECT VISIT_START_AT INTO @VISIT_START_AT FROM SITE_WSTE_DISPOSAL_ORDER WHERE ID = IN_DISPOSER_ORDER_ID;
 				IF @VISIT_START_AT <= IN_REG_DT THEN
 				/*방문시작이 된 경우에는 정상처리한다.*/
 					CALL sp_req_policy_direction(
 					/*조기마감이 된 배출신청에 등록된 입찰마감일자를 반환한다.*/
-						'bidding_end_date_after_the_visit_closing',
-						@bidding_end_date_after_the_visit_closing
+						'duration_bidding_end_date_after_the_visit_closing',
+						@duration_bidding_end_date_after_the_visit_closing
 					);
                     
 					UPDATE SITE_WSTE_DISPOSAL_ORDER 
 					SET 
 						VISIT_EARLY_CLOSING 		= TRUE, 
 						VISIT_EARLY_CLOSED_AT 		= IN_REG_DT, 
-						BIDDING_END_AT 	= ADDTIME(IN_REG_DT, CONCAT(@bidding_end_date_after_the_visit_early_closing, ':00:00')),
+						BIDDING_END_AT 	= ADDTIME(IN_REG_DT, CONCAT(@duration_bidding_end_date_after_the_visit_closing, ':00:00')),
 					/*	BIDDING_END_AT 	= IF(BIDDING_END_AT <= ADDTIME(IN_REG_DT, CONCAT(@PERIOD_UNTIL_BIDDING_END_DATE, ':00')), */
 					/*						BIDDING_END_AT, 				*/	
 											/*조건을 만족하는 경우로서 입찰마감일이 현재일로부터 정책으로 결정된 시간 이내인 경우에는 현재 설정된 입찰마감일을 그대로 사용하도록 한다.*/

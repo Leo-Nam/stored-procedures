@@ -89,7 +89,9 @@ AUTHOR 			: Leo Nam
 		STATE_CATEGORY_ID					INT,    			/*오더 대구분 상태 코드*/
 		AVATAR_PATH							VARCHAR(255),		/*수거자 아바타 경로*/
         SITE_INFO							JSON,
-        REPORT_INFO							JSON
+        REPORT_INFO							JSON,
+        IMG_PATH							JSON
+        
 	);         
 	
 	OPEN TEMP_CURSOR;	
@@ -170,11 +172,18 @@ AUTHOR 			: Leo Nam
 			CUR_REPORT_ID,
             @REPORT_INFO
         );
+		            
+		CALL sp_get_disposal_img_lists(
+			CUR_DISPOSER_ORDER_ID,
+			'처리',
+			@IMG_PATH
+		);
         
 		UPDATE PAST_TRANSACTIONS
 		SET 
 			SITE_INFO 	= @SITE_INFO,
-			REPORT_INFO = @REPORT_INFO
+			REPORT_INFO = @REPORT_INFO,
+			IMG_PATH = @IMG_PATH
 		WHERE REPORT_ID = CUR_REPORT_ID;
 		
 	END LOOP;   
@@ -198,7 +207,8 @@ AUTHOR 			: Leo Nam
 			'STATE_CATEGORY_ID'				, STATE_CATEGORY_ID, 
 			'AVATAR_PATH'					, AVATAR_PATH, 
 			'SITE_INFO'						, SITE_INFO, 
-			'REPORT_INFO'					, REPORT_INFO
+			'REPORT_INFO'					, REPORT_INFO, 
+			'IMG_PATH'						, IMG_PATH
 		)
 	) 
 	INTO @json_data 

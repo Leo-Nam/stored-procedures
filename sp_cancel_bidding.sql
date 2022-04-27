@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_cancel_bidding`(
 	IN IN_USER_ID					BIGINT,				/*입력값 : 사용자 고유등록번호(USERS.ID)*/
-	IN IN_COLLECT_BIDDING_ID		BIGINT				/*입력값 : 입찰 고유등록번호(COLLECTOR_BIDDING.ID)*/
+	IN IN_COLLECTOR_BIDDING_ID		BIGINT				/*입력값 : 입찰 고유등록번호(COLLECTOR_BIDDING.ID)*/
 )
 BEGIN
 
@@ -20,8 +20,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		/*ROLLBACK;*/
-        COMMIT;
+		ROLLBACK;
 		SET @json_data 		= NULL;
 		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 	END;        
@@ -42,7 +41,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 	IF @rtn_val = 0 THEN
     /*사용자가 존재하는 경우*/
 		CALL sp_req_disposal_id_of_collector_bidding_id(
-			IN_COLLECT_BIDDING_ID,
+			IN_COLLECTOR_BIDDING_ID,
 			@DISPOSAL_ORDER_ID
 		);
 		
@@ -62,7 +61,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 				INTO @CHK_COUNT 
 				FROM COLLECTOR_BIDDING 
 				WHERE 
-					ID = IN_COLLECT_BIDDING_ID AND
+					ID = IN_COLLECTOR_BIDDING_ID AND
 					DATE_OF_BIDDING IS NOT NULL;
 				IF @CHK_COUNT= 1 THEN
 				/*사이트가 이전에 입찰한 사실이 있는 경우에는 입찰취소가 가능함*/
@@ -70,7 +69,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 					CALL sp_push_collector_cancel_or_giveup_bidding(
 						IN_USER_ID,
 						@DISPOSAL_ORDER_ID,
-						IN_COLLECT_BIDDING_ID,
+						IN_COLLECTOR_BIDDING_ID,
 						@PUSH_CATEGORY_ID,
 						@json_data,
 						@rtn_val,
@@ -78,18 +77,18 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 					);
 					SELECT GIVEUP_BIDDING INTO @GIVEUP_BIDDING 
                     FROM COLLECTOR_BIDDING 
-                    WHERE ID = IN_COLLECT_BIDDING_ID;
+                    WHERE ID = IN_COLLECTOR_BIDDING_ID;
                     IF @GIVEUP_BIDDING = FALSE THEN
 						SELECT CANCEL_BIDDING INTO @CANCEL_BIDDING 
                         FROM COLLECTOR_BIDDING 
-                        WHERE ID = IN_COLLECT_BIDDING_ID;
+                        WHERE ID = IN_COLLECTOR_BIDDING_ID;
 						IF @CANCEL_BIDDING = FALSE THEN
 							UPDATE COLLECTOR_BIDDING 
 							SET 
 								CANCEL_BIDDING 		= TRUE, 
 								CANCEL_BIDDING_AT 	= @REG_DT , 
 								UPDATED_AT		 	= @REG_DT 
-							WHERE ID 				= IN_COLLECT_BIDDING_ID;
+							WHERE ID 				= IN_COLLECTOR_BIDDING_ID;
 							/*입찰신청을 취소사태(비활성상태)로 변경한다.*/
 							IF ROW_COUNT() = 0 THEN
 							/*데이타베이스 입력에 실패한 경우*/
@@ -100,7 +99,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 							/*데이타베이스 입력에 성공한 경우*/                                
 								SELECT BIDDING_RANK INTO @BIDDING_RANK
                                 FROM COLLECTOR_BIDDING
-                                WHERE ID = IN_COLLECT_BIDDING_ID;
+                                WHERE ID = IN_COLLECTOR_BIDDING_ID;
                                 IF @BIDDING_RANK <= 2 THEN
 									IF @BIDDING_RANK = 1 THEN
 										UPDATE SITE_WSTE_DISPOSAL_ORDER
@@ -121,22 +120,20 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 									SET 
 										MAX_DECISION_AT = @REG_DT,
 										UPDATED_AT		= @REG_DT
-									WHERE ID = IN_COLLECT_BIDDING_ID;
+									WHERE ID = IN_COLLECTOR_BIDDING_ID;
 									SET @rtn_val 		= 0;
 									SET @msg_txt 		= 'Success';
                                 END IF;
-								CALL sp_req_last_bidder_set_bidding_end_date_now(
+								CALL sp_req_last_bidder_set_bidding_end_date_now_for_cancel(
 									@DISPOSAL_ORDER_ID,
 									IN_COLLECTOR_BIDDING_ID,
 									@rtn_val,
 									@msg_txt
 								);
 								IF @rtn_val = 0 THEN
-									CALL sp_calc_bidder_and_prospective_visitors(
-										@DISPOSER_ORDER_ID
+									CALL sp_calc_bidding_rank(
+										@DISPOSAL_ORDER_ID
 									);
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success';
 								ELSE
 									SIGNAL SQLSTATE '23000';
 								END IF;
@@ -157,7 +154,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 					CALL sp_push_collector_cancel_or_giveup_bidding(
 						IN_USER_ID,
 						@DISPOSAL_ORDER_ID,
-						IN_COLLECT_BIDDING_ID,
+						IN_COLLECTOR_BIDDING_ID,
 						@PUSH_CATEGORY_ID,
 						@json_data,
 						@rtn_val,
@@ -165,18 +162,18 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 					);
 					SELECT CANCEL_BIDDING INTO @CANCEL_BIDDING 
                     FROM COLLECTOR_BIDDING 
-                    WHERE ID = IN_COLLECT_BIDDING_ID;
+                    WHERE ID = IN_COLLECTOR_BIDDING_ID;
                     IF @CANCEL_BIDDING = FALSE THEN
 						SELECT GIVEUP_BIDDING INTO @GIVEUP_BIDDING 
                         FROM COLLECTOR_BIDDING 
-                        WHERE ID = IN_COLLECT_BIDDING_ID;
+                        WHERE ID = IN_COLLECTOR_BIDDING_ID;
 						IF @GIVEUP_BIDDING = FALSE THEN
 							UPDATE COLLECTOR_BIDDING 
 							SET 
 								GIVEUP_BIDDING 		= TRUE, 
 								GIVEUP_BIDDING_AT 	= @REG_DT,
                                 UPDATED_AT			= @REG_DT
-							WHERE ID 				= IN_COLLECT_BIDDING_ID;
+							WHERE ID 				= IN_COLLECTOR_BIDDING_ID;
 							/*입찰신청권한을 포기한다.*/
 							IF ROW_COUNT() = 0 THEN
 							/*데이타베이스 입력에 실패한 경우*/
@@ -187,7 +184,7 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 							/*데이타베이스 입력에 성공한 경우*/                             
 								SELECT BIDDING_RANK INTO @BIDDING_RANK
                                 FROM COLLECTOR_BIDDING
-                                WHERE ID = IN_COLLECT_BIDDING_ID;
+                                WHERE ID = IN_COLLECTOR_BIDDING_ID;
                                 IF @BIDDING_RANK <= 2 THEN
 									IF @BIDDING_RANK = 1 THEN
 										UPDATE SITE_WSTE_DISPOSAL_ORDER
@@ -208,22 +205,20 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 									SET 
 										MAX_DECISION_AT = @REG_DT,
 										UPDATED_AT		= @REG_DT
-									WHERE ID = IN_COLLECT_BIDDING_ID;
+									WHERE ID = IN_COLLECTOR_BIDDING_ID;
 									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success11122765';
+									SET @msg_txt 		= 'Success';
                                 END IF;
-								CALL sp_req_last_bidder_set_bidding_end_date_now(
+								CALL sp_req_last_bidder_set_bidding_end_date_now_for_cancel(
 									@DISPOSAL_ORDER_ID,
 									IN_COLLECTOR_BIDDING_ID,
 									@rtn_val,
 									@msg_txt
 								);
 								IF @rtn_val = 0 THEN
-									CALL sp_calc_bidder_and_prospective_visitors(
+									CALL sp_calc_bidding_rank(
 										@DISPOSAL_ORDER_ID
 									);
-									SET @rtn_val 		= 0;
-									SET @msg_txt 		= 'Success';
 								ELSE
 									SIGNAL SQLSTATE '23000';
 								END IF;
@@ -253,5 +248,6 @@ Change			: COLLECTOR_BIDDING의 CANCEL_BIDDING 칼럼 상태를 TRUE로 변경�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;
+    
     CALL sp_return_results(@rtn_val, @msg_txt, @json_data);    
 END

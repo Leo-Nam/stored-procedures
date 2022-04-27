@@ -38,7 +38,7 @@ BEGIN
 				'TITLE'					, @TITLE,
 				'BODY'					, @BODY,
 				'ORDER_ID'				, IN_ORDER_ID, 
-				'BIDDING_ID'			, NULL, 
+				'BIDDING_ID'			, B.ID, 
 				'TRANSACTION_ID'		, @TRANSACTION_ID, 
 				'REPORT_ID'				, NULL, 
 				'CATEGORY_ID'			, IN_CATEGORY_ID,

@@ -31,16 +31,19 @@ AUTHOR 			: Leo Nam
 			
 		IF ROW_COUNT() = 1 THEN
 		/*모든 트랜잭션이 성공한 경우에만 로그를 한다.*/
-			SET rtn_val = 0;
-			SET msg_txt = 'Success';
+			CALL sp_calc_bidding_rank_after_delete_site(
+				IN_SITE_ID,
+                rtn_val,
+                msg_txt
+			);
 		ELSE
 		/*변경이 적용되지 않은 경우*/
 			SET rtn_val = 36902;
-			SET msg_txt = 'Failed to delete user account';
+			SET msg_txt = 'Failed to delete site account';
 		END IF;
     ELSE
     /*사이트가 이미 삭제된 경우에는 예외처리한다.*/
 		SET rtn_val = 36901;
-		SET msg_txt = 'user already deleted';
+		SET msg_txt = 'site already deleted';
     END IF;
 END

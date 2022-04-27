@@ -50,9 +50,26 @@ AUTHOR 			: Leo Nam
 				SET rtn_val = 21803;
 				SET msg_txt = 'Failure to delete user information related to the company';
 			ELSE
-			/*사업자 삭제가 정상적으로 처리된 경우*/  
-				SET rtn_val = 0;
-				SET msg_txt = 'Success';
+			/*사업자 삭제가 정상적으로 처리된 경우*/  				
+				UPDATE SITE_WSTE_DISPOSAL_ORDER
+                SET 
+					IS_DELETED = TRUE,
+                    ACTIVE = FALSE,
+                    UPDATED_AT = @REG_DT
+				WHERE SITE_ID IN (SELECT ID FROM COMP_SITE WHERE COMP_ID = IN_COMP_ID);
+                
+                UPDATE COLLECTOR_BIDDING
+                SET
+					DELETED = TRUE,
+                    ACTIVE = FALSE,
+                    UPDATED_AT = @REG_DT
+				WHERE COLLECTOR_ID IN (SELECT ID FROM COMP_SITE WHERE COMP_ID = IN_COMP_ID);
+                
+				CALL sp_calc_bidding_rank_after_delete_company(
+					IN_COMP_ID,
+                    rtn_val,
+                    msg_txt
+				);
 			END IF;
 		ELSE
 		/*사이트가 삭제되지 않은 상태인 경우에는 예외처리함*/

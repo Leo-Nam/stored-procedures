@@ -166,9 +166,6 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 																@COLLECTOR_BIDDING_ID,
 																@REG_DT
 															);
-															CALL sp_calc_bidding_rank(
-																IN_DISPOSAL_ORDER_ID
-															);
 															CALL sp_push_collector_apply_bidding(
 																IN_USER_ID,
 																IN_DISPOSAL_ORDER_ID,
@@ -179,14 +176,14 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 																@msg_txt
 															);
                                                             IF @rtn_val = 0 THEN
-																CALL sp_req_last_bidder_set_bidding_end_date_now(
+																CALL sp_req_last_bidder_set_bidding_end_date_now_for_bidding(
 																	IN_DISPOSAL_ORDER_ID,
 																	@COLLECTOR_BIDDING_ID,
 																	@rtn_val,
 																	@msg_txt
 																);
 																IF @rtn_val = 0 THEN
-																	CALL sp_calc_bidder_and_prospective_visitors(
+																	CALL sp_calc_bidding_rank(
 																		IN_DISPOSAL_ORDER_ID
 																	);
 																ELSE
@@ -269,9 +266,6 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 									IN_DISPOSAL_ORDER_ID
                                 );
                                 IF ROW_COUNT() = 1 THEN
-									CALL sp_calc_bidding_rank(
-										IN_DISPOSAL_ORDER_ID
-									);
 									CALL sp_push_collector_apply_bidding(
 										IN_USER_ID,
 										IN_DISPOSAL_ORDER_ID,
@@ -282,14 +276,14 @@ Change			: STATUS_HISTORY 테이블 사용 중지(0.0.2) / COLLECTOR_BIDDING 테
 										@msg_txt
 									);
 									IF @rtn_val = 0 THEN
-										CALL sp_req_last_bidder_set_bidding_end_date_now(
+										CALL sp_req_last_bidder_set_bidding_end_date_now_for_bidding(
 											IN_DISPOSAL_ORDER_ID,
 											@COLLECTOR_BIDDING_ID,
 											@rtn_val,
 											@msg_txt
 										);
 										IF @rtn_val = 0 THEN
-											CALL sp_calc_bidder_and_prospective_visitors(
+											CALL sp_calc_bidding_rank(
 												IN_DISPOSAL_ORDER_ID
 											);
 										ELSE

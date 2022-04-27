@@ -31,8 +31,11 @@ AUTHOR 			: Leo Nam
 			
 		IF ROW_COUNT() = 1 THEN
 		/*모든 트랜잭션이 성공한 경우에만 로그를 한다.*/
-			SET rtn_val = 0;
-			SET msg_txt = 'Success';
+			CALL sp_calc_bidding_rank_after_delete_company(
+				IN_COMPANY_ID,
+                rtn_val,
+                msg_txt
+			);
 		ELSE
 		/*변경이 적용되지 않은 경우*/
 			SET rtn_val = 37002;

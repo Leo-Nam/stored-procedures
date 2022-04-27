@@ -1,4 +1,4 @@
-CREATE PROCEDURE `sp_req_last_bidder_set_bidding_end_date_now` (
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_last_bidder_set_bidding_end_date_now`(
 	IN IN_DISPOSER_ORDER_ID			BIGINT,
     IN IN_COLLECTOR_BIDDING_ID		BIGINT,
     OUT rtn_val						INT,
@@ -14,34 +14,52 @@ BEGIN
         ACTIVE = TRUE AND
         IS_DELETED = FALSE;
 	IF @ORDER_EXISTS = 1 THEN
-		SELECT COUNT(ID) INTO @BIDDING_EXISTS
-		FROM COLLECTOR_BIDDING
-		WHERE 
-			ID = IN_COLLECTOR_BIDDING_ID AND 
-			ACTIVE = TRUE AND
-			DELETED = FALSE;
-		IF @BIDDING_EXISTS = 1 THEN
-			SELECT DISPOSAL_ORDER_ID INTO @BIDDING_ORDER_ID
-            FROM COLLECTOR_BIDDING
-            WHERE ID = IN_COLLECTOR_BIDDING_ID;
-            IF @BIDDING_ORDER_ID = IN_DISPOSER_ORDER_ID THEN
-				UPDATE SITE_WSTE_DISPOSAL_ORDER
-				SET BIDDING_END_AT = @REG_DT
-				WHERE ID = IN_DISPOSER_ORDER_ID;
-                IF ROW_COUINT() = 1 THEN
-					SET rtn_val = 0;
-					SET msg_txt = 'success';
-                ELSE
-					SET rtn_val = 38504;
-					SET msg_txt = 'bidding failed to set bidding end date now';
-                END IF;
-            ELSE
-				SET rtn_val = 38503;
-				SET msg_txt = 'bidding does not belong to the order';
-            END IF;
+		SELECT DATE_OF_BIDDING INTO @ALREADY_BID
+        FROM COLLECTOR_BIDDING
+        WHERE ID = IN_COLLECTOR_BIDDING_ID;
+        IF @ALREADY_BID IS NOT NULL THEN
+        /*이미 입찰한 사람인 경우*/
+			SET rtn_val = 0;
+			SET msg_txt = 'success';
         ELSE
-			SET rtn_val = 38502;
-			SET msg_txt = 'bidding does not exist';
+        /*아직 입찰하지 않은 사람인 경우*/
+			SELECT PROSPECTIVE_BIDDERS INTO @PROSPECTIVE_BIDDERS
+			FROM SITE_WSTE_DISPOSAL_ORDER
+			WHERE ID = IN_DISPOSER_ORDER_ID;
+			IF @PROSPECTIVE_BIDDERS = 1 THEN
+				SELECT COUNT(ID) INTO @BIDDING_EXISTS
+				FROM COLLECTOR_BIDDING
+				WHERE 
+					ID = IN_COLLECTOR_BIDDING_ID AND 
+					ACTIVE = TRUE AND
+					DELETED = FALSE;
+				IF @BIDDING_EXISTS = 1 THEN
+					SELECT DISPOSAL_ORDER_ID INTO @BIDDING_ORDER_ID
+					FROM COLLECTOR_BIDDING
+					WHERE ID = IN_COLLECTOR_BIDDING_ID;
+					IF @BIDDING_ORDER_ID = IN_DISPOSER_ORDER_ID THEN                
+						UPDATE SITE_WSTE_DISPOSAL_ORDER
+						SET BIDDING_END_AT = @REG_DT
+						WHERE ID = IN_DISPOSER_ORDER_ID;
+						IF ROW_COUNT() = 1 THEN
+							SET rtn_val = 0;
+							SET msg_txt = 'success';
+						ELSE
+							SET rtn_val = 38504;
+							SET msg_txt = 'bidding failed to set bidding end date now';
+						END IF;
+					ELSE
+						SET rtn_val = 38503;
+						SET msg_txt = 'bidding does not belong to the order';
+					END IF;
+				ELSE
+					SET rtn_val = 38502;
+					SET msg_txt = 'bidding does not exist';
+				END IF;
+			ELSE
+				SET rtn_val = 0;
+				SET msg_txt = 'success';
+			END IF;
         END IF;
     ELSE
 		SET rtn_val = 38501;

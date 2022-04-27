@@ -1,5 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_system_notice`(
 	IN IN_SUBJECT					VARCHAR(255),
+    IN IN_CATEGORY_ID				INT,
     OUT OUT_TARGET_LIST				JSON,
     OUT rtn_val 					INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 					VARCHAR(200)		/*출력값 : 처리결과 문자열*/

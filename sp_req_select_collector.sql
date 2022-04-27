@@ -104,7 +104,7 @@ AUTHOR 			: Leo Nam
 													@msg_txt
 												);
                                                 IF @rtn_val = 0 THEN
-													CALL sp_push_disposer_close_visit_early(
+													CALL sp_push_disposer_select_collector(
 														IN_USER_ID,
 														IN_DISPOSER_ORDER_ID,
 														IN_COLLECTOR_BIDDING_ID,
@@ -113,6 +113,9 @@ AUTHOR 			: Leo Nam
 														@rtn_val,
 														@msg_txt
 													);
+                                                    IF @rtn_val > 0 THEN
+														SIGNAL SQLSTATE '23000';
+                                                    END IF;
                                                 ELSE
 													SIGNAL SQLSTATE '23000';
                                                 END IF;
@@ -133,7 +136,7 @@ AUTHOR 			: Leo Nam
 												@msg_txt
 											);
 											IF @rtn_val = 0 THEN
-												CALL sp_push_disposer_close_visit_early(
+												CALL sp_push_disposer_select_collector(
 													IN_USER_ID,
 													IN_DISPOSER_ORDER_ID,
 													IN_COLLECTOR_BIDDING_ID,
@@ -142,6 +145,9 @@ AUTHOR 			: Leo Nam
 													@rtn_val,
 													@msg_txt
 												);
+												IF @rtn_val > 0 THEN
+													SIGNAL SQLSTATE '23000';
+												END IF;
 											ELSE
 												SIGNAL SQLSTATE '23000';
 											END IF;

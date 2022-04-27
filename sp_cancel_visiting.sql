@@ -1,6 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_cancel_visiting`(
 	IN IN_USER_ID					BIGINT,				/*입력값 : 사용자 고유등록번호(USERS.ID)*/
-	IN IN_COLLECT_BIDDING_ID		BIGINT				/*입력값 : 입찰 고유등록번호(COLLECTOR_BIDDING.ID)*/
+	IN IN_COLLECTOR_BIDDING_ID		BIGINT				/*입력값 : 입찰 고유등록번호(COLLECTOR_BIDDING.ID)*/
 )
 BEGIN
 
@@ -32,7 +32,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 	IF @rtn_val = 0 THEN
     /*사용자가 존재하는 경우*/
 		CALL sp_req_disposal_id_of_collector_bidding_id(
-			IN_COLLECT_BIDDING_ID,
+			IN_COLLECTOR_BIDDING_ID,
 			@DISPOSAL_ORDER_ID
 		);
 		
@@ -47,7 +47,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
         FROM COLLECTOR_BIDDING A
         LEFT JOIN USERS B ON A.COLLECTOR_ID = B.AFFILIATED_SITE
         WHERE
-			A.ID = IN_COLLECT_BIDDING_ID AND
+			A.ID = IN_COLLECTOR_BIDDING_ID AND
             B.ID = IN_USER_ID;
 		IF @BIDDING_EXISTS = 1 THEN
 		/*BIDDING이 존재하는 경우 정상처리한다.*/
@@ -56,7 +56,7 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 				SELECT COUNT(ID) INTO @ITEM_COUNT 
 				FROM COLLECTOR_BIDDING 
 				WHERE 
-					ID 				= IN_COLLECT_BIDDING_ID AND 
+					ID 				= IN_COLLECTOR_BIDDING_ID AND 
 					DATE_OF_VISIT 	IS NOT NULL;
 				/*수거자가 방문신청을 한 사실이 있는지 확인하여 그 결과를 @TEMP_COUNT에 반환한다*/
 				IF @ITEM_COUNT = 1 THEN
@@ -64,14 +64,14 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 					SELECT COUNT(ID) INTO @IS_ALREADY_CANCELED 
 					FROM COLLECTOR_BIDDING 
 					WHERE 
-						ID 				= IN_COLLECT_BIDDING_ID AND 
+						ID 				= IN_COLLECTOR_BIDDING_ID AND 
 						CANCEL_VISIT 	= TRUE;
 					/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 있는지 확인하여 그 결과를 @IS_ALREADY_CANCELED 반환한다. 방문취소한 사실이 존재하는 경우 1, 그렇지 않으면 0*/
 					IF @IS_ALREADY_CANCELED = 0 THEN
 					/*수거자가 자신의 방문신청에 대하여 방문취소한 사실이 존재하지 않는 경우 정상처리한다.*/
 						SELECT RESPONSE_VISIT INTO @EMITTOR_RESPONSE_FOR_VISIT 
 						FROM COLLECTOR_BIDDING 
-						WHERE ID = IN_COLLECT_BIDDING_ID;
+						WHERE ID = IN_COLLECTOR_BIDDING_ID;
 						/*배출자가 수거자의 방문신청에 대한 수락 또는 거절의사를 확인하여 그 결과를 @EMITTOR_RESPONSE_FOR_VISIT에 반환한다.*/
 						IF @EMITTOR_RESPONSE_FOR_VISIT IS NULL THEN
 						/*배출자가 수거업체의 방문신청에 대하여 수락 또는 거절의사를 표시하지 않은 대기상태인 경우*/
@@ -80,25 +80,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 								CANCEL_VISIT 		= TRUE, 
 								CANCEL_VISIT_AT 	= @REG_DT, 
 								UPDATED_AT		 	= @REG_DT 
-							WHERE ID = IN_COLLECT_BIDDING_ID;
+							WHERE ID = IN_COLLECTOR_BIDDING_ID;
 							/*방문신청을 취소상태(비활성상태)로 변경한다.*/
 							IF ROW_COUNT() = 1 THEN
 							/*데이타베이스 입력에 성공한 경우*/
-								SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
-								FROM COLLECTOR_BIDDING 
-								WHERE 
-									DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
-									DATE_OF_VISIT 			IS NOT NULL AND
-									CANCEL_VISIT 			= FALSE AND
-									RESPONSE_VISIT 			= TRUE;
-								UPDATE SITE_WSTE_DISPOSAL_ORDER 
-								SET 
-									PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS, 
-									UPDATED_AT		 		= @REG_DT  
-								WHERE ID = @DISPOSAL_ORDER_ID;
+								CALL sp_calc_bidding_rank(
+									IN_DISPOSER_ORDER_ID
+								);
 								CALL sp_push_cancel_visit(
 									IN_USER_ID,
-									IN_COLLECT_BIDDING_ID,
+									IN_COLLECTOR_BIDDING_ID,
 									@PUSH_CATEGORY_ID,
 									@json_data,
 									@rtn_val,
@@ -118,25 +109,16 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 									CANCEL_VISIT 			= TRUE, 
 									CANCEL_VISIT_AT 		= @REG_DT, 
 									UPDATED_AT		 		= @REG_DT   
-								WHERE ID = IN_COLLECT_BIDDING_ID;
+								WHERE ID = IN_COLLECTOR_BIDDING_ID;
 								/*방문신청을 취소상태(비활성상태)로 변경한다.*/
 								IF ROW_COUNT() = 1 THEN
 								/*데이타베이스 입력에 성공한 경우*/
-									SELECT COUNT(ID) INTO @PROSPECTIVE_VISITORS 
-									FROM COLLECTOR_BIDDING 
-									WHERE 
-										DISPOSAL_ORDER_ID 		= @DISPOSAL_ORDER_ID AND 
-										DATE_OF_VISIT 			IS NOT NULL AND
-										CANCEL_VISIT 			= FALSE AND
-										RESPONSE_VISIT 			= TRUE;
-									UPDATE SITE_WSTE_DISPOSAL_ORDER 
-									SET 
-										PROSPECTIVE_VISITORS 	= @PROSPECTIVE_VISITORS , 
-										UPDATED_AT		 		= @REG_DT
-									WHERE ID = @DISPOSAL_ORDER_ID;
+									CALL sp_calc_bidder_and_prospective_visitors(
+										@DISPOSAL_ORDER_ID
+									);
 									CALL sp_push_cancel_visit(
 										IN_USER_ID,
-										IN_COLLECT_BIDDING_ID,
+										IN_COLLECTOR_BIDDING_ID,
 										@PUSH_CATEGORY_ID,
 										@json_data,
 										@rtn_val,
