@@ -46,17 +46,47 @@ Change			: VISIT_START_AT 칼럼 추가(0.0.2)
     
     IF ROW_COUNT() = 1 THEN
     /*레코드 생성에 성공한 경우*/
-		SELECT MAX(ID) INTO @TRANSACTION_ID 
-        FROM WSTE_CLCT_TRMT_TRANSACTION;
+        SELECT LAST_INSERT_ID() INTO @TRANSACTION_ID;
+        IF IN_COLLECTOR_SITE_ID IS NOT NULL THEN
+			CALL sp_req_policy_direction(
+			/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일로부터의 기간을 반환받는다(단위:시간)*/
+				'max_selection_duration',
+				@max_selection_duration
+			);
+			SET @COLLECTOR_MAX_DECISION_AT = ADDTIME(
+												@REG_DT, 
+												CONCAT(
+													CAST(@max_selection_duration AS UNSIGNED), 
+													':00:00'
+												)
+											);
+        END IF;
         
 		UPDATE SITE_WSTE_DISPOSAL_ORDER
         SET 
-			TRANSACTION_ID 	= @TRANSACTION_ID,
-            UPDATED_AT 		= @REG_DT
+			TRANSACTION_ID 				= @TRANSACTION_ID,
+            UPDATED_AT 					= @REG_DT,
+            COLLECTOR_MAX_DECISION_AT 	= IF(IN_COLLECTOR_SITE_ID IS NOT NULL, @COLLECTOR_MAX_DECISION_AT, COLLECTOR_MAX_DECISION_AT)
+            /*기존 거래인 경우에는 위에서 계산한 @COLLECTOR_MAX_DECISION_AT으로 SITE_WSTE_DISPOSAL_ORDER의 COLLECTOR_MAX_DECISION_AT을 변경해준다.*/
         WHERE ID 			= IN_DISPOSER_ORDER_ID;
         IF ROW_COUNT() = 1 THEN
-			SET rtn_val = 0;
-			SET msg_txt = 'success';
+			IF IN_COLLECTOR_SITE_ID IS NOT NULL THEN
+            /*기존거래인 경우*/
+				UPDATE WSTE_CLCT_TRMT_TRANSACTION
+				SET MAX_DECISION_AT = @COLLECTOR_MAX_DECISION_AT
+				WHERE ID = @TRANSACTION_ID;
+				IF ROW_COUNT() = 1 THEN
+					SET rtn_val = 0;
+					SET msg_txt = 'success';
+				ELSE
+					SET rtn_val = 25303;
+					SET msg_txt = 'faild to update transaction max decision at';
+				END IF;
+			ELSE
+            /*입찰거래인 경우*/
+				SET rtn_val = 0;
+				SET msg_txt = 'success';
+			END IF;
         ELSE
 			SET rtn_val = 25302;
 			SET msg_txt = 'faild to update transaction id';

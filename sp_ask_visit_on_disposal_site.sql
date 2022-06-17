@@ -105,7 +105,7 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 								CALL sp_calc_bidder_and_prospective_visitors(
 									IN_DISPOSER_ORDER_ID
 								);
-							ELSE
+                            ELSE
 								SIGNAL SQLSTATE '23000';
                             END IF;
 						ELSE
@@ -122,24 +122,40 @@ Change			: 현재시간을 구하여 필요한 sp에 입력자료로 넘김(0.0.
 							TRUE, 
 							IN_VISIT_AT, 
 							@REG_DT,
+							@BIDDING_ID,
 							@rtn_val,
 							@msg_txt
 						);
 						IF @rtn_val = 0 THEN
 						/*정상적으로 입력완료된 경우*/
-							CALL sp_push_new_visitor_come(
+							CALL sp_create_chat_room(
 								IN_USER_ID,
-								IN_DISPOSER_ORDER_ID,
-                                @PUSH_CATEGORY_ID,
-								@json_data,
+                                IN_DISPOSER_ORDER_ID,
+                                @BIDDING_ID,
+                                0,
+                                102,
 								@rtn_val,
-								@msg_txt
-							);
+								@msg_txt                                
+                            );
                             IF @rtn_val = 0 THEN
-								CALL sp_calc_bidder_and_prospective_visitors(
-									IN_DISPOSER_ORDER_ID
+                            /*채팅방이 정상적으로 생성된 경우 정상처리한다.*/
+								CALL sp_push_new_visitor_come(
+									IN_USER_ID,
+									IN_DISPOSER_ORDER_ID,
+									@PUSH_CATEGORY_ID,
+									@json_data,
+									@rtn_val,
+									@msg_txt
 								);
-							ELSE
+								IF @rtn_val = 0 THEN
+									CALL sp_calc_bidder_and_prospective_visitors(
+										IN_DISPOSER_ORDER_ID
+									);
+								ELSE
+									SIGNAL SQLSTATE '23000';
+								END IF;
+                            ELSE
+                            /*채팅방이 정상적으로 생성되지 않은 경우 예외처리한다.*/
 								SIGNAL SQLSTATE '23000';
                             END IF;
 						ELSE

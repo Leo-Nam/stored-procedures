@@ -1,15 +1,15 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_transaction_info_in_process`(
-	IN IN_USER_ID						BIGINT,						/*입력값 : 사용자의 고유등록번호(USERS.ID)*/
-	IN IN_COLLECTOR_BIDDING_ID			BIGINT,						/*입력값 : COLLECTOR_BIDDING.ID*/
-	IN IN_WSTE_CODE						VARCHAR(8),					/*입력값 : 폐기물 코드*/
-	IN IN_WSTE_QUANTITY					FLOAT,						/*입력값 : 폐기물 중량(수량)*/
-	IN IN_WSTE_PRICE_UNIT				FLOAT,						/*입력값 : 폐기물 처리 단가*/
-	IN IN_WSTE_UNIT						ENUM('kg','m3'),			/*입력값 : 폐기물 처리 단위*/
-	IN IN_WSTE_TRMT_METHOD				VARCHAR(4),					/*입력값 : 폐기물 처리 방법*/
-	IN IN_IMG_LIST						JSON,						/*입력값 : 처리사진 등록 리스트*/
-	IN IN_COMPLETED_AT					DATETIME,					/*입력값 : 폐기물 처리일자*/
-	OUT rtn_val							INT,						/*출력값 : 처리결과 코드*/
-	OUT msg_txt 						VARCHAR(200)				/*출력값 : 처리결과 문자열*/
+	IN IN_USER_ID						BIGINT,								/*입력값 : 사용자의 고유등록번호(USERS.ID)*/
+	IN IN_COLLECTOR_BIDDING_ID			BIGINT,								/*입력값 : COLLECTOR_BIDDING.ID*/
+	IN IN_WSTE_CODE						VARCHAR(8),							/*입력값 : 폐기물 코드*/
+	IN IN_WSTE_QUANTITY					FLOAT,								/*입력값 : 폐기물 중량(수량)*/
+	IN IN_WSTE_PRICE_UNIT				FLOAT,								/*입력값 : 폐기물 처리 단가*/
+	IN IN_WSTE_UNIT						ENUM('Kg','m³','식','전체견적가'),		/*입력값 : 폐기물 처리 단위*/
+	IN IN_WSTE_TRMT_METHOD				VARCHAR(4),							/*입력값 : 폐기물 처리 방법*/
+	IN IN_IMG_LIST						JSON,								/*입력값 : 처리사진 등록 리스트*/
+	IN IN_COMPLETED_AT					DATETIME,							/*입력값 : 폐기물 처리일자*/
+	OUT rtn_val							INT,								/*출력값 : 처리결과 코드*/
+	OUT msg_txt 						VARCHAR(200)						/*출력값 : 처리결과 문자열*/
 )
 BEGIN
 

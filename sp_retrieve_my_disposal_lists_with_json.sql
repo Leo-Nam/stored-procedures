@@ -42,6 +42,13 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_BIDDERS								INT;
     DECLARE CUR_COLLECTOR_ID						BIGINT;
     DECLARE CUR_NOTE								VARCHAR(255);
+	DECLARE VAR_WSTE_LIST 							JSON DEFAULT NULL;
+	DECLARE VAR_IMG_PATH 							JSON DEFAULT NULL;
+	DECLARE VAR_BIDDING_LIST 						JSON DEFAULT NULL;
+	DECLARE VAR_COLLECTOR_INFO 						JSON DEFAULT NULL;
+	DECLARE VAR_DISPLAY_DATE 						DATETIME DEFAULT NULL;
+	DECLARE VAR_MIN_DISPOSAL_DURATION 				VARCHAR(255) DEFAULT NULL;
+	DECLARE VAR_CHECK_STATE			 				TINYINT DEFAULT FALSE;
     DECLARE TEMP_CURSOR		 						CURSOR FOR 
 	SELECT 
 		A.ID, 
@@ -68,13 +75,13 @@ AUTHOR 			: Leo Nam
         A.COLLECTOR_ID, 
         A.NOTE
     FROM SITE_WSTE_DISPOSAL_ORDER A
-    LEFT JOIN V_ORDER_STATE_NAME B ON A.ID = B.DISPOSER_ORDER_ID
-    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
-    LEFT JOIN COMPANY D ON C.COMP_ID = D.ID
+    LEFT JOIN V_ORDER_STATE_NAME B 	ON A.ID 		= B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C 			ON A.SITE_ID 	= C.ID
+    LEFT JOIN COMPANY D 			ON C.COMP_ID 	= D.ID
 	WHERE 
-		B.STATE IS NOT NULL AND 
-        A.IS_DELETED = FALSE AND
-		B.STATE_CODE 	<> 105 AND 
+		B.STATE 			IS NOT NULL AND 
+        A.IS_DELETED 		= FALSE AND
+		B.STATE_CODE 		<> 105 AND 
         IF (IN_USER_TYPE	= 'Person', 
             A.DISPOSER_ID 	= IN_USER_ID, 
             C.ACTIVE 		= TRUE AND 
@@ -121,11 +128,12 @@ AUTHOR 			: Leo Nam
 		IMG_PATH							JSON,
 		WSTE_LIST							JSON,
 		BIDDING_LIST						JSON,
-		COLLECTOR_INFO						JSON
+		COLLECTOR_INFO						JSON,
+        CHECK_STATE							TINYINT
 	);        
 	
 	OPEN TEMP_CURSOR;	
-	cloop: LOOP
+	cloop: LOOP        
 		FETCH TEMP_CURSOR 
 		INTO 
 			CUR_DISPOSER_ORDER_ID,
@@ -211,46 +219,63 @@ AUTHOR 			: Leo Nam
 			
 		CALL sp_get_disposal_wste_lists_2(
 			CUR_DISPOSER_ORDER_ID,
-			@WSTE_LIST 
+			VAR_WSTE_LIST 
 		);
         
 		CALL sp_get_disposal_img_lists_2(
 			CUR_DISPOSER_ORDER_ID,
 			'입찰',
-			@IMG_PATH
+			VAR_IMG_PATH
 		);
         
 		CALL sp_get_collector_lists_2(
 			CUR_DISPOSER_ORDER_ID,
 			CUR_STATE_CATEGORY_ID,
-			@BIDDING_LIST
+			VAR_BIDDING_LIST
 		);
         
 		CALL sp_get_site_info_simple(
 			CUR_COLLECTOR_ID,
-			@COLLECTOR_INFO
+			VAR_COLLECTOR_INFO
 		);
         
 		CALL sp_set_display_time(
 			CUR_DISPOSER_ORDER_ID,
 			CUR_STATE_CATEGORY_ID,
-			@DISPLAY_DATE
+			VAR_DISPLAY_DATE
 		);
         
 		CALL sp_req_policy_direction(
 		/*수거자가 배출자의 최종입찰선정에 응답을 할 수 있는 최대의 시간으로서 배출자의 최종낙찰자선정일로부터의 기간을 반환받는다(단위:시간)*/
 			'min_disposal_duration',
-			@MIN_DISPOSAL_DURATION
-		);        
+			VAR_MIN_DISPOSAL_DURATION
+		);      
+        
+        SELECT COUNT(ID) INTO @RECORD_COUNT
+        FROM STATE_CONTROLLER
+        WHERE 
+			ORDER_ID = CUR_DISPOSER_ORDER_ID AND
+            USER_TYPE = 2 AND
+            IF(SITE_ID = 0, 
+				USER_ID = CUR_DISPOSER_SITE_ID,
+                SITE_ID = CUR_DISPOSER_SITE_ID
+			) AND
+            ORDER_STATE = CUR_STATE_CODE;
+        IF @RECORD_COUNT > 0 THEN
+			SET VAR_CHECK_STATE = TRUE;
+        ELSE
+			SET VAR_CHECK_STATE = FALSE;
+        END IF;  
         
 		UPDATE DISPOSAL_ORDER_LIST 
         SET 
-			IMG_PATH 				= @IMG_PATH, 
-            WSTE_LIST 				= @WSTE_LIST, 
-            BIDDING_LIST 			= @BIDDING_LIST,
-            DISPLAY_DATE			= @DISPLAY_DATE,
-            MIN_DISPOSAL_DURATION	= @MIN_DISPOSAL_DURATION,
-            COLLECTOR_INFO			= @COLLECTOR_INFO
+			IMG_PATH 				= VAR_IMG_PATH, 
+            WSTE_LIST 				= VAR_WSTE_LIST, 
+            BIDDING_LIST 			= VAR_BIDDING_LIST,
+            DISPLAY_DATE			= VAR_DISPLAY_DATE,
+            MIN_DISPOSAL_DURATION	= VAR_MIN_DISPOSAL_DURATION,
+            COLLECTOR_INFO			= VAR_COLLECTOR_INFO,
+            CHECK_STATE				= VAR_CHECK_STATE
 		WHERE DISPOSER_ORDER_ID 	= CUR_DISPOSER_ORDER_ID;
 		/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
 		
@@ -287,20 +312,22 @@ AUTHOR 			: Leo Nam
             'IMG_PATH'							, IMG_PATH, 
             'WSTE_LIST'							, WSTE_LIST, 
             'BIDDING_LIST'						, BIDDING_LIST, 
-            'COLLECTOR_INFO'					, COLLECTOR_INFO
+            'COLLECTOR_INFO'					, COLLECTOR_INFO, 
+            'CHECK_STATE'						, CHECK_STATE
 		)
 	) 
     INTO json_data 
     FROM DISPOSAL_ORDER_LIST;
-    
-    
-    IF vRowCount = 1 THEN
+        
+	SET rtn_val 				= 0;
+	SET msg_txt 				= 'Success';
+/*    IF vRowCount = 1 THEN
 		SET json_data 				= NULL;
 		SET rtn_val 				= 30601;
 		SET msg_txt 				= 'No data found';
     ELSE
 		SET rtn_val 				= 0;
 		SET msg_txt 				= 'Success';
-	END IF;
+	END IF;*/
 	DROP TABLE IF EXISTS DISPOSAL_ORDER_LIST;
 END

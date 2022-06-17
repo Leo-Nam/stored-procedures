@@ -7832,13 +7832,14 @@ SET @BIDDING_ID = 416;
 	WHERE A.ID = @BIDDING_ID;      
     
 */
+/*
 SET @ORDER_ID = 1374;
 	SELECT JSON_ARRAYAGG(
 		JSON_OBJECT(
 			'ID'				, A.ID, 
 			'ORDER_CODE'		, A.ORDER_CODE, 
 			'SITE_ID'			, A.SITE_ID, 
-			'SITE_NAME'			, B.SITE_NAME, 
+			'SITE_NAME'			, IF(A.SITE_ID = 0, E.USER_NAME, B.SITE_NAME), 
 			'B_CODE'			, A.KIKCD_B_CODE, 
 			'SI_DO'				, C.SI_DO,
 			'SI_GUN_GU'			, C.SI_GUN_GU,
@@ -7852,10 +7853,13 @@ SET @ORDER_ID = 1374;
 			'BIDDING_END_AT'	, A.BIDDING_END_AT,
 			'DISPOSER_ID'		, A.DISPOSER_ID,
 			'AVATAR_PATH'		, E.AVATAR_PATH,
-			'PHONE'				, E.PHONE
+			'PHONE'				, E.PHONE,
+			'PROPECTIVE_BIDDERS'	, A.PROSPECTIVE_BIDDERS,
+			'BIDDERS'				, A.BIDDERS,
+			'PROSPECTIVE_VISITORS'	, A.PROSPECTIVE_VISITORS
 		)
 	) 
-	INTO OUT_DISPOSAL_ORDER_INFO 
+	INTO @DISPOSAL_ORDER_INFO 
 	FROM SITE_WSTE_DISPOSAL_ORDER A 
     LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
     LEFT JOIN KIKCD_B C ON A.KIKCD_B_CODE = C.B_CODE
@@ -7863,4 +7867,2769 @@ SET @ORDER_ID = 1374;
     LEFT JOIN USERS E ON IF(A.SITE_ID = 0, A.DISPOSER_ID = E.ID, A.SITE_ID = E.AFFILIATED_SITE)
 	WHERE 
 		A.ID = @ORDER_ID;
-SELECT @ORDER_ID
+SELECT @ORDER_ID, @DISPOSAL_ORDER_INFO 
+*/
+
+
+
+/*
+SET @USER_ID = 23;
+	SELECT 
+		A.ID, 
+		A.TRANSACTION_ID, 
+		A.WSTE_CODE, 
+        B.NAME, 
+        C.NAME,
+        G.KOREAN,
+        D.ID,
+        D.ORDER_CODE,
+        A.CREATED_AT,
+        A.CONFIRMED_AT,
+        E.STATE,
+        E.STATE_CODE,
+        E.STATE_CATEGORY,
+        E.STATE_CATEGORY_ID,
+        H.AVATAR_PATH,
+        F.ID,
+        D.SITE_ID
+    FROM TRANSACTION_REPORT A
+    LEFT JOIN WSTE_CODE B ON A.WSTE_CODE = B.CODE
+    LEFT JOIN WSTE_TRMT_METHOD C ON A.TRMT_METHOD = C.CODE
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER D ON A.DISPOSER_ORDER_ID = D.ID
+    LEFT JOIN V_ORDER_STATE_NAME E ON D.ID = E.DISPOSER_ORDER_ID
+    LEFT JOIN USERS F ON IF(D.SITE_ID = 0, D.DISPOSER_ID = F.ID, D.SITE_ID = F.AFFILIATED_SITE)
+    LEFT JOIN WSTE_APPEARANCE G ON A.WSTE_APPEARANCE = G.ID
+    LEFT JOIN USERS H ON A.COLLECTOR_SITE_ID = H.AFFILIATED_SITE
+	WHERE 
+        A.CONFIRMED_AT <= NOW() AND
+        D.DISPOSER_ID = @USER_ID AND
+        H.CLASS = 201;
+*/
+
+/*
+SET @USER_ID = 39;
+SET @BIDDING_ID = 464;
+SET @RES = TRUE;
+CALL sp_collector_make_final_decision_on_bidding(
+	@USER_ID,
+    @BIDDING_ID,
+    @RES
+);
+*/
+/*
+SET @USER_ID = 21;
+SET @WSTE_DISPOSAL_ORDER_ID = 1137;
+SET @COLLECTOR_SITE_ID = 33;
+
+CALL sp_push_collector_dispose_new_wste(
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@COLLECTOR_SITE_ID,
+	28,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+);
+SELECT 
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@COLLECTOR_SITE_ID,
+	28,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt;
+*/
+/*
+	SELECT ID, 
+			@USER_NAME, 
+			FCM, 
+			@AVATAR_PATH,
+			@TITLE,
+			@BODY,
+			@ORDER_ID, 
+			NULL, 
+			@TRANSACTION_ID, 
+			NULL, 
+			28,
+            @REG_DT,
+            AFFILIATED_SITE
+	FROM USERS
+	WHERE 
+		ACTIVE 					= TRUE AND
+		PUSH_ENABLED			= TRUE
+*/      
+/*  
+SET @ORDER_ID = 1425;
+SET @COLLECTOR_SITE_ID = 33;
+SET @BIDDING_ID = 499;
+SET @CATEGORY_ID = 21;
+		SELECT ID, 
+			USER_NAME, 
+			FCM, 
+			AVATAR_PATH,
+			@TITLE,
+			@BODY,
+			@ORDER_ID, 
+			@BIDDING_ID, 
+			@TRANSACTION_ID, 
+			NULL, 
+			@CATEGORY_ID,
+            @REG_DT
+		FROM USERS
+		WHERE 
+			ACTIVE 					= TRUE AND
+			PUSH_ENABLED			= TRUE AND
+			AFFILIATED_SITE			= @COLLECTOR_SITE_ID;
+*/
+/*
+SET @USER_ID = 38;
+SET @BIDDING_ID = 525;
+SET @ORDER_ID = 1455;
+SET @DISCHARGED_END_AT = '2022-04-30';
+CALL sp_test(
+	@USER_ID,
+    @BIDDING_ID,
+    @ORDER_ID,
+    @DISCHARGED_END_AT
+);
+*/
+ 
+    CALL sp_req_current_time(@REG_DT);
+    SET @TARGET_YEAR = YEAR(@REG_DT);
+    SET @TARGET_MONTH = MONTH(@REG_DT);
+/*
+	SELECT DATE(A.CREATED_AT), COUNT(DATE(A.CREATED_AT))
+	FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+	WHERE 
+		B.CONFIRMED = FALSE AND
+        YEAR(A.CREATED_AT) = @TARGET_YEAR AND
+        MONTH(A.CREATED_AT) = @TARGET_MONTH
+    GROUP BY DATE(A.CREATED_AT)
+*/ 
+ /*  
+	DROP TABLE IF EXISTS NO_CONFIRM_LICENSE_LIST_MONTHLY;
+    
+    CALL sp_get_no_confirm_license_list_monthly(
+		@TARGET_YEAR,
+        @TARGET_MONTH,
+        @LISTS
+    );
+    SELECT @REG_DT, @LISTS;*/
+    
+/*    
+  
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'DATE'				, DATE(A.CREATED_AT), 
+			'COUNT'				, COUNT(DATE(A.CREATED_AT))
+		)
+	) 
+	INTO @LISTS 
+	FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+	WHERE 
+		B.CONFIRMED = FALSE AND
+        B.ACTIVE = TRUE AND
+        A.ACTIVE = TRUE AND
+        YEAR(A.CREATED_AT) = @TARGET_YEAR AND
+        MONTH(A.CREATED_AT) = @TARGET_MONTH
+    GROUP BY DATE(A.CREATED_AT);
+SELECT @LISTS ;
+*/
+
+/*
+
+	SELECT DATE(A.CREATED_AT), COUNT(DATE(A.CREATED_AT))
+	FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+	WHERE 
+		B.CONFIRMED = FALSE AND
+        B.ACTIVE = TRUE AND
+        A.ACTIVE = TRUE AND
+        YEAR(A.CREATED_AT) = @TARGET_YEAR AND
+        MONTH(A.CREATED_AT) = @TARGET_MONTH
+    GROUP BY DATE(A.CREATED_AT);  
+*/
+/*
+SET @TARGET_DATE = '2022-04-27';
+CALL sp_get_site_lists_registered(@TARGET_DATE, @OUT_LIST);
+SELECT @OUT_LIST;
+
+
+	SELECT 
+		A.ID, 
+        A.COMP_ID,
+		A.KIKCD_B_CODE, 
+		A.ADDR,
+		A.CONTACT,
+        A.LAT,
+        A.LNG,
+		A.SITE_NAME, 
+        A.TRMT_BIZ_CODE,
+        A.CREATOR_ID,
+        A.HEAD_OFFICE,
+        A.PERMIT_REG_CODE,
+        A.PERMIT_REG_IMG_PATH,
+        A.CS_MANAGER_ID,
+        A.CONFIRMED,
+        A.CONFIRMED_AT,
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        A.PUSH_ENABLED,
+        A.NOTICE_ENABLED,
+        D.NAME,
+		B.SI_DO,
+		B.SI_GUN_GU,
+		B.EUP_MYEON_DONG,
+		B.DONG_RI,
+		C.AVATAR_PATH,
+		C.PHONE,
+        A.ACTIVE
+	FROM COMP_SITE A         
+    LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
+    LEFT JOIN USERS C ON A.ID = C.AFFILIATED_SITE
+    LEFT JOIN WSTE_TRMT_BIZ D ON A.TRMT_BIZ_CODE = D.CODE
+	WHERE 
+		DATE(A.CREATED_AT) = @TARGET_DATE;	   
+	DROP TABLE IF EXISTS NO_CONFIRM_LICENSE_LIST_MONTHLY;
+*/
+
+  /*  
+SET @TARGET_DATE = '2022-04-27';
+    CALL sp_get_site_lists_registered(
+		@TARGET_DATE,
+        @LISTS
+    );
+    SELECT @TARGET_DATE, @LISTS;
+    
+    
+		CALL sp_get_no_confirm_license_counts_monthly(
+			@TARGET_DATE,
+			@LISTS
+		);
+    SELECT @TARGET_DATE, @LISTS;
+    
+    
+    
+    SET @TARGET_YEAR = YEAR(@TARGET_DATE);
+    SET @TARGET_MONTH = MONTH(@TARGET_DATE);
+	SELECT DATE(A.CREATED_AT), COUNT(DATE(A.CREATED_AT))
+	FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+	WHERE 
+        B.ACTIVE = TRUE AND
+        A.ACTIVE = TRUE AND
+        B.CONFIRMED = FALSE AND YEAR(A.CREATED_AT) = @TARGET_YEAR AND MONTH(A.CREATED_AT) = @TARGET_YEAR
+    GROUP BY DATE(A.CREATED_AT);   
+    */
+    
+    
+    
+/*
+SET @TARGET_DATE = '2022-04-27';
+	SELECT DATE(A.CREATED_AT), COUNT(DATE(A.CREATED_AT))
+	FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+	WHERE 
+		B.CONFIRMED = FALSE AND
+        B.ACTIVE = TRUE AND
+        A.ACTIVE = TRUE AND
+        YEAR(A.CREATED_AT) = @TARGET_YEAR AND
+        MONTH(A.CREATED_AT) = @TARGET_MONTH
+    GROUP BY DATE(A.CREATED_AT);  
+*/
+/*
+SET @TARGET_DATE = '2022-04-23';
+CALL sp_get_site_lists_registered(
+			@TARGET_DATE,
+			@LISTS
+		);
+    SELECT @TARGET_DATE, @LISTS;
+    
+    SET @TARGET = '배출자';
+    SELECT CODE FROM WSTE_BIZ_CODE WHERE USER_TYPE = (IF @TARGET = '배출자', 2, 3)
+    */
+    
+   /* 
+SET @TARGET_DATE = '2022-04-21';
+SET @MENU_ID = 0;
+    CALL sp_get_site_lists_registered(
+		@TARGET_DATE,
+        @MENU_ID,
+        @OUT_LIST
+    );
+    
+    SELECT 
+		@TARGET_DATE,
+        @MENU_ID,
+        @OUT_LIST
+*/
+
+
+
+/*
+SET @TARGET_DATE = '2022-04-27';
+    
+    
+		CALL sp_get_no_confirm_license_counts_monthly(
+			@TARGET_DATE,
+			@LISTS
+		);
+    SELECT @TARGET_DATE, @LISTS;
+*/
+
+/*
+SET @TARGET_DATE = '2022-04-27';
+SET @MENU_ID = 1;
+CALL sp_get_site_lists_registered(
+			@TARGET_DATE,
+			@MENU_ID,
+			@LISTS
+
+);
+SELECT 
+			@TARGET_DATE,
+			@MENU_ID,
+			@LISTS
+*/
+
+SET @USER_ID = 35;
+SET @BIDDING_ID = 541;
+SET @PUSH_CATEGORY_ID = 4;
+/*
+CALL sp_push_cancel_visit(
+	@USER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+	@json_data,
+	@rtn_val,
+	@msg_txt
+);
+
+SELECT 
+	@USER_ID,
+	@BIDDING_ID,
+	@PUSH_CATEGORY_ID,
+	@json_data,
+	@rtn_val,
+	@msg_txt
+*/    
+    
+/*    
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'USER_ID'				, C.ID, 
+					'USER_NAME'				, C.USER_NAME, 
+					'FCM'					, C.FCM, 
+					'AVATAR_PATH'			, C.AVATAR_PATH,
+					'TITLE'					, @TITLE,
+					'BODY'					, @BODY,
+					'ORDER_ID'				, @ORDER_ID, 
+					'BIDDING_ID'			, @BIDDING_ID, 
+					'TRANSACTION_ID'		, @TRANSACTION_ID, 
+					'REPORT_ID'				, NULL, 
+					'CATEGORY_ID'			, 4,
+					'CREATED_AT'			, @REG_DT
+				)
+			) 
+			INTO @PUSH_INFO
+			FROM COLLECTOR_BIDDING A 
+            LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+            LEFT JOIN USERS C ON B.DISPOSER_ID = C.ID
+			WHERE 
+				C.ACTIVE 					= TRUE AND
+				C.PUSH_ENABLED				= TRUE AND
+                A.ID						= @BIDDING_ID;
+                SELECT @BIDDING_ID, @PUSH_INFO
+*/
+
+/*
+SET @TARGET_DATE = '2022-04-21';
+SET @MENU_ID = 0;
+CALL sp_get_no_confirm_license_counts_daily(
+	@TARGET_DATE,
+    @MENU_ID,
+    @OUT_COUNT
+);      
+SELECT      
+	@TARGET_DATE,
+    @MENU_ID,
+    @OUT_COUNT     
+*/
+/*
+SET @PARAM = '[{"USER_ID":238, "SEARCH":"가나환경", "OFFSET_SIZE": 0, "PAGE_SIZE": 10}]';
+CALL sp_admin_retrieve_site_lists(
+	@PARAM
+)    
+*/
+
+/*
+SET @SEARCH = NULL;
+SET @OFFSET_SIZE = 0;
+SET @PAGE_SIZE = 20;
+SET @CONFIRMED = NULL;
+
+CALL sp_admin_retrive_site_lists_without_handler(
+	@SEARCH,
+	@OFFSET_SIZE,
+	@PAGE_SIZE,
+	@CONFIRMED,
+    @OUT_LIST
+);
+SELECT 
+	@SEARCH,
+	@OFFSET_SIZE,
+	@PAGE_SIZE,
+	@CONFIRMED,
+    @OUT_LIST;
+*/
+
+/*
+SET @IN_PARAMS = '[{"USER_ID":238, "SEARCH":"330", "OFFSET_SIZE":0, "PAGE_SIZE": 5, "CONFIRMED": 0}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_site_lists(@IN_PARAMS);
+*/
+
+/*
+SHOW GLOBAL VARIABLES LIKE 'max_connections';
+*/
+/*
+SET @PARAMS = '[{"USER_ID":238, "SITE_ID":29, "BIZ_REG_CODE":"123456789", "BIZ_REG_IMG_PATH": "IMGPATH", "PERMIT_REG_CODE":"987654321", "PERMIT_REG_IMG_PATH": "IMGPATH2", "REP_NAME":"REP", "B_CODE": "4182000000", "ADDR":"ADDR", "WSTE_LIST": null}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_update_site_info(
+	@PARAMS
+);
+*/
+/*
+SET @SEARCH = '303' COLLATE utf8mb4_unicode_ci;
+SELECT * FROM COMPANY WHERE REPLACE(BIZ_REG_CODE, '-', '') LIKE CONCAT('%', @SEARCH, '%') 
+*/
+
+/*
+SET @SEARCH = '서울' COLLATE utf8mb4_unicode_ci;
+SET @CONFIRMED = 1;
+	SELECT 
+		A.ID, 
+		A.COMP_ID, 
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        A.SITE_NAME,
+        A.PERMIT_REG_CODE,
+        A.KIKCD_B_CODE,
+        A.ADDR,
+        A.PERMIT_REG_IMG_PATH
+    FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+    LEFT JOIN KIKCD_B C ON A.KIKCD_B_CODE = C.B_CODE
+    LEFT JOIN KIKCD_B D ON B.KIKCD_B_CODE = D.B_CODE
+    LEFT JOIN WSTE_TRMT_BIZ E ON A.TRMT_BIZ_CODE = E.CODE
+    WHERE 
+		IF(@SEARCH IS NULL,
+			IF(@CONFIRMED IS NULL,
+				A.ID > 0,
+				(
+					A.CONFIRMED = @CONFIRMED OR
+                    B.CONFIRMED = @CONFIRMED 
+                )
+			),
+			IF(@CONFIRMED IS NULL,
+				A.ID > 0 AND
+                (
+					A.SITE_NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					B.REP_NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					C.B_CODE LIKE CONCAT('%', @SEARCH, '%') OR
+					C.SI_DO LIKE CONCAT('%', @SEARCH, '%') OR
+					C.SI_GUN_GU LIKE CONCAT('%', @SEARCH, '%') OR
+					C.EUP_MYEON_DONG LIKE CONCAT('%', @SEARCH, '%') OR
+					C.DONG_RI LIKE CONCAT('%', @SEARCH, '%') OR
+					D.B_CODE LIKE CONCAT('%', @SEARCH, '%') OR
+					D.SI_DO LIKE CONCAT('%', @SEARCH, '%') OR
+					D.SI_GUN_GU LIKE CONCAT('%', @SEARCH, '%') OR
+					D.EUP_MYEON_DONG LIKE CONCAT('%', @SEARCH, '%') OR
+					D.DONG_RI LIKE CONCAT('%', @SEARCH, '%') OR
+					A.ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE USER_NAME LIKE CONCAT('%', @SEARCH, '%')) OR
+					E.NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					REPLACE(B.BIZ_REG_CODE, '-', '') LIKE CONCAT('%', @SEARCH, '%') OR
+					REPLACE(A.PERMIT_REG_CODE, '-', '') LIKE CONCAT('%', @SEARCH, '%')
+                ),
+				(
+					A.CONFIRMED = @CONFIRMED OR
+                    B.CONFIRMED = @CONFIRMED 
+                ) AND
+                (
+					A.SITE_NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					B.REP_NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					C.B_CODE LIKE CONCAT('%', @SEARCH, '%') OR
+					C.SI_DO LIKE CONCAT('%', @SEARCH, '%') OR
+					C.SI_GUN_GU LIKE CONCAT('%', @SEARCH, '%') OR
+					C.EUP_MYEON_DONG LIKE CONCAT('%', @SEARCH, '%') OR
+					C.DONG_RI LIKE CONCAT('%', @SEARCH, '%') OR
+					D.B_CODE LIKE CONCAT('%', @SEARCH, '%') OR
+					D.SI_DO LIKE CONCAT('%', @SEARCH, '%') OR
+					D.SI_GUN_GU LIKE CONCAT('%', @SEARCH, '%') OR
+					D.EUP_MYEON_DONG LIKE CONCAT('%', @SEARCH, '%') OR
+					D.DONG_RI LIKE CONCAT('%', @SEARCH, '%') OR
+					A.ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE USER_NAME LIKE CONCAT('%', @SEARCH, '%')) OR
+					E.NAME LIKE CONCAT('%', @SEARCH, '%') OR
+					REPLACE(B.BIZ_REG_CODE, '-', '') LIKE CONCAT('%', @SEARCH, '%') OR
+					REPLACE(A.PERMIT_REG_CODE, '-', '') LIKE CONCAT('%', @SEARCH, '%')
+                )
+			)
+        )
+*/
+/*
+call sp_req_b_wste_appearance()
+*/
+
+/*
+SET @CATEGORY_ID = 17;
+	SELECT 
+		A.ID,
+        A.ORDER_CODE,
+		A.BIDDING_END_AT,
+        A.ACTIVE,
+        E.ACTIVE,
+        F.ACTIVE,
+        B.STATE_CODE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
+	LEFT JOIN V_TRANSACTION_STATE C ON A.TRANSACTION_ID = C.TRANSACTION_ID
+    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.TRANSACTION_ID = D.ID
+    LEFT JOIN COMP_SITE E ON A.SITE_ID = E.ID
+    LEFT JOIN USERS F ON A.DISPOSER_ID = F.ID
+	WHERE 
+		IF(B.STATE_CODE = 103,
+			A.BIDDING_END_AT <= ADDTIME(NOW(), '24:00:00'),
+			A.ID = 0
+		) AND
+		A.ID						NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = @CATEGORY_ID);
+*/
+
+
+SET @CATEGORY_ID = 19;
+/*
+CALL sp_push_schedule_bidding_end_1(
+	@CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);     
+SELECT    
+	@CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt;
+*/    
+/*
+	SELECT 
+		A.ID,
+        A.ORDER_CODE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
+	WHERE 
+		B.STATE_CODE 	= 110 AND
+		A.ID			NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = @CATEGORY_ID);
+*/
+
+/*
+SET @USER_ID = 4;
+SET @WSTE_DISPOSAL_ORDER_ID = 1480;
+SET @COLLECTOR_SITE_ID = 4;
+CALL sp_push_collector_dispose_new_wste(
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@COLLECTOR_SITE_ID,
+	28,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+);       
+SELECT  
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@COLLECTOR_SITE_ID,
+	28,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt;
+*/
+/*
+call sp_req_b_wste_appearance();
+*/
+/*
+SET @USER_ID = 1;
+SET @ORDER_ID = 1480;
+SET @BIDDING_ID = 606;
+SET @CATEGORY_ID = 21;
+CALL sp_push_disposer_select_collector(
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@BIDDING_ID,
+	@CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt;
+*/
+
+
+/*    
+SET @USER_ID = 1;
+SET @COLLECTOR_BIDDING_ID = 613;
+SET @DISPOSAL_ORDER_ID = 1493;
+SET @ASK_END_AT = '2022-05-03';
+
+
+call sp_req_select_collector(
+	@USER_ID,
+	@COLLECTOR_BIDDING_ID,
+	@DISPOSAL_ORDER_ID,
+	@ASK_END_AT
+);
+*/
+/*
+SET @REPORT_ID = 85;
+
+CALL sp_get_disposer_name_from_report(
+	@REPORT_ID,
+    @rtn_val,
+    @msg_txt,
+    @USER_INFO
+);
+SELECT 
+	@USER_ID,
+    @rtn_val,
+    @msg_txt,
+    @USER_INFO;
+    
+
+			CALL sp_get_disposer_name_from_report(
+				@REPORT_ID,
+				@SITE_INFO
+			);    
+            SELECT 
+				@REPORT_ID,
+				@SITE_INFO
+*/
+/*
+CALL sp_retrieve_past_transactions_2(
+	39
+); 
+*/
+/*       
+	SELECT 
+		A.ID, 
+		A.TRANSACTION_ID, 
+		A.WSTE_CODE, 
+        B.NAME, 
+        C.NAME,
+        G.KOREAN,
+        D.ID,
+        D.ORDER_CODE,
+        A.CREATED_AT,
+        A.CONFIRMED_AT,
+        E.STATE,
+        E.STATE_CODE,
+        E.STATE_CATEGORY,
+        E.STATE_CATEGORY_ID,
+        H.AVATAR_PATH
+    FROM TRANSACTION_REPORT A
+    LEFT JOIN WSTE_CODE B ON A.WSTE_CODE = B.CODE
+    LEFT JOIN WSTE_TRMT_METHOD C ON A.TRMT_METHOD = C.CODE
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER D ON A.DISPOSER_ORDER_ID = D.ID
+    LEFT JOIN V_TRANSACTION_STATE_NAME E ON A.TRANSACTION_ID = E.TRANSACTION_ID
+    LEFT JOIN USERS F ON A.COLLECTOR_SITE_ID = F.AFFILIATED_SITE
+    LEFT JOIN WSTE_APPEARANCE G ON A.WSTE_APPEARANCE = G.ID
+    LEFT JOIN USERS H ON IF(D.SITE_ID = 0, D.DISPOSER_ID = H.ID, A.DISPOSER_SITE_ID = H.AFFILIATED_SITE)
+	WHERE 
+        A.CONFIRMED_AT <= NOW() AND
+        F.CLASS = 201 AND
+        F.ID = 39 AND
+        F.ACTIVE = TRUE;
+*/        
+  
+/*
+SET @REPORT_ID = 140;    
+			CALL sp_get_disposer_name_from_report(
+				@REPORT_ID,
+                @rtn_val,
+                @msg_txt,
+				@SITE_INFO
+			);    
+            SELECT 
+				@REPORT_ID,
+                @rtn_val,
+                @msg_txt,
+				@SITE_INFO;
+*/                
+/*
+	SELECT 
+		IF(B.SITE_ID = 0, D.USER_NAME, C.SITE_NAME)
+	FROM TRANSACTION_REPORT A 
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSER_ORDER_ID = B.ID
+    LEFT JOIN COMP_SITE C ON B.SITE_ID = C.ID
+    LEFT JOIN USERS D ON B.DISPOSER_ID = D.ID
+	WHERE 
+		A.ID = @REPORT_ID;    
+*/    
+/*
+		CALL sp_push_schedule_visit_end_3(
+			8,
+			@json_data,
+			@rtn_val,
+			@msg_txt
+		);    
+        SELECT 
+			@json_data,
+			@rtn_val,
+			@msg_txt
+            
+*/ 
+/*
+	SELECT 
+		A.ID,
+        A.ORDER_CODE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
+	LEFT JOIN V_TRANSACTION_STATE C ON A.TRANSACTION_ID = C.TRANSACTION_ID
+    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.TRANSACTION_ID = D.ID
+    LEFT JOIN COMP_SITE E ON A.SITE_ID = E.ID
+    LEFT JOIN USERS F ON A.DISPOSER_ID = F.ID
+	WHERE 
+		IF(A.COLLECTOR_ID IS NULL,
+			IF(B.STATE_CODE = 102,
+				A.VISIT_END_AT <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND
+				A.ACTIVE = TRUE AND
+                IF(A.SITE_ID = 0, F.ACTIVE = TRUE, E.ACTIVE = TRUE),
+				A.ID = 0
+			),
+			IF(C.TRANSACTION_STATE_CODE = 201,
+				D.VISIT_END_AT <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND
+				D.IN_PROGRESS = TRUE AND
+                IF(A.SITE_ID = 0, F.ACTIVE = TRUE, E.ACTIVE = TRUE),
+				A.ID = 0
+			)
+		) AND
+		A.ID						NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 8);
+*/
+/*
+SET @USER_ID = 0;
+SET @TITLE = 'HELLO';
+SET @BODY = 'HELLO BODY';
+CALL sp_write_notice(
+	@USER_ID,
+    @TITLE,
+    @BODY
+);        
+*/
+
+
+/*
+	SELECT A.SITE_ID,
+		 A.WSTE_CODE,
+		B.NAME,
+		A.WSTE_APPEARANCE,
+		C.KOREAN,
+		 A.CREATED_AT,
+		A.UPDATED_AT
+	FROM WSTE_SITE_MATCH A
+    LEFT JOIN WSTE_CODE B ON A.WSTE_CODE = B.CODE
+    LEFT JOIN WSTE_APPEARANCE C ON A.WSTE_APPEARANCE = C.ID
+    WHERE 
+		A.ID = 29 AND
+        A.ACTIVE = TRUE; 
+*/
+
+/*
+CALL sp_req_policy_direction(
+	'include_wste_condition',
+	@include_wste_condition
+);
+SET @include_wste_condition = 0;
+	SELECT 
+		A.ID, 
+        A.ORDER_CODE, 
+        A.VISIT_START_AT,
+        A.VISIT_END_AT,
+        A.BIDDING_END_AT,
+        A.KIKCD_B_CODE,
+        A.ADDR,
+        A.CREATED_AT,
+        B.SI_DO,
+        B.SI_GUN_GU,
+        B.EUP_MYEON_DONG,
+        B.DONG_RI,
+        C.STATE,
+        C.STATE_CODE,
+        C.STATE_CATEGORY,
+        C.STATE_CATEGORY_ID,
+        C.PID
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN KIKCD_B B ON A.KIKCD_B_CODE = B.B_CODE
+    LEFT JOIN V_ORDER_STATE_NAME C ON A.ID = C.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE D ON A.SITE_ID = D.ID
+    LEFT JOIN COMPANY E ON D.COMP_ID = E.ID
+    LEFT JOIN USERS F ON A.DISPOSER_ID = F.ID
+    LEFT JOIN WSTE_DISCHARGED_FROM_SITE G ON A.ID = G.DISPOSAL_ORDER_ID
+    WHERE 
+		(A.COLLECTOR_ID IS NULL OR A.COLLECTOR_ID = 0) AND 
+        IF(A.SITE_ID = 0, F.ACTIVE = TRUE, D.ACTIVE = TRUE AND E.ACTIVE = TRUE) AND
+        IF(A.VISIT_END_AT IS NOT NULL, 
+			A.VISIT_END_AT >= NOW(), 
+            A.BIDDING_END_AT >= NOW()
+        ) AND 
+        (
+			A.VISIT_END_AT IS NOT NULL AND A.ID NOT IN (
+				SELECT DISPOSAL_ORDER_ID 
+				FROM COLLECTOR_BIDDING SUB1_A
+				LEFT JOIN COMP_SITE SUB1_B ON SUB1_A.COLLECTOR_ID = SUB1_B.ID
+				LEFT JOIN USERS SUB1_C ON SUB1_B.ID = SUB1_C.AFFILIATED_SITE
+				WHERE 
+					SUB1_A.DATE_OF_VISIT IS NOT NULL AND
+					SUB1_C.ID = 39
+			) OR
+			A.VISIT_END_AT IS NULL AND A.ID NOT IN (
+				SELECT DISPOSAL_ORDER_ID 
+				FROM COLLECTOR_BIDDING SUB1_A
+				LEFT JOIN COMP_SITE SUB1_B ON SUB1_A.COLLECTOR_ID = SUB1_B.ID
+				LEFT JOIN USERS SUB1_C ON SUB1_B.ID = SUB1_C.AFFILIATED_SITE
+				WHERE 
+					SUB1_A.DATE_OF_BIDDING IS NOT NULL AND
+					SUB1_C.ID = 39
+			)
+        ) AND
+		LEFT(A.KIKCD_B_CODE, 5) IN (
+			SELECT LEFT(SUB2_A.KIKCD_B_CODE, 5) 
+			FROM BUSINESS_AREA SUB2_A 
+			LEFT JOIN USERS SUB2_B ON SUB2_A.SITE_ID = SUB2_B.AFFILIATED_SITE 
+			WHERE 
+				SUB2_B.ID = 39 AND
+                SUB2_A.ACTIVE = TRUE
+		) AND 
+        IF(@include_wste_condition = TRUE,
+			C.STATE_CODE = 102 AND 
+			G.WSTE_CLASS IN (
+				SELECT B1.WSTE_CLASS
+				FROM WSTE_SITE_MATCH A1
+				LEFT JOIN WSTE_CODE B1 ON A1.WSTE_CODE = B1.CODE
+				LEFT JOIN USERS C1 ON A1.SITE_ID = C1.AFFILIATED_SITE
+				WHERE 
+					C1.ID = 39 AND
+					A1.ACTIVE = TRUE AND
+					B1.DISPLAY = TRUE
+			),
+			C.STATE_CODE = 102
+        );  
+*/
+/*
+    DROP TABLE IF EXISTS NEW_COMING;
+SET @USER_ID = 39;
+CALL sp_retrieve_new_coming(
+	@USER_ID
+);      
+*/
+/*
+SET @LAT = 36.657877795;
+SET @LNG = 127.488346649;
+	SELECT 
+		A.ID, 
+        A.LAT, 
+        A.LNG,
+        A.SITE_NAME,
+        A.ADDR,
+        SQRT((POW((@LAT - A.LAT)*2.1, 2) + POW((@LNG - A.LNG)*1.726, 2)))
+    FROM COMP_SITE A
+    LEFT JOIN WSTE_TRMT_BIZ B ON A.TRMT_BIZ_CODE = B.CODE
+    WHERE 
+		SQRT((POW((@LAT - A.LAT)*2.1, 2) + POW((@LNG - A.LNG)*1.726, 2))) < 500 AND
+        B.USER_TYPE = 3;  
+*/
+
+/*
+CALL sp_req_policy_direction(
+	'include_wste_condition',
+	@include_wste_condition
+);
+SET @include_wste_condition = TRUE;
+SET @B_CODE = '4377000000' COLLATE utf8mb4_unicode_ci;
+SET @WSTE_CODE = 1 COLLATE utf8mb4_unicode_ci;
+SET @ORDER_ID = 1137 COLLATE utf8mb4_unicode_ci;
+            
+SELECT ORDER_CODE, SITE_ID
+INTO @ORDER_CODE, @SITE_ID
+FROM SITE_WSTE_DISPOSAL_ORDER
+WHERE ID = @ORDER_ID;
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'				, C.ID, 
+				'USER_NAME'				, C.USER_NAME, 
+				'FCM'					, C.FCM, 
+				'AVATAR_PATH'			, C.AVATAR_PATH,
+				'TITLE'					, @TITLE,
+				'BODY'					, @BODY,
+				'ORDER_ID'				, @ORDER_ID, 
+				'BIDDING_ID'			, NULL, 
+				'TRANSACTION_ID'		, @TRANSACTION_ID, 
+				'REPORT_ID'				, NULL, 
+				'CATEGORY_ID'			, 10,
+				'CREATED_AT'			, @REG_DT
+			)
+		) 
+		INTO @PUSH_INFO
+		FROM BUSINESS_AREA A 
+		LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+		LEFT JOIN USERS C ON B.ID = C.AFFILIATED_SITE
+		WHERE 
+            C.PUSH_ENABLED				= TRUE AND			
+            IF(@SITE_ID > 0, 
+				LEFT(A.KIKCD_B_CODE, 5) = LEFT(@B_CODE, 5) AND B.ID NOT IN (@SITE_ID), 
+                LEFT(A.KIKCD_B_CODE, 5) = LEFT(@B_CODE, 5)
+            ) AND
+			IF(@include_wste_condition = TRUE,
+				B.ID IN (
+					SELECT A1.SITE_ID
+					FROM WSTE_SITE_MATCH A1
+					LEFT JOIN WSTE_CODE B1 ON A1.WSTE_CODE = B1.CODE
+					WHERE 
+						B1.DISPLAY = TRUE AND
+						B1.NEURU_CLASS IN (
+							SELECT WSTE_CLASS
+                            FROM WSTE_DISCHARGED_FROM_SITE
+                            WHERE DISPOSAL_ORDER_ID = @ORDER_ID
+                        )
+					GROUP BY 
+						A1.SITE_ID,
+						B1.DISPLAY,
+						B1.NEURU_CLASS
+				) AND
+				A.ACTIVE 					= TRUE AND
+				B.ACTIVE 					= TRUE AND
+				C.ACTIVE	 				= TRUE,
+				A.ACTIVE 					= TRUE AND
+				B.ACTIVE 					= TRUE AND
+				C.ACTIVE	 				= TRUE
+			);  
+            SELECT @ORDER_ID, @PUSH_INFO
+*/
+
+/*
+	SELECT 
+		A1.SITE_ID
+	FROM WSTE_SITE_MATCH A1
+	LEFT JOIN WSTE_CODE B1 ON A1.WSTE_CODE = B1.CODE
+	WHERE 
+		B1.DISPLAY = TRUE AND
+		B1.NEURU_CLASS = 1
+	GROUP BY 
+		A1.SITE_ID,
+		B1.DISPLAY,
+		B1.NEURU_CLASS
+*/
+
+/*
+	SELECT JSON_ARRAYAGG(
+		JSON_OBJECT(
+			'ID'					, A.ID, 
+			'ORDER_CODE'			, A.ORDER_CODE, 
+			'SITE_ID'				, A.SITE_ID, 
+			'SITE_NAME'				, IF(A.SITE_ID = 0, E.USER_NAME, B.SITE_NAME), 
+			'B_CODE'				, A.KIKCD_B_CODE, 
+			'SI_DO'					, C.SI_DO,
+			'SI_GUN_GU'				, C.SI_GUN_GU,
+			'EUP_MYEON_DONG'		, C.EUP_MYEON_DONG,
+			'DONG_RI'				, C.DONG_RI,
+			'ADDR'					, A.ADDR,
+			'ASK_END_AT'			, D.COLLECT_ASK_END_AT,
+			'NOTE'					, A.NOTE,
+			'VISIT_START_AT'		, A.VISIT_START_AT,
+			'VISIT_END_AT'			, A.VISIT_END_AT,
+			'BIDDING_END_AT'		, A.BIDDING_END_AT,
+			'DISPOSER_ID'			, A.DISPOSER_ID,
+			'AVATAR_PATH'			, E.AVATAR_PATH,
+			'PHONE'					, E.PHONE,
+			'PROSPECTIVE_BIDDERS'	, A.PROSPECTIVE_BIDDERS,
+			'BIDDERS'				, A.BIDDERS,
+			'PROSPECTIVE_VISITORS'	, A.PROSPECTIVE_VISITORS
+		)
+	) 
+	INTO @DISPOSAL_ORDER_INFO 
+	FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+    LEFT JOIN KIKCD_B C ON A.KIKCD_B_CODE = C.B_CODE
+    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.ID = D.DISPOSAL_ORDER_ID
+    LEFT JOIN USERS E ON IF(A.SITE_ID = 0, A.DISPOSER_ID = E.ID, A.SITE_ID = E.AFFILIATED_SITE)
+	WHERE 
+		A.ID = 1519;
+        
+        select 1519, @DISPOSAL_ORDER_INFO ;
+*/
+/*
+CALL sp_calc_max_decision_at_all_for_existing_transactions();   
+*/
+
+
+/*
+SET @USER_ID = 1;
+SET @B_CODE = '4113510900' COLLATE utf8mb4_unicode_ci;
+SET @ORDER_ID = 1542;
+CALL sp_push_collector_list_share_business_areas(
+	@USER_ID,
+	@ORDER_ID,
+	@B_CODE,
+	1,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+);
+SELECT 
+	@USER_ID,
+	@ORDER_ID,
+	@B_CODE,
+	1,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+*/
+
+/*
+SET @USER_ID = 4;
+SET @USER_TYPE = 'company';
+	SELECT 
+		A.ID, 
+        A.ORDER_CODE, 
+        A.SITE_ID,        
+        A.VISIT_START_AT,
+        A.VISIT_END_AT,
+        A.BIDDING_END_AT,
+        A.OPEN_AT,
+        A.CLOSE_AT,
+        A.SERVICE_INSTRUCTION_ID,
+        A.VISIT_EARLY_CLOSING,
+        A.VISIT_EARLY_CLOSED_AT,
+        A.BIDDING_EARLY_CLOSING,
+        A.BIDDING_EARLY_CLOSED_AT,
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        B.STATE, 
+        B.STATE_CODE, 
+        B.STATE_CATEGORY_ID, 
+        B.STATE_CATEGORY, 
+        A.PROSPECTIVE_VISITORS, 
+        A.BIDDERS, 
+        A.COLLECTOR_ID, 
+        A.NOTE
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+    LEFT JOIN V_ORDER_STATE_NAME B 	ON A.ID 		= B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C 			ON A.SITE_ID 	= C.ID
+    LEFT JOIN COMPANY D 			ON C.COMP_ID 	= D.ID
+	WHERE 
+		B.STATE 			IS NOT NULL AND 
+        A.IS_DELETED 		= FALSE AND
+		B.STATE_CODE 		<> 105 AND 
+        IF (@USER_TYPE	= 'Person', 
+            A.DISPOSER_ID 	= @USER_ID, 
+            C.ACTIVE 		= TRUE AND 
+            D.ACTIVE 		= TRUE AND 
+            A.SITE_ID 		IS NOT NULL AND 
+            A.SITE_ID 		IN (
+				SELECT AFFILIATED_SITE 
+                FROM USERS 
+                WHERE 
+					ID 		= @USER_ID AND 
+                    ACTIVE 	= TRUE
+			)
+		);
+
+call sp_retrieve_my_disposal_lists(@USER_ID);     
+
+		CALL sp_req_user_type(
+			@USER_ID,
+            @USER_TYPE
+        );
+		CALL sp_retrieve_my_disposal_lists_with_json(
+			@USER_ID,
+			@USER_TYPE,
+			@rtn_val,
+			@msg_txt,
+			@json_data
+		);    
+        SELECT 
+			@USER_ID,
+			@USER_TYPE,
+			@rtn_val,
+			@msg_txt,
+			@json_data
+*/
+/*
+SET @RECORD_COUNT = 105;
+SET @PAGE_SIZE = 15;
+SET @LAST_PAGE = CEILING(@RECORD_COUNT / @PAGE_SIZE);
+SELECT @RECORD_COUNT, @PAGE_SIZE, @LAST_PAGE    ;
+SET @OFFSET_SIZE = 15;
+SET @PAGE_SIZE = 15;
+*/
+/*
+	SELECT 
+		SQL_CALC_FOUND_ROWS
+		A.ID, 
+		A.COMP_ID, 
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        A.SITE_NAME,
+        A.PERMIT_REG_CODE,
+        A.KIKCD_B_CODE,
+        A.ADDR,
+        A.PERMIT_REG_IMG_PATH
+    FROM COMP_SITE A
+    LEFT JOIN COMPANY B ON A.COMP_ID = B.ID
+    LEFT JOIN KIKCD_B C ON A.KIKCD_B_CODE = C.B_CODE
+    LEFT JOIN KIKCD_B D ON B.KIKCD_B_CODE = D.B_CODE
+    LEFT JOIN WSTE_TRMT_BIZ E ON A.TRMT_BIZ_CODE = E.CODE
+    LIMIT 0, 10;   
+    SELECT FOUND_ROWS() INTO @RECORD_COUNT;        
+    SELECT @RECORD_COUNT; 
+*/
+/*
+SET @SEARCH = NULL;
+SET @OFFSET_SIZE = 20;
+SET @PAGE_SIZE = 10;
+SET @CONFIRMED = NULL;
+
+    CALL sp_test(
+		@SEARCH,
+		@OFFSET_SIZE,
+		@PAGE_SIZE,
+		@CONFIRMED,
+		@RECORD_COUNT,
+		@SITE_LIST
+);
+SELECT 
+		@SEARCH,
+		@OFFSET_SIZE,
+		@PAGE_SIZE,
+		@CONFIRMED,
+		@RECORD_COUNT,
+		@SITE_LIST
+*/
+
+
+/*
+SET @SEARCH = NULL;
+SET @OFFSET_SIZE = 0;
+SET @PAGE_SIZE = 10;
+SET @CONFIRMED = NULL;
+
+CALL sp_admin_retrive_site_lists_without_handler(
+	@SEARCH,
+	@OFFSET_SIZE,
+	@PAGE_SIZE,
+	@CONFIRMED,
+    @OUT_LIST
+);
+SELECT 
+	@SEARCH,
+	@OFFSET_SIZE,
+	@PAGE_SIZE,
+	@CONFIRMED,
+    @OUT_LIST;     
+*/
+/*
+	DROP TABLE IF EXISTS ADMIN_GET_SITE_INFO;
+SET @SITE_ID = 4;
+CALL sp_admin_get_site_info(
+	@SITE_ID,
+    @SITE_INFO
+);
+SELECT 
+	@SITE_ID,
+    @SITE_INFO
+*/
+	
+	
+SET @LAT1 = 37.485635919;
+SET @LNG1 = 126.875064446;
+SET @LAT2 = 36.978959753;
+SET @LNG2 = 127.438202298;
+/*
+CALL sp_calc_distance_with_geo(
+	@LAT1,
+    @LNG1,
+    @LAT2,
+    @LNG2,
+    @DIST
+);    
+SELECT 
+	@LAT1,
+    @LNG1,
+    @LAT2,
+    @LNG2,
+    @DIST
+*/
+/*
+SET @USER_TYPE = 3;
+SET @DIST = 50;
+SET @LAT = 37.485635919;
+SET @LNG = 126.875064446;
+CALL sp_get_site_list_inside_range_without_handler(
+	@USER_TYPE,
+	@DIST,
+	@LAT,
+	@LNG,
+    @rtn_val,
+    @msg_txt,
+    @SITE_LIST
+);   
+SELECT  
+	@USER_TYPE,
+	@DIST,
+	@LAT,
+	@LNG,
+    @rtn_val,
+    @msg_txt,
+    @SITE_LIST;
+    
+    
+
+	SELECT 
+		A.ID, 
+        A.LAT, 
+        A.LNG,
+        A.SITE_NAME,
+        6378.137 * ACOS(COS(@LAT * PI() / 180)*COS(A.LAT * PI() / 180)*COS((A.LNG * PI() / 180) - (@LNG * PI() / 180)) + SIN(@LAT * PI() / 180) * SIN(A.LAT * PI() / 180))
+    FROM COMP_SITE A
+    LEFT JOIN WSTE_TRMT_BIZ B ON A.TRMT_BIZ_CODE = B.CODE
+    WHERE 
+		6378.137 * ACOS(COS(@LAT * PI() / 180)*COS(A.LAT * PI() / 180)*COS((A.LNG * PI() / 180) - (@LNG * PI() / 180)) + SIN(@LAT * PI() / 180) * SIN(A.LAT * PI() / 180)) < @DIST AND
+        B.USER_TYPE = @USER_TYPE;  
+*/
+/*
+	DROP TABLE IF EXISTS ADMIN_GET_SITE_INFO;
+SET @SITE_ID = 4;
+CALL sp_admin_get_site_info(
+	@SITE_ID,
+    @SITE_LIST
+);      
+SELECT 
+	@SITE_ID,
+    @SITE_LIST  
+*/
+
+/*
+CALL sp_push_scheduler_base(12);
+
+
+
+	SELECT 
+		A.ID,
+        A.ORDER_CODE,
+        A.VISIT_END_AT
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+	WHERE 
+		IF(A.VISIT_END_AT 	IS NOT NULL,
+			A.VISIT_END_AT	<= NOW() AND
+            A.COLLECTOR_ID IS NULL AND
+            A.ACTIVE = TRUE AND
+            A.IS_DELETED = FALSE AND
+			IF(A.SITE_ID 	= 0,
+				A.ID NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 12) AND
+				A.DISPOSER_ID IN (SELECT ID FROM USERS WHERE PUSH_ENABLED = TRUE AND ACTIVE = TRUE),
+				B.ACTIVE 	= TRUE AND
+                A.ID NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 12) AND
+                A.ID IN (SELECT AFFILIATED_SITE FROM USERS WHERE PUSH_ENABLED = TRUE AND ACTIVE = TRUE)
+                
+			),
+            A.ID = 0
+		);
+*/
+
+
+/*
+SET @USER_ID = 1;
+SET @COLLECTOR_SITE_ID = NULL;
+SET @KIKCD_B_CODE = '4182000000';
+SET @ADDR = '마을면 계록리 1000';
+SET @LNG = 1.1234;
+SET @LAT = 5.6789;
+SET @VISIT_START_AT = '2022-05-04';
+SET @VISIT_END_AT = '2022-05-05';
+SET @BIDDING_END_AT = NULL;
+SET @OPEN_AT = NULL;
+SET @CLOSE_AT = NULL;
+SET @WSTE_CLASS = '[{"WSTE_CLASS_CODE":"1", "WSTE_APPEARANCE":1, "UNIT": "Kg", "QUANTITY": 111}]';
+SET @PHOTO_LIST = '[{"FILE_NAME":"img_0001", "IMG_PATH":"img_0001_path", "FILE_SIZE": 2.35}]';
+SET @NOTE = "빨리 해결해주세요";
+
+CALL sp_create_site_wste_discharge_order(
+	@USER_ID,
+	@COLLECTOR_SITE_ID,
+	@KIKCD_B_CODE,
+	@ADDR,
+	@LNG,
+	@LAT,
+	@VISIT_START_AT,
+	@VISIT_END_AT,
+	@BIDDING_END_AT,
+	@OPEN_AT,
+	@CLOSE_AT,
+	@WSTE_CLASS,
+	@PHOTO_LIST,
+	@NOTE
+);       
+*/
+/*
+SET @USER_ID = 1;
+SET @WSTE_DISPOSAL_ORDER_ID = 1579;
+SET @B_CODE = '4113511300' COLLATE utf8mb4_unicode_ci;
+CALL sp_push_collector_list_share_business_areas(
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@B_CODE,
+	1,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+);
+SELECT 
+	@USER_ID,
+	@WSTE_DISPOSAL_ORDER_ID,
+	@B_CODE,
+	1,
+	@PUSH_INFO,
+	@rtn_val,
+	@msg_txt
+*/    
+/*
+CALL sp_admin_retrieve_site_info_without_handler(4, @SITE_INFO);
+SELECT 14, @SITE_INFO
+*/
+
+
+
+
+/*
+	SELECT 
+		A.ID,
+        A.ORDER_CODE,
+        B.STATE_CODE,
+        A.BIDDING_END_AT,
+        ADDTIME(NOW(), '10:00:00'),
+        A.DISPOSER_ID,
+        C.ACTIVE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
+	WHERE 
+		IF(B.STATE_CODE = 103,
+			A.BIDDING_END_AT <= ADDTIME(NOW(), '10:00:00') AND
+			IF(A.SITE_ID = 0,
+				A.DISPOSER_ID IN (SELECT ID FROM USERS WHERE ACTIVE = TRUE AND PUSH_ENABLED = TRUE AND AFFILIATED_SITE = A.SITE_ID),
+                C.ACTIVE = TRUE
+			) AND
+            A.ACTIVE = TRUE,
+			A.ID = 0
+		) AND
+		A.ID						NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 17);
+*/
+
+
+
+/*
+	SELECT 
+		A.ID,
+        A.ORDER_CODE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
+    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
+	WHERE 
+		IF(B.STATE_CODE = 110,
+			IF(A.SITE_ID = 0,
+				A.DISPOSER_ID IN (SELECT ID FROM USERS WHERE ACTIVE = TRUE AND PUSH_ENABLED = TRUE AND AFFILIATED_SITE = A.SITE_ID),
+                C.ACTIVE = TRUE
+			) AND
+            A.ACTIVE = TRUE,
+			A.ID = 0
+		) AND
+		A.ID						NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 19);        
+*/ 
+
+/*
+CALL sp_push_scheduler_base(17);     
+*/
+
+
+
+/*
+ 
+					SELECT JSON_OBJECT(
+						'ID', 							ID, 
+						'USER_ID', 						USER_ID, 
+						'PWD', 							PWD, 
+						'USER_NAME', 					USER_NAME, 
+						'TRMT_BIZ_CODE', 				TRMT_BIZ_CODE, 
+						'SITE_ID', 						AFFILIATED_SITE, 
+						'COMP_ID', 						BELONG_TO, 
+						'FCM', 							FCM, 
+						'CLASS', 						CLASS, 
+						'PHONE', 						PHONE,	
+						'USER_TYPE', 					USER_TYPE,
+						'USER_CURRENT_TYPE', 			USER_CURRENT_TYPE_NM,
+						'PUSH_ENABLED', 				PUSH_ENABLED,
+						'NOTICE_ENABLED', 				NOTICE_ENABLED,
+						'AVATAR_PATH', 					AVATAR_PATH,
+						'PWD_MATCH', 					@PWD_MATCH
+					) 
+					INTO @json_data 
+					FROM V_USERS 
+					WHERE 
+						USER_ID 		= 'ctest7' AND 
+						ACTIVE 			= TRUE;
+					SELECT @json_data
+*/
+/*
+SET @PARAMS = '[{"ID":"ctest7", "PW":"!!xogus123"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_user_login(
+	@PARAMS
+);   
+*/
+/*
+
+SET @USER_TYPE = 3;
+SET @LAT = 36.884146782;
+SET @LNG = 127.47439963;
+SET @circle_range = 50;
+        CALL sp_get_site_list_inside_range_without_handler(
+			@USER_TYPE,
+            @circle_range,
+            @LAT,
+            @LNG,
+            @rtn_val,
+            @msg_txt,
+            @SITE_LIST
+        );    
+SELECT 
+			@USER_TYPE,
+            @circle_range,
+            @LAT,
+            @LNG,
+            @rtn_val,
+            @msg_txt,
+            @SITE_LIST
+            */
+            
+           /*
+CALL sp_retrieve_push_history(16, 0, 10);
+
+*/
+/*
+SET @PARAMS = '[{"ID":"ctest7"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_decision_list(@PARAMS)
+*/
+/*
+SET @PARAMS = '[{"ID":"ctest7","NAME":"ctest7111"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_create_user(@PARAMS)
+*/
+
+
+/*
+CALL sp_push_scheduler_base(26);     
+*/
+
+/*
+
+
+	SELECT 
+		A.DISPOSER_ORDER_ID,
+        C.ORDER_CODE,
+        A.COLLECTOR_SITE_ID
+    FROM TRANSACTION_REPORT A 
+    LEFT JOIN COMP_SITE B ON A.DISPOSER_SITE_ID = B.ID
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER C ON A.DISPOSER_ORDER_ID = C.ID
+	WHERE 
+        B.ACTIVE 									= TRUE AND
+        A.CONFIRMED									= TRUE AND
+        DATE_ADD(A.CONFIRMED_AT, INTERVAL 1 DAY) 	>= NOW() AND
+		C.ID										NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = 26);
+*/
+
+/*
+SET @B_CODE = '4113511300' COLLATE utf8mb4_unicode_ci;
+SET @ORDER_ID = 1717;
+SET @CATEGORY_ID = 1;
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'				, C.ID, 
+				'USER_NAME'				, C.USER_NAME, 
+				'FCM'					, C.FCM, 
+				'AVATAR_PATH'			, C.AVATAR_PATH,
+				'TITLE'					, @TITLE,
+				'BODY'					, @BODY,
+				'ORDER_ID'				, @ORDER_ID, 
+				'BIDDING_ID'			, NULL, 
+				'TRANSACTION_ID'		, @TRANSACTION_ID, 
+				'REPORT_ID'				, NULL, 
+				'CATEGORY_ID'			, @CATEGORY_ID,
+				'CREATED_AT'			, @REG_DT
+			)
+		) 
+		INTO @PUSH_INFO
+		FROM BUSINESS_AREA A 
+		LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+		LEFT JOIN USERS C ON B.ID = C.AFFILIATED_SITE
+		WHERE 
+            C.PUSH_ENABLED				= TRUE AND			
+            IF(@SITE_ID > 0, 
+				LEFT(A.KIKCD_B_CODE, 5) = LEFT(@B_CODE, 5) AND B.ID NOT IN (@SITE_ID), 
+                LEFT(A.KIKCD_B_CODE, 5) = LEFT(@B_CODE, 5)
+            ) AND
+			IF(@include_wste_condition = '1',
+				B.ID IN (
+					SELECT A1.SITE_ID
+					FROM WSTE_SITE_MATCH A1
+					LEFT JOIN WSTE_CODE B1 ON A1.WSTE_CODE = B1.CODE
+					WHERE 
+						B1.DISPLAY = TRUE AND
+						B1.NEURU_CLASS IN (
+							SELECT WSTE_CLASS
+                            FROM WSTE_DISCHARGED_FROM_SITE
+                            WHERE DISPOSAL_ORDER_ID = @ORDER_ID
+                        )
+					GROUP BY 
+						A1.SITE_ID,
+						B1.DISPLAY,
+						B1.NEURU_CLASS
+				) AND
+				A.ACTIVE 					= TRUE AND
+				B.ACTIVE 					= TRUE AND
+				C.ACTIVE	 				= TRUE,
+				A.ACTIVE 					= TRUE AND
+				B.ACTIVE 					= TRUE AND
+				C.ACTIVE	 				= TRUE
+			);  
+            SELECT @B_CODE, @ORDER_ID, @CATEGORY_ID, @PUSH_INFO
+*/
+
+
+
+
+
+/*
+			CALL sp_push_collector_list_share_business_areas(
+				244,
+				700,
+				'4182000000',
+                1,
+				@PUSH_INFO,
+				@rtn_val,
+				@msg_txt
+			);
+            
+            select 
+				@rtn_val,
+				@msg_txt,
+				@PUSH_INFO           
+*/
+
+
+
+/*
+	SELECT 
+		A.ID, 
+		A.COMP_ID, 
+        A.CREATED_AT,
+        A.UPDATED_AT,
+        A.SITE_NAME,
+        A.PERMIT_REG_CODE,
+        A.KIKCD_B_CODE,
+        A.ADDR,
+        A.PERMIT_REG_IMG_PATH,
+        A.LAT,
+        A.LNG,
+        B.USER_TYPE
+    FROM COMP_SITE A
+    LEFT JOIN WSTE_TRMT_BIZ B ON A.TRMT_BIZ_CODE = B.CODE
+    WHERE A.ID = 15;  
+*/
+
+
+
+
+/*
+SET @PARAMS = '[{"USER_ID":1, "SEARCH":null, "OFFSET_SIZE":0, "PAGE_SIZE":2}]' COLLATE utf8mb4_unicode_ci;
+
+CALL sp_retrieve_site_registered_lists(
+	@PARAMS
+);
+*/
+
+
+
+
+
+SET @USER_ID = 37;
+/*
+SELECT 
+	A.TARGET_ID,
+	COUNT(B.ID)
+FROM REGISTERED_SITE A 
+LEFT JOIN TRANSACTION_REPORT B ON A.TARGET_ID = B.COLLECTOR_SITE_ID
+LEFT JOIN COMP_SITE C ON A.TARGET_ID = C.ID
+LEFT JOIN USERS D ON A.SITE_ID = D.AFFILIATED_SITE
+WHERE 
+	A.ACTIVE = TRUE AND
+	A.DELETED_AT IS NULL AND
+	B.CONFIRMED = TRUE AND
+	C.ACTIVE = TRUE AND
+	D.ACTIVE = TRUE AND
+	D.ID = @USER_ID
+	GROUP BY 
+		A.TARGET_ID
+ */ 
+ /*
+CALL sp_req_prev_transaction_site_lists(@USER_ID);
+ */
+
+/*
+SET @USER_ID = 16;
+    
+		CALL sp_req_prev_transaction_site_lists_without_handler(
+			@USER_ID,
+			@rtn_val,
+			@msg_txt,
+			@PREV_TRANSACTION_LIST
+		);
+        select 
+			@USER_ID,
+			@rtn_val,
+			@msg_txt,
+			@PREV_TRANSACTION_LIST
+select last_day('2022-02-23')   
+*/
+
+/*
+SET @PARAMS = '[{"USER_ID":1, "TARGET_ID":11}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_register_site(@PARAMS)
+*/
+
+/*
+SET @PARAMS = '[{"USER_ID":1, "REGION_CODE":"4300000000"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_stat_region(@PARAMS);
+*/
+
+/*
+CALL sp_admin_retrieve_stat_region_sido_without_handler(@PARAMS);
+select 1, @PARAMS
+*/
+
+
+/*
+SET @USER_ID = 37;
+SET @USER_TYPE = 2;
+SET @OFFSET_SIZE = 0;
+SET @PAGE_SIZE = 10;
+*/
+/*
+CALL sp_retrieve_my_registered_site_lists(
+	@USER_ID,
+	@USER_TYPE,
+	@OFFSET_SIZE,
+	@PAGE_SIZE
+);
+*/
+
+/*    
+		CALL sp_req_registered_site_lists_without_handler(
+			@USER_ID,
+			@rtn_val,
+			@msg_txt,
+			@REGISTERED_SITE_LIST
+		);
+        
+        select 
+			@USER_ID,
+			@rtn_val,
+			@msg_txt,
+			@REGISTERED_SITE_LIST
+*/
+
+
+/*
+SET @USER_ID = 1;
+SET @SEARCH = NULL;
+SET @OFFSET_SIZE = 0;
+SET @PAGE_SIZE = 2;
+
+CALL sp_retrieve_site_registered_lists(
+	@USER_ID,
+	@SEARCH,
+	@OFFSET_SIZE,
+	@PAGE_SIZE
+);         
+*/
+
+/*
+SET @USER_ID = 16;
+SET @USER_TYPE = 2;
+SET @TARGET_ID = 37;
+CALL sp_req_delete_registered_site(
+	@USER_ID,
+	@USER_TYPE,
+	@TARGET_ID
+);  
+*/
+
+
+/*
+			SELECT ID, MESSAGE 
+			INTO @CHAT_ID, @MESSAGE 
+			FROM CHATS 
+            WHERE ROOM_ID = 3 
+            ORDER BY ID DESC 
+            LIMIT 0, 1;
+
+SELECT @CHAT_ID, @MESSAGE ;
+*/
+/*
+	DROP TABLE IF EXISTS ADMIN_GET_CHAT_ROOMS_TEMP;
+SET @PARAMS = '[{"USER_ID":1}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_get_chat_rooms(@PARAMS);
+*/
+
+
+
+/*
+SET @USER_ID = 16;
+SET @USER_TYPE = 2;
+SET @TARGET_ID = 37;
+SET @EVENT_TYPE = 2;
+CALL sp_req_delete_registered_site(
+	@USER_ID,
+	@USER_TYPE,
+	@TARGET_ID,
+	@EVENT_TYPE
+);  
+*/
+
+/*
+
+	DROP TABLE IF EXISTS RETRIEVE_PREV_TRANSACTION_SITE_TEMP_999;
+	DROP TABLE IF EXISTS PREV_TRANSACTION_SITE_LIST_TEMP;
+SET @USER_ID = 16;
+    
+		CALL sp_req_prev_transaction_site_lists(
+			@USER_ID
+		);
+*/
+
+/*
+SET @USER_ID = 1;
+CALL sp_retrieve_my_disposal_lists_20220523(@USER_ID);
+*/
+/*
+SET @ORDER_ID = 1847;
+CALL sp_req_order_details_102(
+	@ORDER_ID,
+    @DETAILS
+);
+
+SELECT 
+	@ORDER_ID,
+    @DETAILS;
+*/
+
+
+
+
+/*		
+        CALL sp_get_disposer_wste_geo_info(
+			1256,
+            @WSTE_GEO_INFO
+        );
+        SELECT 1256, @WSTE_GEO_INFO
+*/
+
+/*
+	DROP TABLE IF EXISTS RETRIEVE_COLLECTION_REQUEST_TEMP;
+CALL sp_retrieve_collection_request(7);   
+*/
+
+
+/*
+SET @PARAMS = '[{"USER_ID":4, "CHAT_ID_LIST":"1456"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_delete_chat(
+	@PARAMS
+);     
+*/
+
+/*
+select @@innodb_page_size;
+*/
+
+/*
+SHOW STATUS LIKE 'Handler_%';
+*/
+/*
+SET @START_AT = unix_timestamp(now(6));
+	SELECT 
+		A.COLLECTOR_ID, 
+        A.ID, 
+        A.DISPOSAL_ORDER_ID,
+        B.STATE_CODE,
+        B.STATE,
+        B.STATE_PID,
+        B.COLLECTOR_CATEGORY_ID,
+        B.COLLECTOR_CATEGORY,
+        A.BIDDING_RANK,
+        G.TRANSACTION_ID,
+        G.TRANSACTION_STATE_CODE
+    FROM COLLECTOR_BIDDING A
+    LEFT JOIN V_BIDDING_STATE_NAME B ON A.ID = B.COLLECTOR_BIDDING_ID
+    LEFT JOIN USERS C ON A.COLLECTOR_ID = C.AFFILIATED_SITE
+    LEFT JOIN COMP_SITE D ON A.COLLECTOR_ID = D.ID
+    LEFT JOIN COMPANY E ON D.COMP_ID = E.ID
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER F ON A.DISPOSAL_ORDER_ID = F.ID
+    LEFT JOIN V_TRANSACTION_STATE G ON G.COLLECTOR_BIDDING_ID = A.ID
+	WHERE 
+        C.ID = 6 AND
+        (C.CLASS = 201 OR C.CLASS = 202) AND
+        A.ORDER_VISIBLE = TRUE AND
+        C.ACTIVE = TRUE AND
+        D.ACTIVE = TRUE AND
+        E.ACTIVE = TRUE AND
+        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249) AND 
+        IF(F.IS_DELETED = TRUE, B.STATE_CODE NOT IN (202, 207, 210, 229, 239, 244), B.STATE_CODE NOT IN (0)) AND
+        (G.TRANSACTION_STATE_CODE NOT IN (211) OR G.TRANSACTION_STATE_CODE IS NULL);
+
+SET @END_AT = unix_timestamp(now(6));
+SELECT @END_AT - @START_AT;
+*/
+/*
+EXPLAIN 
+	SELECT 
+		A.COLLECTOR_ID, 
+        A.ID, 
+        A.DISPOSAL_ORDER_ID,
+        B.STATE_CODE,
+        B.STATE,
+        B.STATE_PID,
+        B.COLLECTOR_CATEGORY_ID,
+        B.COLLECTOR_CATEGORY,
+        A.BIDDING_RANK,
+        G.TRANSACTION_ID,
+        G.TRANSACTION_STATE_CODE
+    FROM COLLECTOR_BIDDING A
+    LEFT JOIN V_BIDDING_STATE_NAME B ON A.ID = B.COLLECTOR_BIDDING_ID
+    LEFT JOIN USERS C ON A.COLLECTOR_ID = C.AFFILIATED_SITE
+    LEFT JOIN COMP_SITE D ON A.COLLECTOR_ID = D.ID
+    LEFT JOIN COMPANY E ON D.COMP_ID = E.ID
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER F ON A.DISPOSAL_ORDER_ID = F.ID
+    LEFT JOIN V_TRANSACTION_STATE G ON G.COLLECTOR_BIDDING_ID = A.ID
+	WHERE 
+        C.ID = 6 AND
+        (C.CLASS = 201 OR C.CLASS = 202) AND
+        A.ORDER_VISIBLE = TRUE AND
+        C.ACTIVE = TRUE AND
+        D.ACTIVE = TRUE AND
+        E.ACTIVE = TRUE AND
+        B.STATE_CODE NOT IN (202, 207, 211, 230, 238, 239, 241, 244, 246, 249) AND 
+        IF(F.IS_DELETED = TRUE, B.STATE_CODE NOT IN (202, 207, 210, 229, 239, 244), B.STATE_CODE NOT IN (0)) AND
+        (G.TRANSACTION_STATE_CODE NOT IN (211) OR G.TRANSACTION_STATE_CODE IS NULL);
+*/        
+/*
+CALL sp_test_performance(1000);
+*/
+
+
+/*
+CREATE INDEX ix_collector_bidding_001 ON COLLECTOR_BIDDING(DISPOSAL_ORDER_ID ASC, BIDDING_RANK ASC, COLLECTOR_ID ASC, ID ASC);
+*/
+/*
+DROP INDEX ix_collector_bidding_001 ON COLLECTOR_BIDDING;
+*/
+/*ALTER TABLE tb_test DROP FOREIGN KEY SiteID;*/
+
+/*
+ALTER TABLE BIDDING_DETAILS
+ADD CONSTRAINT BiddingDetailsCollectorBiddingId
+FOREIGN KEY(COLLECTOR_BIDDING_ID)
+REFERENCES COLLECTOR_BIDDING(ID);
+*/
+/*
+ALTER TABLE COLLECTOR_BIDDING MODIFY COLUMN ID BIGINT auto_increment
+*/
+/*
+ALTER TABLE BIDDING_DETAILS DROP FOREIGN KEY BiddingDetailsCollectorBiddingId;
+DROP INDEX BiddingDetailsCollectorBiddingId ON BIDDING_DETAILS;
+*/
+/*
+ALTER TABLE CHAT_ROOMS
+ADD CONSTRAINT ChatRoomsBiddingId
+FOREIGN KEY(BIDDING_ID)
+REFERENCES COLLECTOR_BIDDING(ID);
+*/
+/*
+SET @USER_ID = 6;
+SET @USER_SITE_ID = 6;
+	SELECT 
+		A.COLLECTOR_SITE_ID,
+        COUNT(A.COLLECTOR_SITE_ID)
+    FROM TRANSACTION_REPORT A 
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSER_ORDER_ID = B.ID
+    LEFT JOIN USERS C ON B.SITE_ID = C.AFFILIATED_SITE
+    LEFT JOIN USERS D ON B.DISPOSER_ID = D.ID
+    LEFT JOIN COMP_SITE E ON A.COLLECTOR_SITE_ID = E.ID
+	WHERE 
+		A.CONFIRMED = TRUE AND
+        B.CLOSE_AT <= NOW() AND
+        IF (B.SITE_ID = 0, D.ID = @USER_ID, C.ID = @USER_ID) AND
+        (C.CLASS = 201 OR C.CLASS = 202) AND
+        C.ACTIVE = TRUE AND
+        E.ACTIVE = TRUE AND
+        A.COLLECTOR_SITE_ID NOT IN (
+			SELECT TARGET_ID 
+            FROM REGISTERED_SITE 
+            WHERE 
+				IF(@USER_SITE_ID = 0,
+					USER_ID = @USER_ID,
+                    SITE_ID = @USER_SITE_ID
+				) AND
+                REGISTER_TYPE = 2 AND
+                ACTIVE = TRUE
+        )
+	GROUP BY 
+		A.DISPOSER_SITE_ID, A.COLLECTOR_SITE_ID;
+*/        
+        /*
+SET @USER_ID = 6;
+SET @USER_SITE_ID = 6;
+
+EXPLAIN
+SELECT 
+	A.COLLECTOR_SITE_ID,
+	COUNT(A.COLLECTOR_SITE_ID)
+FROM 
+	TRANSACTION_REPORT 			A, 
+	SITE_WSTE_DISPOSAL_ORDER 	B,
+	USERS 						C,
+	USERS 						D,
+	COMP_SITE 					E
+WHERE 
+	A.DISPOSER_ORDER_ID 		= B.ID AND
+	A.COLLECTOR_SITE_ID 		= E.ID AND
+	B.SITE_ID 					= C.AFFILIATED_SITE AND
+	B.DISPOSER_ID 				= D.ID AND
+	A.CONFIRMED 				= TRUE AND
+	B.CLOSE_AT 					<= NOW() AND
+	IF (B.SITE_ID = 0, 
+		D.ID = @USER_ID, 
+		C.ID = @USER_ID
+	) AND
+	(C.CLASS = 201 OR C.CLASS = 202) AND
+	C.ACTIVE 					= TRUE AND
+	E.ACTIVE 					= TRUE AND
+	A.COLLECTOR_SITE_ID NOT IN (
+		SELECT TARGET_ID 
+		FROM REGISTERED_SITE 
+		WHERE 
+			IF(@USER_SITE_ID = 0,
+				USER_ID = @USER_ID,
+				SITE_ID = @USER_SITE_ID
+			) AND
+			REGISTER_TYPE = 2 AND
+			ACTIVE = TRUE
+	)
+GROUP BY 
+	A.DISPOSER_SITE_ID, A.COLLECTOR_SITE_ID;
+*/
+
+
+
+
+/*SHOW PROCESSLIST;*/
+/*
+SELECT * FROM performance_schema.events_statements_history
+*/
+
+/*
+EXPLAIN
+SELECT 
+	A.COLLECTOR_SITE_ID,
+	COUNT(A.COLLECTOR_SITE_ID)
+FROM 
+	TRANSACTION_REPORT 			A, 
+	SITE_WSTE_DISPOSAL_ORDER 	B,
+	USERS 						C,
+	USERS 						D,
+	COMP_SITE 					E
+WHERE 
+	A.DISPOSER_ORDER_ID 		= B.ID AND
+	A.COLLECTOR_SITE_ID 		= E.ID AND
+	B.SITE_ID 					= C.AFFILIATED_SITE AND
+	B.DISPOSER_ID 				= D.ID AND
+	A.CONFIRMED 				= TRUE AND
+	B.CLOSE_AT 					<= NOW() AND
+	IF (B.SITE_ID = 0, 
+		D.ID = @USER_ID, 
+		C.ID = @USER_ID
+	) AND
+	(C.CLASS = 201 OR C.CLASS = 202) AND
+	C.ACTIVE 					= TRUE AND
+	E.ACTIVE 					= TRUE AND
+	A.COLLECTOR_SITE_ID NOT IN (
+		SELECT TARGET_ID 
+		FROM REGISTERED_SITE 
+		WHERE 
+			IF(@USER_SITE_ID = 0,
+				USER_ID = @USER_ID,
+				SITE_ID = @USER_SITE_ID
+			) AND
+			REGISTER_TYPE = 2 AND
+			ACTIVE = TRUE
+	)
+GROUP BY 
+	A.DISPOSER_SITE_ID, A.COLLECTOR_SITE_ID;
+*/
+
+
+
+/*
+ALTER TABLE TRANSACTION_REPORT
+ADD CONSTRAINT TransactionReportWsteAppearance
+FOREIGN KEY(WSTE_APPEARANCE)
+REFERENCES WSTE_APPEARANCE(ID);    
+*/
+
+
+/*
+SET @USER_ID = 4;
+SET @USER_TYPE = 3;
+call sp_retrieve_my_disposal_lists_20220523(@USER_ID);
+*/
+/*
+		CALL sp_retrieve_my_disposal_lists_with_json_20220523(
+			@USER_ID,
+			@USER_TYPE,
+			@rtn_val,
+			@msg_txt,
+			@json_data
+		);
+        select 
+			@USER_ID,
+			@USER_TYPE,
+			@rtn_val,
+			@msg_txt,
+			@json_data
+*/       
+
+/*
+SET @USER_ID = 4;
+SET @ORDER_ID = 1859;
+SET @BIDDING_ID = 819;
+SET @CATEGORY_ID = 21;
+CALL sp_push_disposer_select_collector(
+	@USER_ID,
+    @ORDER_ID,
+    @BIDDING_ID
+); 
+*/    
+ 
+/*    
+		SELECT B.ORDER_CODE, A.COLLECTOR_ID, A.RESPONSE_VISIT
+        INTO @ORDER_CODE, @COLLECTOR_SITE_ID, @RESPONSE_VISIT
+        FROM COLLECTOR_BIDDING A
+        LEFT JOIN SITE_WSTE_DISPOSAL_ORDER B ON A.DISPOSAL_ORDER_ID = B.ID
+        WHERE
+			A.ID = @BIDDING_ID;
+            
+SELECT @ORDER_CODE, @COLLECTOR_SITE_ID, @RESPONSE_VISIT;
+*/
+
+/*
+    SELECT 
+		A.STATE_CODE, 
+        A.DISPOSER_ORDER_ID, 
+        B.DISPOSAL_ORDER_ID, 
+        B.TRANSACTION_STATE_CODE,
+        IF(B.DISPOSAL_ORDER_ID = 1865 AND 
+            B.TRANSACTION_STATE_CODE = 252 AND
+            C.COLLECTOR_ID IS NOT NULL,
+            0,
+            1
+		)
+    FROM V_ORDER_STATE A
+    LEFT JOIN V_TRANSACTION_STATE B ON A.DISPOSER_ORDER_ID = B.DISPOSAL_ORDER_ID
+    LEFT JOIN SITE_WSTE_DISPOSAL_ORDER C ON A.DISPOSER_ORDER_ID = C.ID
+    WHERE (
+		A.DISPOSER_ORDER_ID = 1865 OR
+        (
+			B.DISPOSAL_ORDER_ID = 1865 AND 
+            B.TRANSACTION_STATE_CODE = 252 AND
+            C.COLLECTOR_ID IS NOT NULL
+		)
+	);
+    */
+/*
+SET @ORDER_ID = 1865;    
+CALL sp_req_order_details_t252(
+	@ORDER_ID,
+    @DETAILS
+);
+SELECT 
+	@ORDER_ID,
+    @DETAILS;
+*/    
+
+/*
+SET @USER_ID = 1;
+SET @USER_TYPE = 3;
+call sp_retrieve_my_disposal_lists_20220523(@USER_ID);
+*/
+
+/*
+	DROP TABLE IF EXISTS PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP;
+CALL sp_push_to_prospective_bidders(1068)
+*/
+/*
+SET @USER_ID = 4;
+SET @ROOM_ID = 43;
+SET @PAGE_SIZE= 1000;
+SET @OFFSET_SIZE = 0;
+SET @PARAMS = '[{"USER_ID":49, "ROOM_ID":43, "PAGE_SIZE":1000, "OFFSET_SIZE":0}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_chats(
+	@PARAMS
+);
+*/
+/*
+	DROP TABLE IF EXISTS PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP;
+CALL sp_push_to_prospective_bidders(2544)
+*/
+/*
+	CALL sp_admin_retrieve_chats_without_handler(
+		@ROOM_ID,
+		@USER_ID,
+        @PAGE_SIZE,
+        @OFFSET_SIZE,
+        @json_data
+    );
+    SELECT 
+		@ROOM_ID,
+		@USER_ID,
+        @PAGE_SIZE,
+        @OFFSET_SIZE,
+        @json_data;
+        
+    SELECT 
+		USER_ID, 
+		ID, 
+        ROOM_ID, 
+        IF(DELETED = FALSE, MESSAGE, '삭제된 메시지입니다.'),
+        CREATED_AT, 
+        IS_READ,
+        DELETED,
+        MEDIA
+    FROM CHATS
+    WHERE 
+		ROOM_ID = @ROOM_ID AND
+        DATE(CREATED_AT) = '2022-05-31'
+    ORDER BY CREATED_AT ASC;  
+*/    
+/*
+CALL sp_req_order_details_118(1256, @OUT_DETAILS);
+SELECT 1256, @OUT_DETAILS
+*/
+
+/*
+    CALL sp_req_current_time(@REG_DT);
+
+    SELECT 
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, 1, 2),
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, B.COLLECTOR_ID, E.COLLECTOR_ID),
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, C.SITE_NAME, F.SITE_NAME),
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, C.TRMT_BIZ_CODE, F.TRMT_BIZ_CODE),
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, D.NAME, G.NAME),
+        IF(@REG_DT < A.COLLECTOR_MAX_DECISION_AT, B.ID, E.ID)
+    INTO 
+        @BIDDING_RANK,
+        @SITE_ID,
+        @SITE_NAME,
+        @TRMT_BIZ_CODE,
+        @TRMT_BIZ_NAME,
+        @COLLECTOR_BIDDING_ID
+    FROM SITE_WSTE_DISPOSAL_ORDER A
+    LEFT JOIN COLLECTOR_BIDDING B ON A.FIRST_PLACE = B.ID
+    LEFT JOIN COMP_SITE C ON B.COLLECTOR_ID = C.ID
+    LEFT JOIN WSTE_TRMT_BIZ D ON C.TRMT_BIZ_CODE = D.CODE    
+    LEFT JOIN COLLECTOR_BIDDING E ON A.SECOND_PLACE = E.ID
+    LEFT JOIN COMP_SITE F ON E.COLLECTOR_ID = F.ID
+    LEFT JOIN WSTE_TRMT_BIZ G ON F.TRMT_BIZ_CODE = G.CODE
+    WHERE A.ID = 1280;
+    
+    SELECT AVATAR_PATH INTO @AVATAR_PATH
+    FROM USERS
+    WHERE 
+		AFFILIATED_SITE = @SITE_ID AND
+        CLASS = 201 AND
+        ACTIVE = TRUE;
+    
+    SELECT
+        @BIDDING_RANK,
+        @SITE_ID,
+        @SITE_NAME,
+        @TRMT_BIZ_CODE,
+        @TRMT_BIZ_NAME,
+        @COLLECTOR_BIDDING_ID,
+        @AVATAR_PATH
+*/
+
+/*
+SET @USER_ID = 16;
+CALL sp_retrieve_my_disposal_lists_20220523(@USER_ID);
+*/
+/*
+CALL sp_push_to_prospective_bidders(2544)
+*/
+
+/*
+CALL sp_retrieve_my_disposal_lists_20220523(16)
+*/
+
+
+
+
+/*
+SET @ORDER_ID = 1127;        
+SELECT 
+	A.STATE_CODE, 
+	B.TRANSACTION_STATE_CODE,
+	IF(B.DISPOSAL_ORDER_ID = @ORDER_ID AND 
+		B.TRANSACTION_STATE_CODE IN (250, 251, 252) AND
+		C.COLLECTOR_ID IS NOT NULL,
+		1,
+		0
+	)
+FROM V_ORDER_STATE A
+LEFT JOIN V_TRANSACTION_STATE B ON A.DISPOSER_ORDER_ID = B.DISPOSAL_ORDER_ID
+LEFT JOIN SITE_WSTE_DISPOSAL_ORDER C ON A.DISPOSER_ORDER_ID = C.ID
+WHERE 
+(
+	(
+		A.DISPOSER_ORDER_ID = @ORDER_ID AND
+		C.COLLECTOR_ID IS NULL 
+	) OR
+	(
+		B.DISPOSAL_ORDER_ID = @ORDER_ID AND 
+		B.TRANSACTION_STATE_CODE IN (250, 251, 252) AND
+		C.COLLECTOR_ID IS NOT NULL
+	)
+);
+
+SELECT FOUND_ROWS();
+*/
+/*
+SELECT * FROM COMP_SITE WHERE ID<10;
+SELECT FOUND_ROWS();
+*/
+
+
+/*
+CALL sp_push_scheduler_base(19);    
+*/
+
+
+/*
+SET @TITLE = 'TITLE';
+SET @BODY = 'BODY';
+SET @CATEGORY_ID = 17;
+SET @ORDER_ID = 2662;
+
+	DROP TABLE IF EXISTS GET_DISPOSER_LIST_FOR_PUSH_TEMP;
+CALL sp_get_disposer_list_for_push(
+	@ORDER_ID,
+	@TITLE,
+	@BODY,
+    @CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt
+);
+SELECT 
+	@ORDER_ID,
+	@TITLE,
+	@BODY,
+    @CATEGORY_ID,
+    @TARGET_LIST,
+    @rtn_val,
+    @msg_txt;
+*/
+
+
+/*
+
+SET @TITLE = 'TITLE';
+SET @BODY = 'BODY';
+SET @CATEGORY_ID = 17;
+SET @ORDER_ID = 2662;
+
+			SELECT 
+				B.ID,
+				B.USER_NAME,
+				B.FCM,
+				B.AVATAR_PATH,
+				@TITLE,
+				@BODY,
+				@ORDER_ID,
+				NULL,
+				@TRANSACTION_ID,
+				@REPORT_ID,
+				@CATEGORY_ID,
+				@REG_DT
+			FROM WSTE_CLCT_TRMT_TRANSACTION A 
+			LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
+			WHERE 
+				B.ACTIVE = TRUE AND 
+				B.PUSH_ENABLED = TRUE AND
+				A.IN_PROGRESS = TRUE AND
+				A.ACCEPT_ASK_END = TRUE AND
+				A.DISPOSAL_ORDER_ID = @ORDER_ID;
+                
+                
+			SELECT 
+				B.ID,
+				B.USER_NAME,
+				B.FCM,
+				B.AVATAR_PATH,
+				@TITLE,
+				@BODY,
+				@ORDER_ID,
+				NULL,
+				@TRANSACTION_ID,
+				@REPORT_ID,
+				@CATEGORY_ID,
+				@REG_DT
+			FROM COLLECTOR_BIDDING A 
+			LEFT JOIN USERS B ON A.COLLECTOR_ID = B.AFFILIATED_SITE
+			WHERE 
+				B.ACTIVE 				= TRUE AND 
+				B.PUSH_ENABLED 			= TRUE AND
+				A.ACTIVE 				= TRUE AND
+				A.DELETED 				= FALSE AND
+				A.RESPONSE_VISIT 		= TRUE AND
+                A.CANCEL_VISIT 			= FALSE AND
+                A.REJECT_BIDDING_APPLY 	= FALSE AND
+                A.GIVEUP_BIDDING 		= FALSE AND
+                A.CANCEL_BIDDING 		= FALSE AND
+                A.REJECT_BIDDING 		= FALSE AND
+                A.BIDDING_VISIBLE 		= TRUE AND
+                A.ORDER_VISIBLE 		= TRUE AND
+				A.DISPOSAL_ORDER_ID 	= @ORDER_ID;
+SET @TITLE = 'TITLE';
+SET @BODY = 'BODY';
+SET @CATEGORY_ID = 17;
+SET @ORDER_ID = 2662;
+
+SELECT COLLECTOR_ID, ORDER_CODE INTO @COLLECTOR_ID, @ORDER_CODE
+FROM SITE_WSTE_DISPOSAL_ORDER
+WHERE ID = @ORDER_ID;
+
+SELECT ID INTO @TRANSACTION_ID
+FROM WSTE_CLCT_TRMT_TRANSACTION
+WHERE DISPOSAL_ORDER_ID = @ORDER_ID;
+
+SELECT ID INTO @REPORT_ID
+FROM TRANSACTION_REPORT
+WHERE DISPOSER_ORDER_ID = @ORDER_ID;
+
+CALL sp_req_current_time(@REG_DT);
+
+
+SELECT 
+	B.ID,
+	B.USER_NAME,
+	B.FCM,
+	B.AVATAR_PATH,
+	@TITLE,
+	@BODY,
+	@ORDER_ID,
+	NULL,
+	@TRANSACTION_ID,
+	@REPORT_ID,
+	@CATEGORY_ID,
+	@REG_DT
+FROM SITE_WSTE_DISPOSAL_ORDER A, COLLECTOR_BIDDING C, WSTE_CLCT_TRMT_TRANSACTION E
+LEFT JOIN USERS B ON IF(@SITE_ID = 0, A.DISPOSER_ID = B.ID, A.SITE_ID = B.AFFILIATED_SITE)
+LEFT JOIN USERS D ON C.COLLECTOR_ID = D.AFFILIATED_SITE
+LEFT JOIN USERS F ON E.COLLECTOR_SITE_ID = F.AFFILIATED_SITE
+WHERE
+	(
+		B.ACTIVE = TRUE AND 
+		B.PUSH_ENABLED = TRUE AND
+		A.ACTIVE = TRUE AND
+		A.IS_DELETED = FALSE AND
+		A.ID = @ORDER_ID AND
+		IF(@SITE_ID = 0, 
+			A.DISPOSER_ID = @DISPOSER_ID,
+			A.SITE_ID = @SITE_ID
+		)
+	) OR
+	(
+		IF(@COLLECTOR_ID IS NULL,					
+			D.ACTIVE 				= TRUE AND 
+			D.PUSH_ENABLED 			= TRUE AND
+			C.ACTIVE 				= TRUE AND
+			C.DELETED 				= FALSE AND
+			C.RESPONSE_VISIT 		= TRUE AND
+			C.CANCEL_VISIT 			= FALSE AND
+			C.REJECT_BIDDING_APPLY 	= FALSE AND
+			C.GIVEUP_BIDDING 		= FALSE AND
+			C.CANCEL_BIDDING 		= FALSE AND
+			C.REJECT_BIDDING 		= FALSE AND
+			C.BIDDING_VISIBLE 		= TRUE AND
+			C.ORDER_VISIBLE 		= TRUE AND
+			C.DISPOSAL_ORDER_ID 	= @ORDER_ID,
+			F.ACTIVE = TRUE AND 
+			F.PUSH_ENABLED = TRUE AND
+			E.IN_PROGRESS = TRUE AND
+			E.ACCEPT_ASK_END = TRUE AND
+			E.DISPOSAL_ORDER_ID = @ORDER_ID
+		)
+	);
+
+
+
+SELECT A.ID, A.SITE_ID, COUNT(B.ID)
+FROM SITE_WSTE_DISPOSAL_ORDER A
+LEFT JOIN WSTE_REGISTRATION_PHOTO B ON B.DISPOSAL_ORDER_ID = A.ID
+WHERE A.SITE_ID = 1 AND A.IS_DELETED = FALSE
+GROUP BY A.ID, A.SITE_ID
+*/
+
+
+/*
+SET @USER_ID = 1;
+CALL sp_retrieve_my_disposal_lists_20220523(@USER_ID);
+*/
+
+
+/*
+	DROP TABLE IF EXISTS ADMIN_RETRIEVE_SITE_INFO_TEMP;
+SET @COLLECTOR_SITE_ID = 33;
+CALL sp_get_bidding_lists_3(
+	@COLLECTOR_SITE_ID,
+    @BIDDING_LIT
+);
+SELECT 
+	@COLLECTOR_SITE_ID,
+    @BIDDING_LIT
+*/
+/*
+SET @PARAMS = '[{"USER_ID":49, "B_CODE":"1114000000"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_get_site_list_whose_biz_areas_of_interest(
+	@PARAMS
+);
+*/
+/*
+CREATE TABLE `LANDFILL_EMIT_FACTOR` (
+  `ID` int NOT NULL,
+  `NAME` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DOC` float DEFAULT NULL,
+  `k` float DEFAULT NULL COMMENT '메탄발생속도상수로서 이 값이 클수록 분해율이 높다',
+  `dm` float DEFAULT NULL,
+  `cf` float DEFAULT NULL,
+  `fcf` float DEFAULT NULL,
+  `ek` float DEFAULT NULL COMMENT '잔존유기물',
+  `IPCC_CLASS` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NOTE` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '폐기물의 유형',
+  `CATEGORY` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'WSTE_CODE.CODE로서 생활폐기물인 경우에는 91, 사업장 폐기물인 경우에는 51임',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='폐기물 매립 배출계수';
+
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(1, '음식물', 0.15, 0.185, 0.4, 0.38, 0, 0.831104283852126, 'Food waste', '음식물, 채소류 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(2, '섬유', 0.24, 0.06, 0.8, 0.5, 0.2, 0.941764533584249, 'Textiles', '섬유, 폐섬유 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(3, '나무류', 0.43, 0.03, 0.85, 0.5, 0, 0.970445533548508, 'Wood', '목재류(최종 목제제품으로 사용된)', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(4, '종이류', 0.4, 0.06, 0.9, 0.46, 0.01, 0.941764533584249, 'Paper,cardboard', '종이, 판지 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(5, '고무/가죽', 0.39, 0.03, 0.84, 0.67, 0.2, 0.970445533548508, 'Rubber and leather', '합성고무, 폐피혁 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(6, '플라스틱류', 0, 0, 1, 0.75, 1, 1, 'Plastics', '플라스틱, 폐합성수지 등 ', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(7, '금속', 0, 0, 1, 0, 0, 1, 'Metal', '금속 등의 불연물질', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(8, '유리', 0, 0, 1, 0, 0, 1, 'Glass', '유리 등의 불연물질', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(9, '정원/공원폐기물', 0.2, 0.1, 0.4, 0.49, 0, 0.90483741803596, 'Garden and Park waste', '벌채목 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(10, '기저귀', 0.24, 0.06, 0.4, 0.7, 0.1, 0.941764533584249, 'Nappies', '종이류로 포함되지 않는 기저귀 등', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(11, '기타', 0, 0, 0.9, 0.03, 1, 1, 'Other, inert', '기타, 비활성 폐기물', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(12, '혼합폐기물', 0.14, 0.09, NULL, NULL, NULL, 0.913931185271228, 'bulk waste from Waste Model', '조성별매립량 자료의 확보가 불가능한 년도만 적용', 91);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(13, '음식물', 0.15, 0.185, 0.4, 0.15, 0, 0.831104283852126, 'Food,beverages,tobacco', '음식, 음료, 담배 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(14, '섬유', 0.24, 0.06, 0.8, 0.4, 0.16, 0.941764533584249, 'Textile', '섬유, 폐섬유 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(15, '폐목재', 0.43, 0.03, 0.85, 0.43, 0, 0.970445533548508, 'Wood, Wood product', '목재(최종 목재 제품으로 사용된), 폐목재', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(16, '제지', 0.4, 0.06, 0.9, 0.41, 0.01, 0.941764533584249, 'Pulp, paper', '제지, 폐지 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(17, '석유제품', 0, NULL, 1, 0.8, 0.8, 1, 'Petroleum products, solvents, Plastic', '석유제품, 용매, 플라스틱 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(18, '고무', 0.39, 0.03, 0.84, 0.56, 0.17, 0.970445533548508, 'Rubber', '폐합성고무(천연고무가 아닌)', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(19, '건설폐기물', 0.04, 0.09, 1, 0.24, 0.2, 0.913931185271228, 'Construction, demolition', '건설 및 파쇄 잔재 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(20, '하수슬러지', 0.05, 0.185, 0.1, 0.45, 0, 0.831104283852126, 'Domestic sludge', '하수오니, 정수처리오니, 유기성하수오니 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(21, '폐수슬러지', 0.09, 0.185, 0.35, 0.45, 0, 0.831104283852126, 'Industrial sludge', '폐수처리오니, 공정오니 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(22, '병원성폐기물', 0.15, 0.1, 0.65, 0.4, 0.25, 0.90483741803596, 'Clinical waste', '감염성폐기물, 동식물성 폐잔재물 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(23, '폐피혁', 0.39, 0.03, 0.84, 0.67, 0.2, 0.970445533548508, 'Leather from MSW', '피혁, 폐피혁 등', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(24, '기타', 0.01, 0.1, 0.9, 0.04, 0.03, 0.90483741803596, 'Other', '기타', 51);
+INSERT INTO LANDFILL_EMIT_FACTOR(ID, NAME, DOC, k, dm, cf, fcf, ek, IPCC_CLASS, NOTE, CATEGORY) VALUES(25, '혼합폐기물', 0.15, 0.09, NULL, NULL, NULL, 0.913931185271228, 'bulk waste from Waste Model', '조성별매립량 자료의 확보가 불가능한 년도만 적용', 51);
+*/
+
+
+
+/*
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(1, 'DOCf', 0.5, '매립', '혐기적으로 분해가능한 유기탄소비율');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(2, 'MCF', 8, '매립', '메탄보정계수');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(3, 'F', 0.5, '매립', '매립가스중 메탄가스 비율');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(4, 'OX', 0.1, '매립', '산화계수');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(5, 'OF', 1, '소각', '산화계수');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(6, 'CH4', 0.006, '소각', 'CH4배출계수');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(7, 'N2O', 39.8, '소각', 'N2O배출계수');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(8, 'CH4_COMP', 10, '생물', 'CH4배출계수(퇴비화)');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(9, 'N2O_COMP', 0.6, '생물', 'N2O배출계수(퇴비화)');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(10, 'CH4_ANAE', 2, '생물', 'CH4배출계수(혐기성소화)');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(11, 'N2O_ANANE', 0, '생물', 'N2O배출계수(혐기성소화)');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(12, 'CH4_SEW', 0.01532, '하수', 'CH4배출계수(하수)');
+INSERT INTO EMIT_FACTOR_2(ID, NAME, FACTOR, CATEGORY, NOTE) VALUES(13, 'N2O_SEW', 0.005, '하수', 'N2O배출계수(하수)');
+*/
+
+
+/*
+UPDATE chium.WSTE_CODE A, chiumdev_2.WSTE_CODE B
+SET A.LANDFILL_TYPE = B.LANDFILL_TYPE
+WHERE A.CODE = B.CODE;
+*/
+
+
+
+
+/*
+SET @TEST_ARRAY = '[{"TYPE":"ORDER", "KEY":"AAA", "VALUE":"VAL_1"},{"TYPE":"BIDDING", "KEY":"BBB", "VALUE":"VAL_2"}]' COLLATE utf8mb4_unicode_ci;
+SELECT JSON_KEYS(@TEST_ARRAY, '$[0]');
+SELECT JSON_LENGTH(@TEST_ARRAY);
+SELECT JSON_VALID(@TEST_ARRAY);
+SELECT JSON_SEARCH(@TEST_ARRAY, 'all', 'AAA');
+SELECT JSON_INSERT(@TEST_ARRAY, '$[0].KEY2', 'AAA22');
+SELECT JSON_REPLACE(@TEST_ARRAY, '$[0].KEY', 'AAA2233');
+SELECT JSON_REMOVE(@TEST_ARRAY, '$[0]');
+SELECT JSON_ARRAY_APPEND(@TEST_ARRAY, '$[0]', 1);
+SELECT JSON_ARRAY_APPEND(@TEST_ARRAY, '$[0]', 1);
+*/
+
+
+/*
+SET @TEST_ARRAY = '{"a": 4, "b": 2, "c": {"d": 4}}' COLLATE utf8mb4_unicode_ci;
+SET @TEST_ARRAY2 = '3' COLLATE utf8mb4_unicode_ci;
+SELECT JSON_CONTAINS(@TEST_ARRAY, @TEST_ARRAY2, '$.a');
+*/
+
+/*
+SET @j = '{"a": "10", "b": 2, "c": {"d": 4}}';
+SELECT JSON_CONTAINS_PATH(@j, 'one', '$.a', '$.e');
+SELECT JSON_CONTAINS_PATH(@j, 'one', '$.a', '$.c.d');
+SELECT JSON_UNQUOTE(JSON_EXTRACT(@j, '$[0].a')) INTO @ABC;
+SELECT @ABC;
+*/
+
+/*
+SELECT bit_length('가나다라'),char_length('가나다라'),length('가나다라');
+SELECT concat_ws('/','2020','01','01'); 
+select elt(2,'하나','둘','셋');
+select field('둘','하나','둘','셋');
+select find_in_set('둘','하나,둘,셋');
+select instr('하나둘셋','둘');
+select locate('둘','하나둘셋');
+
+select format(123456.123456,4); -- 소숫점 4자리까지 출력 반올림되서 출력됨
+select bin(31),hex(31),oct(31); -- 2진수 16진수 8진수
+select left('abcdefg',3),right('abcdefg',3); -- 왼쪽 3번째 까지 해당되는 문자 출력
+select lower('abcdefg'),upper('abcdefg'); -- 소문자로 변환, 대문자로 변환
+select lpad('안녕',5,'###'),rpad('안녕',5,'###'); -- 문자길이를 총 5개로 잡고 ### 추가
+select ltrim('  안녕'),rtrim('  안녕'); -- 왼쪽오른쪽 공백 제거
+select trim('   공백제거  '), trim(both 'ㅋ' from 'ㅋㅋㅋ안녕ㅋㅋㅋㅋ');
+select repeat('안녕',3); -- 반복
+select replace('안녕 친구','안녕','hello'); -- 문자열 치환
+select reverse ('hello'); -- 거꾸로 출력
+select concat('안녕',space(10),'친구');
+select substring('안녕친구들',3,2);	-- 3번째 문자 부터 2번째 까치 출력
+select substring_index('hi.my.name.is','.',-2);
+select substring_index('hi.my.name.is','.',2); -- 두번째 점 이후로 버린다.
+select insert('abcdefg',3,4,'@@'),insert('abcdefg',2,4,'@@'); -- 지정 위치에 문자 대체
+*/
+
+/*
+select abs(-400); -- 절대값 구하기
+select ceiling(4.7),floor(4.7),round(4.7);-- 올림 내림 반올림
+select conv('AA',16,2),CONV(100,10,8);-- 진수끼리 변환 하는 함수 	AAR가 16진수 인데 2진수로 바꿔
+SELECT MOD(157,10),157%10, 157 MOD 10; -- 나머지 값 구하기
+SELECT RAND(), floor(1+(RAND() * (6-1)));-- 임의의 값 구하기
+SELECT truncate(12345.12345,2),TRUNCATE(12345.12345,-2);
+*/
+
+/*
+SET @START_AT = unix_timestamp(now(6));
+CALL sp_test_004(7);
+SET @END_AT = unix_timestamp(now(6));
+SELECT @END_AT - @START_AT;
+
+
+SET @ROOM_ID = 155;
+	SELECT DISTINCT DATE(CREATED_AT)
+    FROM CHATS
+	WHERE 
+		ROOM_ID = @ROOM_ID;
+        
+        
+
+SET @PARAMS = '[{"USER_ID":7, "ROOM_ID":155, "PAGE_SIZE":1000, "OFFSET_SIZE":0}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_chats(
+	@PARAMS
+);
+*/
+
+/*
+SET @USER_ID = 7;
+SET @ROOM_ID = 155;
+SET @PAGE_SIZE= 1000;
+SET @OFFSET_SIZE = 0;
+CALL sp_test_005(
+	@ROOM_ID,
+	@USER_ID,
+	@PAGE_SIZE,
+	@OFFSET_SIZE,
+    @OUT_COUNT,
+	@json_data
+);
+SELECT 
+	@ROOM_ID,
+	@USER_ID,
+	@PAGE_SIZE,
+	@OFFSET_SIZE,
+    @OUT_COUNT,
+	@json_data;
+*/
+/*
+SET @PARAMS = '[{"USER_ID":7, "SITE_ID":0, "PAGE_SIZE":1000, "OFFSET_SIZE":0}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_users(
+	@PARAMS
+);    
+*/
+/*
+USE chium;
+ALTER TABLE WSTE_TRMT_FCTL MODIFY ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY;
+*/
+
+/*
+call sp_req_b_trmt_fctl();
+*/
+
+/*
+SET @PARAMS = '[{"USER_ID":7, "SITE_ID":0, "PAGE_SIZE":15, "OFFSET_SIZE":0, "CONFIRMED":null, "ACTIVE":null, "SEARCH":"0007"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_users(
+	@PARAMS
+);    
+*/
+/*
+SET @SITE_ID = 45;
+SET @PARAMS = '[{"WSTE_CODE":"01-01-05", "APPR_CODE":2}, {"WSTE_CODE":"01-01-06", "APPR_CODE":1}]' COLLATE utf8mb4_unicode_ci;
+
+CALL sp_admin_update_site_wste_info(
+	@SITE_ID,
+    @PARAMS,
+    @rtn_val,
+    @msg_txt
+);
+*/
+
+/*
+SET @PARAMS = JSON_OBJECT(
+	'USER_ID', 61,
+    'SITE_ID', 45,
+    'WSTE_LIST', 
+    JSON_OBJECT(
+		'WSTE_CODE', '01-01-08',
+		'APPR_CODE', 2
+	)
+);
+
+CALL sp_test_006(
+	@PARAMS
+);
+*/
+
+/*
+CREATE TABLE `REPORTED_WSTE` (
+  `ID` bigint NOT NULL,
+  `REPORT_ID` bigint DEFAULT NULL COMMENT '최종보고서 등록번호(TRANSACTION_REPORT.ID)',
+  `DISPOSER_ID` bigint DEFAULT NULL COMMENT '폐기물 배출자의 등록번호(USERS.ID)',
+  `DISPOSER_SITE_ID` bigint DEFAULT NULL COMMENT '폐기물 배출자 사이트의 등록번호(COMP_SITE.ID)',
+  `COLLECTOR_ID` bigint DEFAULT NULL COMMENT '폐기물 수거자의 등록번호(COMP_SITE.ID)',
+  `PROCESSOR_ID` bigint DEFAULT NULL COMMENT '폐기물처리업자의 등록번호(COMP_SITE.ID)',
+  `TRMT_METHOD` varchar(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '처리방법(WSTE_TRMT_METHOD.CODE)',
+  `WSTE_CODE` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '폐기물코드(WSTE_CODE.CODE)',
+  `WSTE_APPEARANCE` int DEFAULT NULL COMMENT '폐기물성상(WSTE_APPEARANCE.ID)',
+  `WSTE_FCTL_ID` int DEFAULT NULL COMMENT '처리시설 분류코드(WSTE_TRMT_FCTL.ID)',
+  `CREATED_AT` datetime DEFAULT NULL,
+  `UPDATED_AT` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='처리보고서에서 다중 폐기물을 처리하는 시스템이 완료되었을 경우 사용하는  폐기물 관리테이블로서 수집운반 및 처리과정의 완료 또는 완료예정인 폐기물에 대한 정보를 관리하는 테이블'
+*/
+
+
+/*
+USE chium;
+
+DROP TABLE IF EXISTS GHG_EMIT_FACTOR;
+
+CREATE TABLE `GHG_EMIT_FACTOR` (
+  `ID` int NOT NULL,
+  `NAME` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FACTOR` float DEFAULT NULL,
+  `DEPTH` int DEFAULT NULL,
+  `PID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='온실가스배출계산 보정계수';
+
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(1, '매립', NULL, 1, NULL);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(2, '생물학적처리', NULL, 1, NULL);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(3, '소각', NULL, 1, NULL);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(4, '폐수', NULL, 1, NULL);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(5, '복토유형에 따른 산화계수', NULL, 2, 1);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(11, '토양,퇴비 등으로 복토', 0.1, 3, 5);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(12, '기타(비 통기성 재질, 미 분류된) ', 0, 3, 5);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(6, '매립관리형태에 따른 보정계수(MCF)', NULL, 2, 1);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(13, '관리형-혐기성', 1, 3, 6);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(14, '관리형-준호기성', 0.5, 3, 6);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(15, '비관리형-5m이상', 8, 3, 6);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(16, '비관리형-5m미만', 0.4, 3, 6);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(17, '기타(미분류)', 0.6, 3, 6);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(7, '소각로 폐기물형태에 따른 N₂O배출계수', NULL, 2, 3);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(18, '생활폐기물', 39.8, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(19, '사업장폐기물(슬러지제외)', 113.19, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(20, '사업장폐기물(슬러지)', 408.41, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(21, '건설폐기물', 109.57, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(22, '지정폐기물(슬러지제외)', 83.52, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(23, '지정폐기물(슬러지)', 408.41, 3, 7);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(8, '소각로유형에 따른 CH₄배출계수', NULL, 2, 3);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(24, '연속식 - 스토커', 0.0002, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(25, '연속식 - 유동상', 0, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(26, '준연속식 - 스토커', 0.006, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(27, '준연속식 - 유동상', 0.188, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(28, '배치형 - 스토커', 0.06, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(29, '배치형 - 유동상', 0.237, 3, 8);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(9, '폐수처리유형에 따른 CH₄배출계수', NULL, 2, 4);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(30, '슬러지의 혐기성반응조', 0.2, 3, 9);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(31, '혐기성 반응조', 0.2, 3, 9);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(32, '혐기성라군(2m이하)', 0.05, 3, 9);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(33, '혐기성라군(2m초과)', 0.2, 3, 9);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(10, '생물학적처리에서 폐기물처리 중량기준', NULL, 2, 2);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(34, '건량', NULL, 3, 10);
+INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(35, '습량', NULL, 3, 10);
+*/
+
+
+/*
+UPDATE chiumdev_2.WSTE_TRMT_FCTL A, chium.WSTE_TRMT_FCTL B SET A.GHG_EMIT_ID = B.GHG_EMIT_ID WHERE A.ID = B.ID
+*/

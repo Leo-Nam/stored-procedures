@@ -1,7 +1,6 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_retrieve_push_history_payload`(
-	IN IN_USER_ID							BIGINT,
-    IN IN_OFFSET_SIZE						INT,
-    IN IN_PAGE_SIZE							INT
+	IN IN_HISTORY_ID						BIGINT,
+    OUT OUT_PUSH_HISTORY					JSON
 )
 BEGIN
 
@@ -18,8 +17,6 @@ AUTHOR 			: Leo Nam
     DECLARE endOfRow 							TINYINT DEFAULT FALSE;    
     DECLARE CUR_ID 								BIGINT; 
     DECLARE CUR_USER_ID 						BIGINT;
-    DECLARE CUR_TITLE 							VARCHAR(255);
-    DECLARE CUR_BODY							VARCHAR(255);	
     DECLARE CUR_CREATED_AT						DATETIME;	
     DECLARE CUR_IS_READ							TINYINT;	
     DECLARE CUR_IS_READ_AT						DATETIME;	
@@ -30,15 +27,12 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_BIDDING_ID						BIGINT;	
     DECLARE CUR_TRANSACTION_ID					BIGINT;	
     DECLARE CUR_REPORT_ID						BIGINT;	
-    DECLARE CUR_TARGET_URL						VARCHAR(255);	
-    DECLARE PUSH_HISTORY_CURSOR 				CURSOR FOR 
+    DECLARE PUSH_HISTORY_PAYLOAD_CURSOR			CURSOR FOR 
 	SELECT 
 		A.ID, 
         A.USER_ID, 
-        A.TITLE,
-        A.BODY,
         A.CREATED_AT,
-        A.IS_READ	,
+        A.IS_READ,
         A.IS_READ_AT,
         A.DELETED,
         A.DELETED_AT,
@@ -46,31 +40,16 @@ AUTHOR 			: Leo Nam
         A.ORDER_ID,
         A.BIDDING_ID,
         A.TRANSACTION_ID,
-        A.REPORT_ID,
-        A.TARGET_URL
+        A.REPORT_ID
     FROM PUSH_HISTORY A
     LEFT JOIN USERS B ON A.USER_ID = B.ID
-    WHERE B.ID = IN_USER_ID
-    ORDER BY CREATED_AT DESC
-    LIMIT IN_OFFSET_SIZE, IN_PAGE_SIZE;  
+    WHERE A.ID = IN_HISTORY_ID;  
         
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		DROP TABLE IF EXISTS PUSH_HISTORY_PAYLOAD_TEMP;
-		ROLLBACK;
-		SET @json_data 		= NULL;
-		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
-	END;        
-	START TRANSACTION;							
-    /*트랜잭션 시작*/  
         
 	CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_HISTORY_PAYLOAD_TEMP (
 		ID 								BIGINT,
 		USER_ID 						BIGINT,
-		TITLE 							VARCHAR(255),
-		BODY							VARCHAR(255),
 		CREATED_AT						DATETIME,
 		IS_READ							TINYINT,
 		IS_READ_AT						DATETIME,
@@ -81,21 +60,19 @@ AUTHOR 			: Leo Nam
 		BIDDING_ID						BIGINT,
 		TRANSACTION_ID					BIGINT,
 		REPORT_ID						BIGINT,
-		TARGET_URL						VARCHAR(255),
         ORDER_INFO						JSON,
         BIDDING_INFO					JSON,
         TRANSACTION_INFO				JSON,
-        REPORT_INFO						JSON
+        REPORT_INFO						JSON,
+        DROP_VISIT_STATE				TINYINT
 	);
     
-	OPEN PUSH_HISTORY_CURSOR;	
+	OPEN PUSH_HISTORY_PAYLOAD_CURSOR;	
 	cloop: LOOP
-		FETCH PUSH_HISTORY_CURSOR 
+		FETCH PUSH_HISTORY_PAYLOAD_CURSOR 
         INTO  
 			CUR_ID,
 			CUR_USER_ID,
-			CUR_TITLE,
-			CUR_BODY,
 			CUR_CREATED_AT,
 			CUR_IS_READ,
 			CUR_IS_READ_AT,
@@ -105,8 +82,7 @@ AUTHOR 			: Leo Nam
 			CUR_ORDER_ID,
 			CUR_BIDDING_ID,
 			CUR_TRANSACTION_ID,
-			CUR_REPORT_ID,
-			CUR_TARGET_URL;
+			CUR_REPORT_ID;
         
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -117,8 +93,6 @@ AUTHOR 			: Leo Nam
         PUSH_HISTORY_PAYLOAD_TEMP(
 			ID,
 			USER_ID,
-			TITLE,
-			BODY,
 			CREATED_AT,
 			IS_READ,
 			IS_READ_AT,
@@ -128,14 +102,11 @@ AUTHOR 			: Leo Nam
 			ORDER_ID,
 			BIDDING_ID,
 			TRANSACTION_ID,
-			REPORT_ID,
-			TARGET_URL
+			REPORT_ID
 		)
         VALUES(
 			CUR_ID,
 			CUR_USER_ID,
-			CUR_TITLE,
-			CUR_BODY,
 			CUR_CREATED_AT,
 			CUR_IS_READ,
 			CUR_IS_READ_AT,
@@ -145,8 +116,7 @@ AUTHOR 			: Leo Nam
 			CUR_ORDER_ID,
 			CUR_BIDDING_ID,
 			CUR_TRANSACTION_ID,
-			CUR_REPORT_ID,
-			CUR_TARGET_URL
+			CUR_REPORT_ID
 		);
         
         IF CUR_ORDER_ID IS NOT NULL THEN
@@ -185,17 +155,42 @@ AUTHOR 			: Leo Nam
 			SET @REPORT_INFO = NULL;
         END IF;
         
+        SELECT USER_CURRENT_TYPE INTO @USER_TYPE
+        FROM USERS
+        WHERE ID = CUR_USER_ID;
+        
+        IF @USER_TYPE = 2 THEN
+        /*사용자 타입이 수거자인 경우 정상처리한다.*/
+			SELECT STATE_CODE INTO @ORDER_STATE_CODE
+            FROM V_ORDER_STATE
+            WHERE DISPOSER_ORDER_ID = CUR_ORDER_ID;
+            
+            IF @ORDER_STATE_CODE = 102 THEN
+            /*배출자의 상태가 방문중(102)인 경우*/
+				SELECT CANCEL_VISIT INTO @CANCEL_VISIT
+                FROM COLLECTOR_BIDDING
+                WHERE ID = CUR_BIDDING_ID;	
+            ELSE
+            /*배출자의 상태가 방문중(102)이 아닌 경우*/
+				SET @CANCEL_VISIT = NULL;
+            END IF;
+        ELSE
+        /*사용자 타입이 수거자가 아닌 경우 DROP_VISIT_STATE를 NULL처리한다.*/
+			SET @CANCEL_VISIT = NULL;
+        END IF;
+        
 		UPDATE PUSH_HISTORY_PAYLOAD_TEMP 
         SET 
 			ORDER_INFO 			= @ORDER_INFO, 
 			BIDDING_INFO 		= @BIDDING_INFO, 
 			TRANSACTION_INFO 	= @TRANSACTION_INFO, 
-            REPORT_INFO 		= @REPORT_INFO 
+            REPORT_INFO 		= @REPORT_INFO , 
+            DROP_VISIT_STATE 	= @CANCEL_VISIT 
 		WHERE ID = CUR_ID;
         /*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 PUSH_HISTORY_TEMP 테이블에 반영한다.*/      
         
 	END LOOP;   
-	CLOSE PUSH_HISTORY_CURSOR;
+	CLOSE PUSH_HISTORY_PAYLOAD_CURSOR;
 	
 	SELECT JSON_ARRAYAGG(
 		JSON_OBJECT(
@@ -214,15 +209,12 @@ AUTHOR 			: Leo Nam
 			'ORDER_INFO'		, ORDER_INFO, 
 			'BIDDING_INFO'		, BIDDING_INFO, 
 			'TRANSACTION_INFO'	, TRANSACTION_INFO, 
-			'REPORT_INFO'		, REPORT_INFO
+			'REPORT_INFO'		, REPORT_INFO, 
+			'DROP_VISIT_STATE'	, DROP_VISIT_STATE
 		)
 	) 
-	INTO @json_data
+	INTO OUT_PUSH_HISTORY
     FROM PUSH_HISTORY_PAYLOAD_TEMP;
     
-	SET @rtn_val = 0;
-	SET @msg_txt = 'Success11';
     DROP TABLE IF EXISTS PUSH_HISTORY_PAYLOAD_TEMP;
-    COMMIT;
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
 END

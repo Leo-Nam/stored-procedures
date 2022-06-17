@@ -1,13 +1,17 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_select_collector_without_handler`(
+	IN IN_USER_ID							BIGINT,
 	IN IN_COLLECTOR_BIDDING_ID				BIGINT,
     IN IN_DISPOSER_ORDER_ID					BIGINT,
 	IN IN_DISCHARGED_END_AT					DATETIME,
     IN IN_REG_DT							DATETIME,
     IN IN_RANK								INT,
     OUT rtn_val								INT,
-    OUT msg_txt								VARCHAR(200)
+    OUT msg_txt								VARCHAR(200),
+    OUT json_data							JSON
 )
 BEGIN
+	SET rtn_val = NULL;
+    SET msg_txt = NULL;
 	SET @SELECTED_AT = IN_REG_DT;
 /*
 	CALL sp_req_policy_direction(
@@ -34,21 +38,19 @@ BEGIN
 			msg_txt
 		);    
     ELSE
-    
 		UPDATE SITE_WSTE_DISPOSAL_ORDER 
-        SET 
+		SET 
 			SELECTED2 = IN_COLLECTOR_BIDDING_ID, 
-            SELECTED2_AT = @SELECTED_AT,
-            UPDATED_AT = @SELECTED_AT
-        WHERE ID = IN_DISPOSER_ORDER_ID;
-        
+			SELECTED2_AT = @SELECTED_AT,
+			UPDATED_AT = @SELECTED_AT
+		WHERE ID = IN_DISPOSER_ORDER_ID;
+		
 		CALL sp_setup_second_place_schedule(
 			IN_DISPOSER_ORDER_ID,
 			@SELECTED_AT,
 			rtn_val,
 			msg_txt
-		);   
-        
+		);           
     END IF;
 	IF rtn_val = 0 THEN
 		UPDATE COLLECTOR_BIDDING 
@@ -93,8 +95,22 @@ BEGIN
 						IN_PROGRESS = 1;
                         
 					IF ROW_COUNT() = 1 THEN
-						SET rtn_val = 0;
-						SET msg_txt = 'success';
+						SET @PUSH_CATEGORY_ID = 21;
+						CALL sp_push_disposer_select_collector_without_handler(
+							IN_USER_ID,
+							IN_DISPOSER_ORDER_ID,
+							IN_COLLECTOR_BIDDING_ID,
+							@PUSH_CATEGORY_ID,
+							json_data,
+							rtn_val,
+							msg_txt
+						);
+						IF rtn_val = 0 THEN
+							SET rtn_val = 0;
+							SET msg_txt = 'success-sp_req_select_collector_without_handler';
+						ELSE
+							SIGNAL SQLSTATE '23000';
+						END IF;
                     ELSE
 						SET rtn_val = 35104;
 						SET msg_txt = 'Failed to save transaction';

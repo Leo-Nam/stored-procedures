@@ -1,8 +1,8 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_schedule_bidding_end_2`(
 	IN IN_CATEGORY_ID				INT,
     OUT OUT_TARGET_LIST				JSON,
-    OUT rtn_val						INT,
-    OUT msg_txt						VARCHAR(200)
+    OUT rtn_val17					INT,
+    OUT msg_txt17					VARCHAR(200)
 )
 BEGIN
 
@@ -26,26 +26,28 @@ AUTHOR 			: Leo Nam
         A.ORDER_CODE
     FROM SITE_WSTE_DISPOSAL_ORDER A 
 	LEFT JOIN V_ORDER_STATE B ON A.ID = B.DISPOSER_ORDER_ID
-	LEFT JOIN V_TRANSACTION_STATE C ON A.TRANSACTION_ID = C.TRANSACTION_ID
-    LEFT JOIN WSTE_CLCT_TRMT_TRANSACTION D ON A.TRANSACTION_ID = D.ID
-    LEFT JOIN COMP_SITE E ON A.SITE_ID = E.ID
+    LEFT JOIN COMP_SITE C ON A.SITE_ID = C.ID
 	WHERE 
 		IF(B.STATE_CODE = 103,
 			A.BIDDING_END_AT <= ADDTIME(NOW(), '1:00:00') AND
-			A.ACTIVE = TRUE AND
-			E.ACTIVE = TRUE,
+			IF(A.SITE_ID = 0,
+				A.DISPOSER_ID IN (SELECT ID FROM USERS WHERE ACTIVE = TRUE AND PUSH_ENABLED = TRUE AND AFFILIATED_SITE = A.SITE_ID),
+                C.ACTIVE = TRUE
+			) AND
+            A.ACTIVE = TRUE,
 			A.ID = 0
 		) AND
 		A.ID						NOT IN (SELECT ORDER_ID FROM PUSH_HISTORY WHERE CATEGORY_ID = IN_CATEGORY_ID);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
     
-	CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_SCHEDULE_VISIT_END_TEMP (
+	CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_SCHEDULE_BIDDING_END_2_TEMP (
 		ORDER_ID						BIGINT,
-		DISPOSER_INFO					JSON,
-		COLLECTOR_INFO					JSON
+		PUSH_INFO						JSON
         
 	);        
-	
+	SET OUT_TARGET_LIST = NULL;
+	SET rtn_val17 = NULL;
+	SET msg_txt17 = NULL;
 	OPEN TEMP_CURSOR;	
 	cloop: LOOP
 		SET @DISPOSER_INFO = NULL;
@@ -62,7 +64,7 @@ AUTHOR 			: Leo Nam
 		END IF;
 		
 		INSERT INTO 
-		PUSH_SCHEDULE_VISIT_END_TEMP(
+		PUSH_SCHEDULE_BIDDING_END_2_TEMP(
 			ORDER_ID
 		)
 		VALUES(
@@ -71,51 +73,51 @@ AUTHOR 			: Leo Nam
 		
 		SET @TITLE = CONCAT('[', CUR_ORDER_CODE,']입찰마감 1시간전');
 		SET @BODY = '입찰마감시간 1시간 남았습니다.';
-        CALL sp_get_disposer_list_for_push(
+		SET @TITLE = @TITLE;
+		SET @BODY = @BODY;
+        CALL sp_get_member_list_for_push_2(
+			CUR_ORDER_ID,
+			@TITLE,
+			@BODY,
+			@TITLE_2,
+			@BODY_2,
+			IN_CATEGORY_ID,
+            OUT_TARGET_LIST,
+            rtn_val17,
+            msg_txt17
+        );
+        /*
+		SET @TITLE = CONCAT('[', CUR_ORDER_CODE,']입찰마감 1시간전');
+		SET @BODY = '입찰마감시간 1시간 남았습니다.';
+		CALL sp_get_collector_list_for_push(
 			CUR_ORDER_ID,
 			@TITLE,
 			@BODY,
 			IN_CATEGORY_ID,
-            @DISPOSER_INFO,
-            rtn_val,
-            msg_txt
-        );
-        IF rtn_val = 0 THEN
-			SET @TITLE = CONCAT('[', CUR_ORDER_CODE,']입찰마감 1시간전');
-			SET @BODY = '입찰마감시간 1시간 남았습니다.';
-			CALL sp_get_collector_list_for_push(
-				CUR_ORDER_ID,
-				@TITLE,
-				@BODY,
-				IN_CATEGORY_ID,
-				@COLLECTOR_INFO,
-				rtn_val,
-				msg_txt
-			);
-			IF rtn_val = 0 THEN
-				UPDATE PUSH_SCHEDULE_VISIT_END_TEMP 
-				SET 
-					DISPOSER_INFO 			= @DISPOSER_INFO,
-					COLLECTOR_INFO 			= @COLLECTOR_INFO
-				WHERE ORDER_ID 				= CUR_ORDER_ID;
-            ELSE
-				LEAVE cloop;
-            END IF;
-        ELSE
-			LEAVE cloop;
-        END IF;
+			@COLLECTOR_INFO,
+			rtn_val17,
+			msg_txt17
+		);
+		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'DISPOSER_INFO'				, @DISPOSER_INFO, 
+			'COLLECTOR_INFO'			, @COLLECTOR_INFO
+		)) 
+		INTO @PUSH_INFO;
+		UPDATE PUSH_SCHEDULE_BIDDING_END_2_TEMP SET PUSH_INFO = @PUSH_INFO WHERE ORDER_ID = CUR_ORDER_ID;
+        */
 		
 	END LOOP;   
 	CLOSE TEMP_CURSOR;
-	
+	/*
 	SELECT JSON_ARRAYAGG(JSON_OBJECT(
 		'ORDER_ID'					, ORDER_ID, 
-		'DISPOSER_INFO'				, DISPOSER_INFO, 
-		'COLLECTOR_INFO'			, COLLECTOR_INFO
+		'PUSH_INFO'					, PUSH_INFO
 	)) 
-	INTO OUT_TARGET_LIST FROM PUSH_SCHEDULE_VISIT_END_TEMP;
-	
-	SET rtn_val = 0;
-	SET msg_txt = 'Success';
-	DROP TABLE IF EXISTS PUSH_SCHEDULE_VISIT_END_TEMP;
+	INTO OUT_TARGET_LIST FROM PUSH_SCHEDULE_BIDDING_END_2_TEMP;
+	*/
+    /*
+	SET rtn_val17 = 0;
+	SET msg_txt17 = 'Success-17';
+    */
+	DROP TABLE IF EXISTS PUSH_SCHEDULE_BIDDING_END_2_TEMP;
 END

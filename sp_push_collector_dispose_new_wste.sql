@@ -1,79 +1,36 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_collector_dispose_new_wste`(
 	IN IN_USER_ID					BIGINT,
 	IN IN_ORDER_ID					BIGINT,
-	IN IN_COLLECTOR_SITE_ID			BIGINT,
-    IN IN_CATEGORY_ID				INT,
-    OUT OUT_TARGET_LIST				JSON,
-    OUT rtn_val 					INT,				/*출력값 : 처리결과 반환값*/
-    OUT msg_txt 					VARCHAR(200)		/*출력값 : 처리결과 문자열*/
+	IN IN_COLLECTOR_SITE_ID			BIGINT
 )
 BEGIN
-    CALL sp_req_current_time(@REG_DT);
-	SELECT IF(A.AFFILIATED_SITE = 0, A.USER_NAME, B.SITE_NAME)
-    INTO @DISPOSER_NAME
-	FROM USERS A
-    LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID
-	WHERE A.ID = IN_USER_ID;
-		
-	SELECT ORDER_CODE INTO @ORDER_CODE
-	FROM SITE_WSTE_DISPOSAL_ORDER
-	WHERE ID = IN_ORDER_ID;
-	SET @ORDER_ID = IN_ORDER_ID;
+
+	DECLARE json_data				JSON			DEFAULT NULL;
+	DECLARE rtn_val					INT				DEFAULT NULL;
+	DECLARE msg_txt					VARCHAR(200)	DEFAULT NULL;
     
-    SELECT ID INTO @TRANSACTION_ID
-    FROM WSTE_CLCT_TRMT_TRANSACTION
-    WHERE 
-		DISPOSAL_ORDER_ID = IN_ORDER_ID AND
-        COLLECTOR_SITE_ID = IN_COLLECTOR_SITE_ID;     
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		SET json_data 		= NULL;
+		CALL sp_return_results(rtn_val, msg_txt, json_data);
+	END;        
+	START TRANSACTION;				
+    /*트랜잭션 시작*/  
     
-	SELECT A.AVATAR_PATH, IF(A.AFFILIATED_SITE = 0, A.USER_NAME, B.SITE_NAME) 
-	INTO @AVATAR_PATH, @USER_NAME
-	FROM USERS A
-	LEFT JOIN COMP_SITE B ON A.AFFILIATED_SITE = B.ID
-	WHERE A.ID = IN_USER_ID;
-    
-	SET @TITLE = CONCAT('[', @ORDER_CODE, ']신규 폐기물 등록');
-	SET @BODY = CONCAT('[', @DISPOSER_NAME, ']님이 신규 폐기물 처리를 요청하셨습니다 .');
-	SELECT JSON_ARRAYAGG(
-		JSON_OBJECT(
-			'USER_ID'				, ID, 
-			'USER_NAME'				, @USER_NAME, 
-			'FCM'					, FCM, 
-			'AVATAR_PATH'			, @AVATAR_PATH,
-			'TITLE'					, @TITLE,
-			'BODY'					, @BODY,
-			'ORDER_ID'				, @ORDER_ID, 
-			'BIDDING_ID'			, NULL, 
-			'TRANSACTION_ID'		, @TRANSACTION_ID, 
-			'REPORT_ID'				, NULL, 
-			'CATEGORY_ID'			, IN_CATEGORY_ID,
-            'CREATED_AT'			, @REG_DT
-		)
-	) 
-	INTO @PUSH_INFO
-	FROM USERS
-	WHERE 
-		ACTIVE 					= TRUE AND
-		PUSH_ENABLED			= TRUE AND
-		AFFILIATED_SITE			= IN_COLLECTOR_SITE_ID;
-        
-	CALL sp_insert_push(
+	CALL sp_push_collector_dispose_new_wste_sub(
 		IN_USER_ID,
-		@PUSH_INFO,
-		rtn_val,
-		msg_txt
-	);
-    
-	CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_INFO_TEMP (
-		PUSH_INFO						JSON
-	);     
-	INSERT PUSH_INFO_TEMP(PUSH_INFO) VALUES(@PUSH_INFO);
-	SELECT JSON_ARRAYAGG(JSON_OBJECT(
-		'PUSH_INFO'			, PUSH_INFO
-	)) 
-	INTO OUT_TARGET_LIST
-	FROM PUSH_INFO_TEMP;  
-	DROP TABLE IF EXISTS PUSH_INFO_TEMP;  
-	SET rtn_val = 0;
-	SET msg_txt = 'success';
+        IN_ORDER_ID,
+        IN_COLLECTOR_SITE_ID,
+        28,
+        json_data,
+        rtn_val,
+        msg_txt
+    );
+    IF rtn_val > 0 THEN
+		SET json_data 		= NULL;
+		SIGNAL SQLSTATE '23000';
+    END IF;
+    COMMIT;      
+	CALL sp_return_results(rtn_val, msg_txt, json_data);
 END

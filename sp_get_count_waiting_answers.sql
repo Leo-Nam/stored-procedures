@@ -42,10 +42,11 @@ AUTHOR 			: Leo Nam
         FROM POSTS 
         WHERE PID = CUR_POST_ID;
         
-        IF @TEMP_COUNT > 0 THEN
+        IF @TEMP_COUNT = 0 THEN
 			SET @COUNT_UNANSWER = @COUNT_UNANSWER + 1;
         END IF;
-	END LOOP;   
+	END LOOP;  
+        
     SET OUT_COUNT = @COUNT_UNANSWER;
 	CLOSE TEMP_CURSOR;
 END

@@ -51,6 +51,8 @@ AUTHOR 			: Leo Nam
 	)) AS PUSH_INFO;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;        
 
+	SET rtn_val = NULL;
+    SET msg_txt = NULL;
     SELECT COUNT(USER_ID) INTO @RECORD_COUNT
     FROM JSON_TABLE(IN_JSON_DATA, "$[*]" COLUMNS(
     /*JSON 데이타에서 사용하는 KEY와 VALUE 타입*/
@@ -79,17 +81,21 @@ AUTHOR 			: Leo Nam
 			SET vRowCount = vRowCount + 1;
 			IF endOfRow THEN
 				SET rtn_val = 0;
-				SET msg_txt = 'Success';
+				SET msg_txt = CONCAT('success-sp_insert_push-1:', vRowCount);
 				LEAVE cloop;
 			END IF;
+                
 			IF 
 				CUR_USER_ID IS NOT NULL AND
 				CUR_TITLE IS NOT NULL AND
 				CUR_CREATED_AT IS NOT NULL AND
-				IN_SENDER_ID IS NOT NULL AND
-				CUR_ORDER_ID IS NOT NULL AND
-				CUR_TRANSACTION_ID IS NOT NULL AND
-				CUR_CATEGORY_ID IS NOT NULL
+                IF(IN_SENDER_ID = 0,
+					IN_SENDER_ID IS NOT NULL,
+					IN_SENDER_ID IS NOT NULL AND
+					CUR_ORDER_ID IS NOT NULL AND
+					CUR_TRANSACTION_ID IS NOT NULL AND
+					CUR_CATEGORY_ID IS NOT NULL
+                )
             THEN
 				INSERT INTO PUSH_HISTORY(
 					USER_ID,
@@ -121,13 +127,13 @@ AUTHOR 			: Leo Nam
 					LEAVE cloop;
 				ELSE
 					SET rtn_val = 0;
-					SET msg_txt = 'Success to insert push hisotry1';
+					SET msg_txt = 'Success-sp_insert_push-2';
 				END IF;
             END IF;
 		END LOOP;   
 		CLOSE PUSH_CURSOR;
     ELSE
 		SET rtn_val = 0;
-		SET msg_txt = 'Success to insert push hisotry2';
+		SET msg_txt = 'Success-sp_insert_push-3';
     END IF;
 END

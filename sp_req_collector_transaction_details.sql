@@ -22,6 +22,7 @@ AUTHOR 			: Leo Nam
     DECLARE CUR_DISPOSER_SITE_ID				BIGINT;
     DECLARE CUR_STATE							VARCHAR(20);
     DECLARE CUR_STATE_CODE						INT;
+    DECLARE CUR_USER_TYPE						INT;
     DECLARE TEMP_CURSOR		 					CURSOR FOR 
 	SELECT 
 		A.ID, 
@@ -31,7 +32,8 @@ AUTHOR 			: Leo Nam
         E.ID, 
         E.AFFILIATED_SITE,
         C.STATE,
-        C.STATE_CODE
+        C.STATE_CODE,
+        B.USER_CURRENT_TYPE
     FROM WSTE_CLCT_TRMT_TRANSACTION A
     LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
     LEFT JOIN V_TRANSACTION_STATE_NAME C ON A.ID = C.TRANSACTION_ID
@@ -64,7 +66,8 @@ AUTHOR 			: Leo Nam
 		WSTE_DISPOSAL_LIST 						JSON,
 		DISPOSER_ORDER_INFO 					JSON,
 		DISPOSER_WSTE_GEO_INFO 					JSON,
-		TRANSACTION_INFO	 					JSON
+		TRANSACTION_INFO	 					JSON,
+		USER_TYPE			 					INT
 	);        
 	
 	OPEN TEMP_CURSOR;	
@@ -78,7 +81,8 @@ AUTHOR 			: Leo Nam
 			CUR_DISPOSER_USER_ID,
 			CUR_DISPOSER_SITE_ID,
 			CUR_STATE,
-			CUR_STATE_CODE;
+			CUR_STATE_CODE,
+			CUR_USER_TYPE;
 		
 		SET vRowCount = vRowCount + 1;
 		IF endOfRow THEN
@@ -134,8 +138,8 @@ AUTHOR 			: Leo Nam
             @DISPOSER_WSTE_GEO_INFO
         );
 		
-        CALL sp_get_transaction_info(
-			CUR_DISPOSER_ORDER_ID,
+        CALL sp_get_transaction_info_2(
+			CUR_TRANSACTION_ID,
             @TRANSACTION_INFO
         );
         
@@ -145,11 +149,25 @@ AUTHOR 			: Leo Nam
 			IMG_LIST 				= @IMG_LIST, 
             WSTE_DISPOSAL_LIST 		= @WSTE_DISPOSAL_LIST, 
             DISPOSER_ORDER_INFO 	= @DISPOSER_ORDER_INFO, 
-            DISPOSER_WSTE_GEO_INFO 	= @DISPOSER_WSTE_GEO_INFO , 
-            TRANSACTION_INFO 		= @TRANSACTION_INFO 
+            DISPOSER_WSTE_GEO_INFO 	= @DISPOSER_WSTE_GEO_INFO, 
+            TRANSACTION_INFO 		= @TRANSACTION_INFO
         WHERE TRANSACTION_ID 		= CUR_TRANSACTION_ID;
 		/*위에서 받아온 JSON 타입 데이타를 비롯한 몇가지의 데이타를 NEW_COMING 테이블에 반영한다.*/
-		
+        
+        CALL sp_set_check_state(
+			CUR_DISPOSER_ORDER_ID,
+			@BIDDING_ID,
+			CUR_TRANSACTION_ID,
+			CUR_USER_ID,
+			CUR_COLLECTOR_SITE_ID,
+			CUR_USER_TYPE,
+			@rtn_val,
+			@msg_txt
+        );
+        
+        IF @rtn_val > 0 THEN
+			SIGNAL SQLSTATE '23000';
+        END IF;		
 		
 	END LOOP;   
 	CLOSE TEMP_CURSOR;

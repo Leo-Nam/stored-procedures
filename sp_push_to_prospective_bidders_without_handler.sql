@@ -1,0 +1,100 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_push_to_prospective_bidders_without_handler`(
+	IN IN_ORDER_ID					INT,
+    OUT OUT_TARGET_LIST				JSON,
+    OUT rtn_val						INT,
+    OUT msg_txt						VARCHAR(200)
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_push_schedule_visit_end_2
+Input param 	: 1개
+Output param 	: 1개
+Job 			: 무방문신청 종료에 대한 푸시를 반환한다
+Update 			: 2022.04.23
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/
+
+    DECLARE vRowCount 							INT DEFAULT 0;
+    DECLARE endOfRow 							TINYINT DEFAULT FALSE;    
+    DECLARE CUR_ORDER_ID						BIGINT;  
+    DECLARE CUR_ORDER_CODE						VARCHAR(10);  
+    DECLARE TEMP_CURSOR		 					CURSOR FOR 
+	SELECT 
+		A.ID,
+        A.ORDER_CODE
+    FROM SITE_WSTE_DISPOSAL_ORDER A 
+    LEFT JOIN COMP_SITE B ON A.SITE_ID = B.ID
+    LEFT JOIN V_ORDER_STATE C ON A.ID = C.DISPOSER_ORDER_ID
+	WHERE 
+		C.STATE_CODE = 103 AND
+        A.PROSPECTIVE_BIDDERS > 0 AND
+        A.IS_DELETED = FALSE AND
+        A.ACTIVE = TRUE AND
+        A.ID = IN_ORDER_ID;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET endOfRow = TRUE;
+    
+	CREATE TEMPORARY TABLE IF NOT EXISTS PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP (
+		ORDER_ID						BIGINT,
+		DISPOSER_INFO					JSON,
+		COLLECTOR_INFO					JSON
+        
+	);        
+	
+	OPEN TEMP_CURSOR;	
+	cloop: LOOP
+		SET @DISPOSER_INFO = NULL;
+		SET @COLLECTOR_INFO = NULL; 
+		
+		FETCH TEMP_CURSOR 
+		INTO 
+			CUR_ORDER_ID,
+			CUR_ORDER_CODE;
+		
+		SET vRowCount = vRowCount + 1;
+		IF endOfRow THEN
+			LEAVE cloop;
+		END IF;
+		
+		INSERT INTO 
+		PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP(
+			ORDER_ID
+		)
+		VALUES(
+			CUR_ORDER_ID
+		);
+		
+		SET @TITLE = CONCAT('[', CUR_ORDER_CODE,']입찰가능알림');
+		SET @BODY = CONCAT('신청하신 [', CUR_ORDER_CODE, ']에 대하여 입찰대상자로 선정되었습니다. 지금 입찰하시기 바랍니다.');
+		CALL sp_get_collector_list_for_push_4(
+			CUR_ORDER_ID,
+			@TITLE,
+			@BODY,
+			38,
+			@COLLECTOR_INFO,
+			rtn_val,
+			msg_txt
+		);
+		IF rtn_val = 0 THEN
+			UPDATE PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP 
+			SET 
+				DISPOSER_INFO 			= @DISPOSER_INFO,
+				COLLECTOR_INFO 			= @COLLECTOR_INFO
+			WHERE ORDER_ID 				= CUR_ORDER_ID;
+		ELSE
+			LEAVE cloop;
+		END IF;
+		
+	END LOOP;   
+	CLOSE TEMP_CURSOR;
+	
+	SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'PUSH_INFO'					, COLLECTOR_INFO
+	)) 
+	INTO OUT_TARGET_LIST FROM PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP;
+	
+	SET rtn_val = 0;
+	SET msg_txt = 'Success11';
+	DROP TABLE IF EXISTS PUSH_TO_PROSPECTIVE_BIDDERS_WITHOUT_HANDLER_TEMP;
+END

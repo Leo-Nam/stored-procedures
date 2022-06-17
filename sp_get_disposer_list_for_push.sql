@@ -27,7 +27,10 @@ AUTHOR 			: Leo Nam
 		ID 				= IN_ORDER_ID AND
         IS_DELETED 		= FALSE AND
         ACTIVE		 	= TRUE;
-        
+    
+	SET rtn_val = NULL;
+	SET msg_txt = NULL;
+    
     IF @ORDER_EXISTS = 1 THEN
 		SELECT DISPOSER_ID, SITE_ID, ORDER_CODE INTO @DISPOSER_ID, @SITE_ID, @ORDER_CODE
         FROM SITE_WSTE_DISPOSAL_ORDER
@@ -67,8 +70,10 @@ AUTHOR 			: Leo Nam
 			A.ACTIVE = TRUE AND
 			A.IS_DELETED = FALSE AND
 			A.ID = IN_ORDER_ID AND
-			A.SITE_ID = @SITE_ID AND
-			A.DISPOSER_ID = @DISPOSER_ID;
+			IF(@SITE_ID = 0, 
+				A.DISPOSER_ID = @DISPOSER_ID,
+				A.SITE_ID = @SITE_ID
+			);
         
         CALL sp_insert_push(
 			0,

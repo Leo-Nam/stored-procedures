@@ -4,6 +4,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_create_collector_bidding`(
 	IN IN_ACTIVE				TINYINT, 
 	IN IN_DATE_OF_VISIT			DATETIME, 
 	IN IN_REG_DT				DATETIME,
+    OUT OUT_BIDDING_ID			BIGINT,
     OUT rtn_val 				INT,				/*출력값 : 처리결과 반환값*/
     OUT msg_txt 				VARCHAR(200)		/*출력값 : 처리결과 문자열*/
 
@@ -19,11 +20,7 @@ BEGIN
         
     IF @ALREADY_BIDDING = 0 THEN
     /*이미 입찰한 사실이 없는 경우 정상처리한다.*/
-		CALL sp_req_collect_bidding_max_id(
-			@COLLECTOR_BIDDING_ID
-		);
 		INSERT INTO COLLECTOR_BIDDING (
-			ID, 
 			COLLECTOR_ID, 
 			DISPOSAL_ORDER_ID, 
 			ACTIVE, 
@@ -31,7 +28,6 @@ BEGIN
 			CREATED_AT, 
 			UPDATED_AT
 		) VALUES (
-			@COLLECTOR_BIDDING_ID, 
 			IN_COLLECTOR_SITE_ID, 
 			IN_DISPOSER_ORDER_ID, 
 			IN_ACTIVE, 
@@ -41,12 +37,19 @@ BEGIN
 		);
 		IF ROW_COUNT() = 1 THEN
 		/*정상적으로 입력완료된 경우*/
+        /*
+			CALL sp_req_collect_bidding_max_id(
+				@COLLECTOR_BIDDING_ID
+			);
+			SET OUT_BIDDING_ID = @COLLECTOR_BIDDING_ID;
+		*/
+            SELECT LAST_INSERT_ID() INTO OUT_BIDDING_ID;
 			INSERT INTO FINAL_BIDDER_MANAGEMENT (
 				DISPOSER_ORDER_ID,
 				COLLECTOR_BIDDING_ID
 			) VALUES (
-				@COLLECTOR_BIDDING_ID, 
-				IN_DISPOSER_ORDER_ID
+				IN_DISPOSER_ORDER_ID,
+				OUT_BIDDING_ID
 			);
             IF ROW_COUNT() = 1 THEN
 				SET rtn_val = 0;

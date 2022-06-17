@@ -53,7 +53,7 @@ AUTHOR 			: Leo Nam
     LEFT JOIN V_TRANSACTION_STATE_NAME E ON A.TRANSACTION_ID = E.TRANSACTION_ID
     LEFT JOIN USERS F ON A.COLLECTOR_SITE_ID = F.AFFILIATED_SITE
     LEFT JOIN WSTE_APPEARANCE G ON A.WSTE_APPEARANCE = G.ID
-    LEFT JOIN USERS H ON A.DISPOSER_SITE_ID = H.AFFILIATED_SITE
+    LEFT JOIN USERS H ON IF(D.SITE_ID = 0, D.DISPOSER_ID = H.ID, A.DISPOSER_SITE_ID = H.AFFILIATED_SITE)
 	WHERE 
         A.CONFIRMED_AT <= NOW() AND
         F.CLASS = 201 AND
@@ -90,7 +90,8 @@ AUTHOR 			: Leo Nam
 		AVATAR_PATH							VARCHAR(255),		/*수거자 아바타 경로*/
         SITE_INFO							JSON,
         REPORT_INFO							JSON,
-        IMG_PATH							JSON
+        IMG_PATH							JSON,
+        DISPOSER_ORDER_INFO					JSON
         
 	);         
 	
@@ -160,13 +161,23 @@ AUTHOR 			: Leo Nam
 		WHERE ID = CUR_DISPOSER_ORDER_ID;
 		
 		IF @SITE_ID = 0 THEN
-			SET @SITE_INFO = NULL;
+			CALL sp_get_disposer_name_from_report(
+				CUR_REPORT_ID,
+                @rtn_val,
+                @msg_txt,
+				@SITE_INFO
+			);
 		ELSE
 			CALL sp_get_site_info_simple(
 				@SITE_ID,
 				@SITE_INFO
 			);
 		END IF;
+        
+        CALL sp_get_disposal_order_info(
+			CUR_DISPOSER_ORDER_ID,
+            @DISPOSER_ORDER_INFO
+        );
 		
         CALL sp_get_transaction_report(
 			CUR_REPORT_ID,
@@ -183,7 +194,8 @@ AUTHOR 			: Leo Nam
 		SET 
 			SITE_INFO 	= @SITE_INFO,
 			REPORT_INFO = @REPORT_INFO,
-			IMG_PATH = @IMG_PATH
+			IMG_PATH = @IMG_PATH,
+			DISPOSER_ORDER_INFO = @DISPOSER_ORDER_INFO
 		WHERE REPORT_ID = CUR_REPORT_ID;
 		
 	END LOOP;   
@@ -208,7 +220,8 @@ AUTHOR 			: Leo Nam
 			'AVATAR_PATH'					, AVATAR_PATH, 
 			'SITE_INFO'						, SITE_INFO, 
 			'REPORT_INFO'					, REPORT_INFO, 
-			'IMG_PATH'						, IMG_PATH
+			'IMG_PATH'						, IMG_PATH, 
+			'DISPOSER_ORDER_INFO'			, DISPOSER_ORDER_INFO
 		)
 	) 
 	INTO @json_data 

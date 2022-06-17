@@ -112,18 +112,31 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
                                     IN_PROGRESS			= TRUE;
 								IF ROW_COUNT() = 1 THEN
 								/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
-									SET @PUSH_CATEGORY_ID = 23;
-									CALL sp_push_collector_make_final_decision(
+									CALL sp_create_chat_room(
 										IN_USER_ID,
 										@DISPOSAL_ORDER_ID,
 										IN_COLLECTOR_BIDDING_ID,
-										NULL,
-										@PUSH_CATEGORY_ID,
-										@json_data,
+										1,
+										118,
 										@rtn_val,
-										@msg_txt
+										@msg_txt                                
 									);
-                                    IF @rtn_val > 0 THEN
+									IF @rtn_val = 0 THEN
+										SET @PUSH_CATEGORY_ID = 23;
+										CALL sp_push_collector_make_final_decision(
+											IN_USER_ID,
+											@DISPOSAL_ORDER_ID,
+											IN_COLLECTOR_BIDDING_ID,
+											NULL,
+											@PUSH_CATEGORY_ID,
+											@json_data,
+											@rtn_val,
+											@msg_txt
+										);
+										IF @rtn_val > 0 THEN
+											SIGNAL SQLSTATE '23000';
+										END IF;
+                                    ELSE
 										SIGNAL SQLSTATE '23000';
                                     END IF;
 								ELSE
@@ -179,20 +192,33 @@ Change			: 반환 타입은 레코드를 사용하기로 함. 모든 프로시�
 										IN_PROGRESS			= TRUE;
 									IF ROW_COUNT() = 1 THEN
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 성공한 경우*/
-										SET @PUSH_CATEGORY_ID = 23;
-										CALL sp_push_collector_make_final_decision(
+										CALL sp_create_chat_room(
 											IN_USER_ID,
 											@DISPOSAL_ORDER_ID,
 											IN_COLLECTOR_BIDDING_ID,
-											NULL,
-											@PUSH_CATEGORY_ID,
-											@json_data,
+											1,
+											118,
 											@rtn_val,
-											@msg_txt
+											@msg_txt                                
 										);
-										IF @rtn_val > 0 THEN
+										IF @rtn_val = 0 THEN
+											SET @PUSH_CATEGORY_ID = 23;
+											CALL sp_push_collector_make_final_decision(
+												IN_USER_ID,
+												@DISPOSAL_ORDER_ID,
+												IN_COLLECTOR_BIDDING_ID,
+												NULL,
+												@PUSH_CATEGORY_ID,
+												@json_data,
+												@rtn_val,
+												@msg_txt
+											);
+											IF @rtn_val > 0 THEN
+												SIGNAL SQLSTATE '23000';
+											END IF;
+										ELSE
 											SIGNAL SQLSTATE '23000';
-										END IF;
+                                        END IF;
 									ELSE
 									/*WSTE_CLCT_TRMT_TRANSACTION에 이미 생성되어 있는 작업사항 중 수거자결정 내용 변경에 실패한 경우 예외처리한다.*/
 										SET @rtn_val 		= 24107;

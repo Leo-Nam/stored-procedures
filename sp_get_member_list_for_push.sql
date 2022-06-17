@@ -1,0 +1,217 @@
+CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_get_member_list_for_push`(
+	IN IN_ORDER_ID					BIGINT,
+	IN IN_TITLE						VARCHAR(255),
+	IN IN_BODY						VARCHAR(255),
+    IN IN_CATEGORY_ID				INT,
+    OUT OUT_TARGET_LIST				JSON,
+    OUT OUT_rtn_val						INT,
+    OUT OUT_msg_txt						VARCHAR(200)
+)
+BEGIN
+
+/*
+Procedure Name 	: sp_get_member_list_for_push
+Input param 	: 1개
+Output param 	: 1개
+Job 			: 푸시를 보내기 위한 수거자 정보를 반환한다.
+Update 			: 2022.04.23
+Version			: 0.0.1
+AUTHOR 			: Leo Nam
+*/
+	
+    CALL sp_req_current_time(@REG_DT);
+	SELECT COUNT(ID) 
+    INTO @ORDER_EXISTS
+    FROM SITE_WSTE_DISPOSAL_ORDER
+    WHERE 
+		ID 				= IN_ORDER_ID AND
+        IS_DELETED 		= FALSE AND
+        ACTIVE		 	= TRUE;
+    
+	SET OUT_rtn_val = NULL;
+	SET OUT_msg_txt = NULL;
+    
+	CREATE TEMPORARY TABLE IF NOT EXISTS GET_DISPOSER_LIST_FOR_PUSH_TEMP (
+		USER_ID					BIGINT,
+		USER_NAME				VARCHAR(255),
+		FCM						VARCHAR(255),
+		AVATAR_PATH				VARCHAR(255),
+		TITLE					VARCHAR(255),
+		BODY					VARCHAR(255),
+		ORDER_ID				BIGINT,
+		BIDDING_ID				BIGINT,
+		TRANSACTION_ID			BIGINT,
+		REPORT_ID				BIGINT,
+		CATEGORY_ID				INT,
+		CREATED_AT				DATETIME
+	);        
+    
+    IF @ORDER_EXISTS = 1 THEN
+		SELECT DISPOSER_ID, SITE_ID, ORDER_CODE INTO @DISPOSER_ID, @SITE_ID, @ORDER_CODE
+        FROM SITE_WSTE_DISPOSAL_ORDER
+        WHERE ID = IN_ORDER_ID;
+        
+		SELECT ID INTO @TRANSACTION_ID
+        FROM WSTE_CLCT_TRMT_TRANSACTION
+        WHERE DISPOSAL_ORDER_ID = IN_ORDER_ID;
+        
+        SELECT ID INTO @REPORT_ID
+        FROM TRANSACTION_REPORT
+        WHERE DISPOSER_ORDER_ID = IN_ORDER_ID;
+        
+		CALL sp_req_current_time(@REG_DT);
+        INSERT INTO GET_DISPOSER_LIST_FOR_PUSH_TEMP (
+			USER_ID,
+			USER_NAME,
+			FCM,
+			AVATAR_PATH,
+			TITLE,
+			BODY,
+			ORDER_ID,
+			BIDDING_ID,
+			TRANSACTION_ID,
+			REPORT_ID,
+			CATEGORY_ID,
+			CREATED_AT
+        )
+		SELECT 
+			B.ID,
+            B.USER_NAME,
+            B.FCM,
+            B.AVATAR_PATH,
+            IN_TITLE,
+            IN_BODY,
+            IN_ORDER_ID,
+            NULL,
+            @TRANSACTION_ID,
+            @REPORT_ID,
+            IN_CATEGORY_ID,
+            @REG_DT
+		FROM SITE_WSTE_DISPOSAL_ORDER A 
+		LEFT JOIN USERS B ON IF(@SITE_ID = 0, A.DISPOSER_ID = B.ID, A.SITE_ID = B.AFFILIATED_SITE)
+		WHERE 
+			B.ACTIVE = TRUE AND 
+			B.PUSH_ENABLED = TRUE AND
+			A.ACTIVE = TRUE AND
+			A.IS_DELETED = FALSE AND
+			A.ID = IN_ORDER_ID AND
+			IF(@SITE_ID = 0, 
+				A.DISPOSER_ID = @DISPOSER_ID,
+				A.SITE_ID = @SITE_ID
+			);
+        
+        IF @COLLECTOR_ID IS NULL THEN
+			INSERT INTO GET_DISPOSER_LIST_FOR_PUSH_TEMP (
+				USER_ID,
+				USER_NAME,
+				FCM,
+				AVATAR_PATH,
+				TITLE,
+				BODY,
+				ORDER_ID,
+				BIDDING_ID,
+				TRANSACTION_ID,
+				REPORT_ID,
+				CATEGORY_ID,
+				CREATED_AT
+			)
+			SELECT 
+				B.ID,
+				B.USER_NAME,
+				B.FCM,
+				B.AVATAR_PATH,
+				IN_TITLE,
+				IN_BODY,
+				IN_ORDER_ID,
+				NULL,
+				@TRANSACTION_ID,
+				@REPORT_ID,
+				IN_CATEGORY_ID,
+				@REG_DT
+			FROM COLLECTOR_BIDDING A 
+			LEFT JOIN USERS B ON A.COLLECTOR_ID = B.AFFILIATED_SITE
+			WHERE 
+				B.ACTIVE 				= TRUE AND 
+				B.PUSH_ENABLED 			= TRUE AND
+				A.ACTIVE 				= TRUE AND
+				A.DELETED 				= FALSE AND
+				A.RESPONSE_VISIT 		= TRUE AND
+                A.CANCEL_VISIT 			= FALSE AND
+                A.REJECT_BIDDING_APPLY 	= FALSE AND
+                A.GIVEUP_BIDDING 		= FALSE AND
+                A.CANCEL_BIDDING 		= FALSE AND
+                A.REJECT_BIDDING 		= FALSE AND
+                A.BIDDING_VISIBLE 		= TRUE AND
+                A.ORDER_VISIBLE 		= TRUE AND
+				A.DISPOSAL_ORDER_ID 	= IN_ORDER_ID;
+        ELSE
+			INSERT INTO GET_DISPOSER_LIST_FOR_PUSH_TEMP (
+				USER_ID,
+				USER_NAME,
+				FCM,
+				AVATAR_PATH,
+				TITLE,
+				BODY,
+				ORDER_ID,
+				BIDDING_ID,
+				TRANSACTION_ID,
+				REPORT_ID,
+				CATEGORY_ID,
+				CREATED_AT
+			)
+			SELECT 
+				B.ID,
+				B.USER_NAME,
+				B.FCM,
+				B.AVATAR_PATH,
+				IN_TITLE,
+				IN_BODY,
+				IN_ORDER_ID,
+				NULL,
+				@TRANSACTION_ID,
+				@REPORT_ID,
+				IN_CATEGORY_ID,
+				@REG_DT
+			FROM WSTE_CLCT_TRMT_TRANSACTION A 
+			LEFT JOIN USERS B ON A.COLLECTOR_SITE_ID = B.AFFILIATED_SITE
+			WHERE 
+				B.ACTIVE = TRUE AND 
+				B.PUSH_ENABLED = TRUE AND
+				A.IN_PROGRESS = TRUE AND
+				A.ACCEPT_ASK_END = TRUE AND
+				A.DISPOSAL_ORDER_ID = IN_ORDER_ID;
+        END IF;  
+        
+		SELECT JSON_ARRAYAGG(
+			JSON_OBJECT(
+				'USER_ID'				, USER_ID,
+				'USER_NAME'				, USER_NAME,
+				'FCM'					, FCM,
+				'AVATAR_PATH'			, AVATAR_PATH,
+				'TITLE'					, TITLE,
+				'BODY'					, BODY,
+				'ORDER_ID'				, ORDER_ID,
+				'BIDDING_ID'			, BIDDING_ID,
+				'TRANSACTION_ID'		, TRANSACTION_ID,
+				'REPORT_ID'				, REPORT_ID,
+				'CATEGORY_ID'			, CATEGORY_ID,
+				'CREATED_AT'			, CREATED_AT
+			)
+		) 
+		INTO @PUSH_INFO
+		FROM GET_DISPOSER_LIST_FOR_PUSH_TEMP;
+        
+        CALL sp_insert_push(
+			0,
+			@PUSH_INFO,
+			OUT_rtn_val,
+			OUT_msg_txt
+        );
+		SET OUT_TARGET_LIST = @PUSH_INFO;
+    ELSE
+		SET OUT_rtn_val = 38601;
+        SET OUT_msg_txt = 'order does not exist';
+		SET OUT_TARGET_LIST = NULL;
+    END IF;
+	DROP TABLE IF EXISTS GET_DISPOSER_LIST_FOR_PUSH_TEMP;
+END

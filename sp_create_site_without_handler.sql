@@ -66,6 +66,7 @@ AUTHOR 			: Leo Nam
 						CREATOR_ID,
 						HEAD_OFFICE,
 						CREATED_AT,
+						CONFIRMED_AT,
 						UPDATED_AT
 					) VALUES (
 						@MAX_SITE_ID,
@@ -80,6 +81,7 @@ AUTHOR 			: Leo Nam
 						IN_TRMT_BIZ_CODE,
 						IN_USER_ID,
 						IN_HEAD_OFFICE,
+						IN_REG_DT,
 						IN_REG_DT,
 						IN_REG_DT
 					);

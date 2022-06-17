@@ -25,6 +25,9 @@ AUTHOR 			: Leo Nam
 	START TRANSACTION;							
     /*트랜잭션 시작*/  
 	
+    SET @msg_txt = null;
+    SET @rtn_val = null;
+    SET @json_data = null;
 	SET @PUSH_CATEGORY_ID = 21;
     CALL sp_req_current_time(@REG_DT);
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
@@ -73,13 +76,15 @@ AUTHOR 			: Leo Nam
 							IF @WINNER = TRUE THEN
                             /*수거자가 최종낙찰자격을 갖추었다면 정상처리한다.*/
 								CALL sp_req_select_collector_without_handler(
+									IN_USER_ID,
                                     IN_COLLECTOR_BIDDING_ID,
 									IN_DISPOSER_ORDER_ID,
 									IN_DISCHARGED_END_AT,
                                     @REG_DT,
                                     1,
 									@rtn_val,
-									@msg_txt
+									@msg_txt,
+									@json_data
                                 );
                             ELSE
                             /*수거자가 최종낙찰자격을 갖추지 못한경우에는 예외처리한다.*/
@@ -90,32 +95,25 @@ AUTHOR 			: Leo Nam
 									IF @FIRST_PLACE_WINNER_MAKE_DECISION = TRUE THEN
 										SET @rtn_val = 24604;
 										SET @msg_txt = '1st place bidder has already been selected';
+										SIGNAL SQLSTATE '23000';
 									ELSE
 										IF @FIRST_PLACE_WINNER_MAKE_DECISION IS NULL THEN
 											IF @FIRST_PLACE_WINNER_MAX_DECISION_AT <= NOW() THEN
 											/*1순위가 낙찰자 수락 또는 거절의 의사표시를 하지 않고 최대시간에 도달한 상태로서 조건부 가능한 상태*/
 												CALL sp_req_select_collector_without_handler(
+													IN_USER_ID,
 													IN_COLLECTOR_BIDDING_ID,
 													IN_DISPOSER_ORDER_ID,
 													IN_DISCHARGED_END_AT,
 													@REG_DT,
 													@BIDDING_RANK,
 													@rtn_val,
-													@msg_txt
+													@msg_txt,
+													@json_data
 												);
                                                 IF @rtn_val = 0 THEN
-													CALL sp_push_disposer_select_collector(
-														IN_USER_ID,
-														IN_DISPOSER_ORDER_ID,
-														IN_COLLECTOR_BIDDING_ID,
-														@PUSH_CATEGORY_ID,
-														@json_data,
-														@rtn_val,
-														@msg_txt
-													);
-                                                    IF @rtn_val > 0 THEN
-														SIGNAL SQLSTATE '23000';
-                                                    END IF;
+													SET @rtn_val = 0;
+													SET @msg_txt = 'success-sp_req_select_collector-1';
                                                 ELSE
 													SIGNAL SQLSTATE '23000';
                                                 END IF;
@@ -128,26 +126,19 @@ AUTHOR 			: Leo Nam
 										ELSE
 										/*1순위가 낙찰자를 포기한 경우로서 항상 가능*/
 											CALL sp_req_select_collector_without_handler(
+												IN_USER_ID,
 												IN_COLLECTOR_BIDDING_ID,
 												IN_DISPOSER_ORDER_ID,
+												IN_DISCHARGED_END_AT,
 												@REG_DT,
 												@BIDDING_RANK,
 												@rtn_val,
-												@msg_txt
+												@msg_txt,
+												@json_data
 											);
 											IF @rtn_val = 0 THEN
-												CALL sp_push_disposer_select_collector(
-													IN_USER_ID,
-													IN_DISPOSER_ORDER_ID,
-													IN_COLLECTOR_BIDDING_ID,
-													@PUSH_CATEGORY_ID,
-													@json_data,
-													@rtn_val,
-													@msg_txt
-												);
-												IF @rtn_val > 0 THEN
-													SIGNAL SQLSTATE '23000';
-												END IF;
+												SET @rtn_val = 0;
+												SET @msg_txt = 'success-sp_req_select_collector-2';
 											ELSE
 												SIGNAL SQLSTATE '23000';
 											END IF;

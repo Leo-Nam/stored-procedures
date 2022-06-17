@@ -42,12 +42,13 @@ AUTHOR 			: Leo Nam
 				IN_CONTENTS,
 				@rtn_val,
 				@msg_txt,
-				@json_data
+				@last_id
 			);
 			IF @rtn_val = 0 THEN
 			/*공지사항 작성에 실패한 경우 예외처리한다*/
 				CALL sp_push_system_notice(
 					IN_SUBJECT,
+					@last_id,
 					@PUSH_CATEGORY_ID,
 					@json_data,
 					@rtn_val,

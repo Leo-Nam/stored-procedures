@@ -84,6 +84,14 @@ Changes			: 배출자의 방문수락 또는 거절 의사가 발생하는 경�
 						CALL sp_calc_bidder_and_prospective_visitors(
 							@DISPOSER_ORDER_ID
 						);
+                        UPDATE CHAT_ROOMS 
+                        SET 
+							CONFIRMED = IN_RESPONSE,
+                            UPDATED_AT = @REG_DT,
+                            CONFIRMED_AT = @REG_DT
+                        WHERE 
+							ORDER_ID = @DISPOSER_ORDER_ID AND 
+                            BIDDING_ID = IN_COLLECTOR_BIDDING_ID;
 					ELSE
 					/*정보변경에 실패한 경우 예외처리한다.*/
 						SET @rtn_val = 24404;

@@ -41,7 +41,7 @@ BEGIN
 			IN_PROGRESS = TRUE;  
             
 		SET @TITLE = CONCAT('[', @ORDER_CODE, ']낙찰자선정', @WHAT);
-		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']의 입찰에 낙찰된 ',  @COLLECTOR_SITE_NAME,'님이 거래를 ',  @WHAT, '하였습니다. 확인해주세요.');
+		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']의 된 ',  @COLLECTOR_SITE_NAME,'님이 거래를 ',  @WHAT, '하였습니다. 확인해주세요.');
         IF @DISPOSER_SITE_ID = 0 THEN
 			SELECT JSON_ARRAYAGG(
 				JSON_OBJECT(

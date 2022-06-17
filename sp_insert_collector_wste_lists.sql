@@ -57,11 +57,10 @@ IN_JSON_DATA	: JSON 데이타에서 사용하는 KEY와 VALUE 타입
 			LEAVE cloop;
 		END IF;
         
-        SELECT COUNT(CODE) INTO @WSTE_CODE_VALID
-        FROM WSTE_CODE
-        WHERE 
-			CODE = WSTE_CODE AND
-            DISPLAY = TRUE;
+        CALL sp_check_if_wste_code_valid(
+			CUR_WSTE_CODE,
+            @WSTE_CODE_VALID
+        );
         
         IF @WSTE_CODE_VALID = 1 THEN
 			INSERT INTO 
@@ -78,7 +77,7 @@ IN_JSON_DATA	: JSON 데이타에서 사용하는 KEY와 VALUE 타입
 			VALUES(
 				IN_COLLECTOR_BIDDING_ID, 
 				CUR_WSTE_CODE, 
-				CUR_UNIT, 
+				IF(CUR_UNIT='', '전체견적가', CUR_UNIT), 
 				CUR_UNIT_PRICE, 
 				IF(CUR_VOLUME = 0, 1, CUR_VOLUME), 
 				CUR_TRMT_CODE, 
@@ -88,14 +87,14 @@ IN_JSON_DATA	: JSON 데이타에서 사용하는 KEY와 VALUE 타입
 			
 			IF ROW_COUNT() = 0 THEN
 				SET rtn_val = 23601;
-				SET msg_txt = 'Failed to save waste bidding information';
+				SET msg_txt = 'Failed to save waste bidding information1';
 				LEAVE cloop;
 			ELSE
 				SET rtn_val = 0;
 				SET msg_txt = 'Success4';
 			END IF;
         ELSE
-			SET rtn_val = 23603;
+			SET rtn_val = 236032;
 			SET msg_txt = 'waste code is not valid';
 			LEAVE cloop;
         END IF;

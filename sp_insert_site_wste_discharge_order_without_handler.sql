@@ -16,9 +16,9 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_insert_site_wste_discharge_order_with
 	IN IN_LAT						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 위도값*/
 	IN IN_LNG						DECIMAL(12,9),				/*입렦값 : 폐기물 발생지 경도값*/
 	IN IN_REG_DT					DATETIME,					/*입력값 : 등록일자*/
-	OUT OUT_PUSH_INFO				JSON,						/*출력값 : 푸시정보*/
-    OUT rtn_val 					INT,						/*출력값 : 처리결과 반환값*/
-    OUT msg_txt 					VARCHAR(200)				/*출력값 : 처리결과 문자열*/
+	OUT OUT_PUSH_INFO_7743			JSON,						/*출력값 : 푸시정보*/
+    OUT rtn_val_7743 				INT,						/*출력값 : 처리결과 반환값*/
+    OUT msg_txt_7743				VARCHAR(200)				/*출력값 : 처리결과 문자열*/
 )
 BEGIN
 
@@ -86,12 +86,14 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 									CAST(@max_bidding_duration AS UNSIGNED),
 									IN_OPEN_AT,
 									IN_CLOSE_AT,
-									@OPEN_AT,
+									IN_OPEN_AT,
 									@CLOSE_AT,
-									@rtn_val,
-									@msg_txt
+									@rtn_val_7743,
+									@msg_txt_7743
 								);
-                                IF @rtn_val = 0 THEN
+                                IF @rtn_val_7743 = 0 THEN
+									SET @rtn_val_7743 = NULL;
+									SET @msg_txt_7743 = NULL;
                                 /*프로시저 처리가 성공한 경우*/
 									CALL sp_insert_site_wste_discharge_order_to_table(
 										IN_USER_ID,
@@ -103,7 +105,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 										IN_VISIT_START_AT,
 										IN_VISIT_END_AT,
 										IN_BIDDING_END_AT,
-										@OPEN_AT,
+										IN_OPEN_AT,
 										@CLOSE_AT,
 										IN_WSTE_CLASS,
 										IN_PHOTO_LIST,
@@ -111,54 +113,54 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 										IN_LAT,
 										IN_LNG,
 										IN_REG_DT,
-										@PUSH_INFO,
-										@rtn_val,
-										@msg_txt
+										@PUSH_INFO_7743,
+										@rtn_val_7743,
+										@msg_txt_7743
                                     );
-                                    IF @rtn_val = 0 THEN
+                                    IF @rtn_val_7743 = 0 THEN
                                     /*데이타 입력작업에 성공한 경우*/
-										SET OUT_PUSH_INFO = @PUSH_INFO;
-										SET rtn_val = 0;
-										SET msg_txt = 'Success';
+										SET rtn_val_7743 = @rtn_val_7743;
+										SET msg_txt_7743 = @msg_txt_7743;
+										SET OUT_PUSH_INFO_7743 = @PUSH_INFO_7743;
                                     ELSE
                                     /*데이타 입력작업에 실패한 경우*/
-										SET rtn_val = @rtn_val;
-										SET msg_txt = @msg_txt;
+										SET rtn_val_7743 = @rtn_val_7743;
+										SET msg_txt_7743 = @msg_txt_7743;
                                     END IF;
                                 ELSE
                                 /*프로시저 처리가 실패한 경우 예외처리한다.*/
-									SET rtn_val = @rtn_val;
-									SET msg_txt = @msg_txt;
+									SET rtn_val_7743 = @rtn_val_7743;
+									SET msg_txt_7743 = @msg_txt_7743;
                                 END IF;
                             ELSE
                             /*입찰종료일을 입력하지 않은 경우에는 예외처리한다.*/
-								SET rtn_val = 23007;
-								SET msg_txt = CONCAT('No bid end date entered');
+								SET rtn_val_7743 = 23007;
+								SET msg_txt_7743 = CONCAT('No bid end date entered');
                             END IF;
 						ELSE
 						/*방문종료일이 정책적으로 결정된 기간 이후인 경우에는 예외처리한다.*/
-							SET rtn_val = 23006;
-							SET msg_txt = CONCAT('The end date of the visit must be within ', @max_visit_duration, ' days from the date of the start of the visit');
+							SET rtn_val_7743 = 23006;
+							SET msg_txt_7743 = CONCAT('The end date of the visit must be within ', @max_visit_duration, ' days from the date of the start of the visit');
 						END IF;
 					ELSE
 					/*방문종료일이 방문시작일 이전인 경우에는 예외처리한다.*/
-						SET rtn_val = 23005;
-						SET msg_txt = CONCAT('The end date of the visit must be after the start date of the visit, ', IN_VISIT_END_AT, ', ', IN_VISIT_START_AT, ', ', IF(IN_VISIT_END_AT >= IN_VISIT_START_AT, 1, 0));
+						SET rtn_val_7743 = 23005;
+						SET msg_txt_7743 = CONCAT('The end date of the visit must be after the start date of the visit, ', IN_VISIT_END_AT, ', ', IN_VISIT_START_AT, ', ', IF(IN_VISIT_END_AT >= IN_VISIT_START_AT, 1, 0));
 					END IF;
                 ELSE
                 /*방문종료일이 결정되지 않은 경우*/
-					SET rtn_val = 23004;
-					SET msg_txt = 'Visit end date not entered';
+					SET rtn_val_7743 = 23004;
+					SET msg_txt_7743 = 'Visit end date not entered';
                 END IF;   
             ELSE
             /*방문시작일이 정책적으로 결정된 기간 이후인 경우에는 예외처리한다.*/
-				SET rtn_val = 23003;
-				SET msg_txt = CONCAT('The start date of the visit must be within ', @max_visit_start, ' days from the date of registration of the bid');
+				SET rtn_val_7743 = 23003;
+				SET msg_txt_7743 = CONCAT('The start date of the visit must be within ', @max_visit_start, ' days from the date of registration of the bid');
             END IF;
         ELSE
         /*방문시작일이 현재 시점보다 과거인 경우에는 예외처리한다.*/
-			SET rtn_val = 23002;
-			SET msg_txt = 'The start date of the visit must be after the bid registration date';
+			SET rtn_val_7743 = 23002;
+			SET msg_txt_7743 = 'The start date of the visit must be after the bid registration date';
         END IF;
     ELSE
     /*방문 시작일이 지정되지 않은 경우*/
@@ -184,13 +186,15 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				CAST(@max_bidding_duration AS UNSIGNED),
 				IN_OPEN_AT,
 				IN_CLOSE_AT,
-				@OPEN_AT,
+				IN_OPEN_AT,
 				@CLOSE_AT,
-				@rtn_val,
-				@msg_txt
+				@rtn_val_7743,
+				@msg_txt_7743
             );
-			IF @rtn_val = 0 THEN
+			IF @rtn_val_7743 = 0 THEN
 			/*프로시저 처리가 성공한 경우*/
+				SET @rtn_val_7743 = NULL;
+				SET @msg_txt_7743 = NULL;
 				CALL sp_insert_site_wste_discharge_order_to_table(
 					IN_USER_ID,
 					IN_COLLECTOR_SITE_ID,
@@ -201,7 +205,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_VISIT_START_AT,
 					@VISIT_END_AT,
 					IN_BIDDING_END_AT,
-					@OPEN_AT,
+					IN_OPEN_AT,
 					@CLOSE_AT,
 					IN_WSTE_CLASS,
 					IN_PHOTO_LIST,
@@ -209,29 +213,29 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_LAT,
 					IN_LNG,
 					IN_REG_DT,
-					@PUSH_INFO,
-					@rtn_val,
-					@msg_txt
+					@PUSH_INFO_7743,
+					@rtn_val_7743,
+					@msg_txt_7743
 				);
-				IF @rtn_val = 0 THEN
+				IF @rtn_val_7743 = 0 THEN
 				/*데이타 입력작업에 성공한 경우*/
-					SET OUT_PUSH_INFO = @PUSH_INFO;
-					SET rtn_val = 0;
-					SET msg_txt = 'Success';
+					SET rtn_val_7743 = @rtn_val_7743;
+					SET msg_txt_7743 = @msg_txt_7743;
+					SET OUT_PUSH_INFO_7743 = @PUSH_INFO_7743;
 				ELSE
 				/*데이타 입력작업에 실패한 경우*/
-					SET rtn_val = @rtn_val;
-					SET msg_txt = @msg_txt;
+					SET rtn_val_7743 = @rtn_val_7743;
+					SET msg_txt_7743 = @msg_txt_7743;
 				END IF;
 			ELSE
 			/*프로시저 처리가 실패한 경우 예외처리한다.*/
-				SET rtn_val = @rtn_val;
-				SET msg_txt = @msg_txt;
+				SET rtn_val_7743 = @rtn_val_7743;
+				SET msg_txt_7743 = @msg_txt_7743;
 			END IF;
 		ELSE
 		/*입찰종료일을 입력하지 않은 경우에는 예외처리한다.*/
-			SET rtn_val = 23001;
-			SET msg_txt = CONCAT('No bid end date entered');
+			SET rtn_val_7743 = 23001;
+			SET msg_txt_7743 = CONCAT('No bid end date entered');
 		END IF;
 	END IF;   
 END

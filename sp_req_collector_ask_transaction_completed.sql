@@ -5,7 +5,7 @@ CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_req_collector_ask_transaction_complet
 	IN IN_QUANTITY					FLOAT,								/*입렦값 : 폐기물수량*/
 	IN IN_COMPLETED_AT				DATETIME,							/*입렦값 : 폐기물 최종처리일자*/
 	IN IN_PRICE						INT,								/*입렦값 : 폐기물 처리가격*/
-	IN IN_UNIT						ENUM('Kg','m3','식','전체견적가'),		/*입렦값 : 폐기물 처리단위*/
+	IN IN_UNIT						ENUM('Kg','m³','식','전체견적가'),		/*입렦값 : 폐기물 처리단위*/
 	IN IN_TRMT_METHOD				VARCHAR(4),							/*입렦값 : 폐기물 처리방법(WSTE_TRMT_METHOD.CODE)*/
 	IN IN_WSTE_APPEARANCE			INT,								/*입렦값 : 폐기물 성상(WSTE_APPEARANCE.ID)으로서 1:고상, 2:액상*/
 	IN IN_IMG_LIST					JSON								/*입렦값 : 폐기물 처리사진*/

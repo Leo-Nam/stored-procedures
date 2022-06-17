@@ -36,24 +36,27 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 	BEGIN
 		ROLLBACK;
 		SET @json_data 		= NULL;
-		CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+		CALL sp_return_results(@rtn_val_5984, @msg_txt_5984, @json_data_5984);
 	END;        
 	START TRANSACTION;				
     /*트랜잭션 시작*/  
     
     CALL sp_req_current_time(@REG_DT);
+    SET @PUSH_INFO_5984 = NULL;
     /*UTC 표준시에 9시간을 추가하여 ASIA/SEOUL 시간으로 변경한 시간값을 현재 시간으로 정한다.*/
     
 	CALL sp_req_user_exists_by_id(
     /*DISPOSER가 존재하면서 활성화된 상태인지 검사한다.*/
 		IN_USER_ID,
         TRUE,
-		@rtn_val,
-		@msg_txt
+		@rtn_val_5984,
+		@msg_txt_5984
     );
     
-    IF @rtn_val = 0 THEN
+    IF @rtn_val_5984 = 0 THEN
     /*DISPOSER가 유효한 경우에는 정상처리한다.*/
+		SET @rtn_val_5984 = NULL;
+		SET @msg_txt_5984 = NULL;
 		IF IN_VISIT_END_AT IS NOT NULL THEN
 			SET @VISIT_END_AT = CAST(CONCAT(DATE(IN_VISIT_END_AT), ' ', '23:59:55') AS DATETIME);
 			SET @REF_DATE = @VISIT_END_AT;
@@ -66,14 +69,14 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 			SET @BIDDING_END_AT = CAST(CONCAT(DATE(IN_BIDDING_END_AT), ' ', '23:59:59') AS DATETIME);
 		ELSE
 			CALL sp_req_policy_direction(
-			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.1*/
-				'bidding_end_date_after_the_visit_closing',
-				@bidding_end_date_after_the_visit_closing
+			/*입찰종료일을 자동결정하기 위하여 방문종료일로부터의 기간을 반환받는다. 입찰종료일일은 방문종료일 + duration_bidding_end_date_after_the_visit_closing으로 한다.1*/
+				'duration_bidding_end_date_after_the_visit_closing',
+				@duration_bidding_end_date_after_the_visit_closing
 			);
 			SET @BIDDING_END_AT = ADDTIME(
 				@REF_DATE, 
 				CONCAT(
-					CAST(@bidding_end_date_after_the_visit_early_closing AS UNSIGNED), 
+					CAST(@duration_bidding_end_date_after_the_visit_closing AS UNSIGNED), 
 					':00:00'
 				)
 			);
@@ -83,7 +86,7 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 			SET @CLOSE_AT = CAST(CONCAT(DATE(IN_CLOSE_AT), ' ', '23:59:59') AS DATETIME);
 		ELSE
 			CALL sp_req_policy_direction(
-			/*입찰마감일로부터 배출종료일까지의 최소 소요기간(단위: day)을 반환받는다. 입찰종료일일은 방문종료일 + bidding_end_date_after_the_visit_early_closing으로 한다.*/
+			/*입찰마감일로부터 배출종료일까지의 최소 소요기간(단위: day)을 반환받는다. 입찰종료일일은 방문종료일 + duration_bidding_end_date_after_the_visit_closing으로 한다.*/
 				'max_disposal_duration',
 				@max_disposal_duration
 			);
@@ -123,15 +126,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 					IN_LAT,
 					IN_LNG,
 					@REG_DT,
-					@PUSH_INFO,
-					@rtn_val,
-					@msg_txt
+					@PUSH_INFO_5984,
+					@rtn_val_5984,
+					@msg_txt_5984
 				);
-				IF @rtn_val = 0 THEN
+				IF @rtn_val_5984 = 0 THEN
 				/*프로시저 실행에 성공한 경우*/
-					SET @json_data = @PUSH_INFO;
-					SET @rtn_val = 0;
-					SET @msg_txt = 'Success';
+					SET @json_data_5984 = @PUSH_INFO_5984;
 				ELSE
 				/*프로시저 실행에 실패한 경우*/
 					SIGNAL SQLSTATE '23000';
@@ -143,11 +144,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 				/*사이트가 유효한지 검사한다.*/
 					@USER_SITE_ID,
 					TRUE,
-					@rtn_val,
-					@msg_txt
+					@rtn_val_5984,
+					@msg_txt_5984
 				);
-				IF @rtn_val = 0 THEN
+				IF @rtn_val_5984 = 0 THEN
 				/*사이트가 유효한 경우*/
+					SET @rtn_val_5984 = NULL;
+					SET @msg_txt_5984 = NULL;
 					CALL sp_insert_site_wste_discharge_order_without_handler(
 						IN_USER_ID,
 						IN_COLLECTOR_SITE_ID,
@@ -166,15 +169,13 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 						IN_LAT,
 						IN_LNG,
 						@REG_DT,
-						@PUSH_INFO,
-						@rtn_val,
-						@msg_txt
+						@PUSH_INFO_5984,
+						@rtn_val_5984,
+						@msg_txt_5984
 					);
 					IF @rtn_val = 0 THEN
 					/*프로시저 실행에 성공한 경우*/
-						SET @json_data = @PUSH_INFO;
-						SET @rtn_val = 0;
-						SET @msg_txt = 'Success';
+						SET @json_data_5984 = @PUSH_INFO_5984;
 					ELSE
 					/*프로시저 실행에 실패한 경우*/
 						SIGNAL SQLSTATE '23000';
@@ -186,8 +187,8 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 			END IF;
         ELSE
         /*사용자의 현재 타입정보가 배출자가 아닌 경우에는 예외처리한다.*/
-			SET @rtn_val = 31001;
-			SET @msg_txt = 'Discharge is not possible with the current user type';
+			SET @rtn_val_5984 = 31001;
+			SET @msg_txt_5984 = 'Discharge is not possible with the current user type';
 			SIGNAL SQLSTATE '23000';
         END IF;
     ELSE
@@ -195,5 +196,5 @@ Change			: 폐기물 배출 사이트의 고유등록번호도 저장하게 됨�
 		SIGNAL SQLSTATE '23000';
     END IF;
     COMMIT;   
-	CALL sp_return_results(@rtn_val, @msg_txt, @json_data);
+	CALL sp_return_results(@rtn_val_5984, @msg_txt_5984, @json_data_5984);
 END

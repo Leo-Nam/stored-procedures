@@ -35,6 +35,8 @@ AUTHOR 			: Leo Nam
     LEFT JOIN SITE_WSTE_DISPOSAL_ORDER F ON A.ORDER_ID = F.ID
     WHERE A.ID = IN_PUSH_ID;
     
+    SET @PICKED = FALSE;
+    
 	IF @CATEGORY_ID = 1 THEN
 		SET OUT_BODY = CONCAT('[', @ORDER_CODE, ']의 폐기물 배출신청을 하였습니다.');
         SET @PICKED = TRUE;

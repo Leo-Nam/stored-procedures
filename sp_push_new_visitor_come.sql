@@ -29,7 +29,7 @@ BEGIN
 			ID = IN_ORDER_ID AND
 			ACTIVE = TRUE;
 		SET @TITLE = CONCAT('[', @ORDER_CODE, ']방문신청');
-		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']에 대하여 방문신청이 도달하였습니다.');
+		SET @BODY = CONCAT('신청하신 [', @ORDER_CODE, ']에 대하여 방문신청건이 있습니다.');
         IF @DISPOSER_SITE_ID = 0 THEN
 			SELECT JSON_ARRAYAGG(
 				JSON_OBJECT(

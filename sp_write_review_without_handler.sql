@@ -19,36 +19,68 @@ Update 			: 2022.02.16
 Version			: 0.0.1
 AUTHOR 			: Leo Nam
 */
-	
-	CALL sp_insert_post(
-		IN_USER_ID,	
-		NULL,
-		IN_CONTENTS,
-		IN_SITE_ID,
-		4,
-		NULL,
-		IN_PID,
-		IN_RATING,
-		IN_DISPOSER_ORDER_ID,
-		NULL,
-		NULL,
-		@rtn_val,
-		@msg_txt,
-		@last_insert_id
-	);
-	IF @rtn_val = 0 THEN
-		SELECT JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'LAST_ID', @last_insert_id
-			)
-		) 
-		INTO json_data;
-		SET rtn_val = @rtn_val;
-		SET msg_txt = @msg_txt;
-	ELSE
-	/*posting이 비정상적으로 종료된 경우 예외처리한다.*/
+	SELECT AFFILIATED_SITE INTO @USER_SITE_ID
+    FROM USERS
+    WHERE ID = IN_USER_ID;
+    
+    IF @USER_SITE_ID = 0 THEN
+    /*작성자가 개인인 경우*/
+		SELECT COUNT(ID) INTO @REVIEW_EXISTS
+        FROM POSTS
+        WHERE 
+			CREATOR_ID = IN_USER_ID AND
+            SITE_ID = IN_SITE_ID AND
+            DISPOSER_ORDER_ID = IN_DISPOSER_ORDER_ID AND
+            DELETED = FALSE;
+    ELSE
+    /*작성자가 사업자인 경우에는 소속사이트의 아이디로 등록된 리뷰가 존재하는 경우에는 리뷰를 본인이 리뷰를 작성하지 않았더라도 리뷰를 작성한 것으로 본다*/
+		SELECT COUNT(A.ID) INTO @REVIEW_EXISTS
+        FROM POSTS A
+        LEFT JOIN USERS B ON A.CREATOR_ID = B.ID
+        WHERE 
+			B.AFFILIATED_SITE = @USER_SITE_ID AND
+            A.SITE_ID = IN_SITE_ID AND
+            A.DISPOSER_ORDER_ID = IN_DISPOSER_ORDER_ID AND
+            A.DELETED = FALSE;
+    END IF;
+    
+    IF @REVIEW_EXISTS = 0 THEN
+    /*이전에 리뷰를 작성하지 않은 경우에는 정상처리한다.*/
+		CALL sp_insert_post(
+			IN_USER_ID,	
+			NULL,
+			IN_CONTENTS,
+			IN_SITE_ID,
+			4,
+			NULL,
+			IN_PID,
+			IN_RATING,
+			IN_DISPOSER_ORDER_ID,
+			NULL,
+			NULL,
+			@rtn_val,
+			@msg_txt,
+			@last_insert_id
+		);
+		IF @rtn_val = 0 THEN
+			SELECT JSON_ARRAYAGG(
+				JSON_OBJECT(
+					'LAST_ID', @last_insert_id
+				)
+			) 
+			INTO json_data;
+			SET rtn_val = @rtn_val;
+			SET msg_txt = @msg_txt;
+		ELSE
+		/*posting이 비정상적으로 종료된 경우 예외처리한다.*/
+			SET json_data = NULL;
+			SET rtn_val = @rtn_val;
+			SET msg_txt = @msg_txt;
+		END IF;
+    ELSE
+    /*이전에 리뷰를 작성한 경우에는 예외처리한다.*/
 		SET json_data = NULL;
-		SET rtn_val = @rtn_val;
-		SET msg_txt = @msg_txt;
-	END IF;
+		SET rtn_val = 39701;
+		SET msg_txt = 'you or your site already registered the review';
+    END IF;
 END

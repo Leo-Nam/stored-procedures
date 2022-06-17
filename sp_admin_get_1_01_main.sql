@@ -1,5 +1,5 @@
 CREATE DEFINER=`chiumdb`@`%` PROCEDURE `sp_admin_get_1_01_main`(
-	IN IN_USER_ID					BIGINT
+	IN IN_PARAM					JSON
 )
 BEGIN
 
@@ -14,6 +14,11 @@ AUTHOR 			: Leo Nam
 */
      
     
+	SELECT USER_ID INTO @USER_ID
+    FROM JSON_TABLE(IN_PARAM, "$[*]" COLUMNS(
+		USER_ID 				BIGINT 				PATH "$.USER_ID"
+	)) AS PARAMS;
+    
 	CALL sp_req_policy_direction(
 	/*입찰마감일로부터 배출종료일까지의 최소 소요기간(단위: day)을 반환받는다. 입찰종료일일은 방문종료일 + duration_bidding_end_date_after_the_visit_closing으로 한다.*/
 		'admin_main_duration',
@@ -21,7 +26,7 @@ AUTHOR 			: Leo Nam
 	);
     
     CALL sp_admin_main_top(
-		IN_USER_ID,
+		@USER_ID,
 		@admin_main_duration,
 		@TOP
     );
@@ -36,7 +41,7 @@ AUTHOR 			: Leo Nam
         TOP, 
         BODY
 	) VALUES(
-        IN_USER_ID, 
+        @USER_ID, 
         @TOP, 
         @BODY
 	);
