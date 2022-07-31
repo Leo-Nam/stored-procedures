@@ -10465,171 +10465,286 @@ select ceiling(4.7),floor(4.7),round(4.7);-- 올림 내림 반올림
 select conv('AA',16,2),CONV(100,10,8);-- 진수끼리 변환 하는 함수 	AAR가 16진수 인데 2진수로 바꿔
 SELECT MOD(157,10),157%10, 157 MOD 10; -- 나머지 값 구하기
 SELECT RAND(), floor(1+(RAND() * (6-1)));-- 임의의 값 구하기
+*/
+/*
 SELECT truncate(12345.12345,2),TRUNCATE(12345.12345,-2);
+
+SELECT adddate('2020-01-01',INTERVAL 31 DAY),ADDDATE('2020-01-01',INTERVAL 1 MONTH);SELECT subdate('2020-01-01',INTERVAL 31 DAY),subdate('2020-01-01',INTERVAL 1 MONTH);SELECT addtime('2020-01-01 23:59:59', '1:1:1'),addtime('15:00:00','2:10:10');SELECT subtime('2020-01-01 23:59:59', '1:1:1'),SUBTIME('15:00:00','2:10:10');select year(curdate()),MONTH(curdate()),DAYOFMONTH(curdate());SELECT hour(curtime()), MINUTE(current_time()), SECOND(current_time()), MICROSECOND(current_time());SELECT DATE(NOW()),TIME(NOW());SELECT datediff('2020-01-01',NOW()), timediff('23:23:59','12:11:10');SELECT dayofweek(curdate()),monthname(curdate()),dayofyear(curdate());SELECT LAST_DAY('2020-02-01');SELECT makedate(2020,32);SELECT maketime(12,11,10);SELECT period_add(202001,11),period_diff(202001,201812); SELECT quarter('2020-07-07');SELECT time_to_sec('12:11:10');SELECT current_user(),database();SELECT * FROM usertbl;SELECT found_rows();SELECT ROW_COUNT(); -- UPDATE, DELETE 했을때 몇개 했는지 반환SELECT version();SELECT sleep(5);SELECT '5초후에 보입니다';
+출처: https://abc1211.tistory.com/249 [길위의 개발자:티스토리]
+
 */
 
 /*
-SET @START_AT = unix_timestamp(now(6));
-CALL sp_test_004(7);
-SET @END_AT = unix_timestamp(now(6));
-SELECT @END_AT - @START_AT;
+SET @PARAMS = '[{"USER_ID":49, "B_CODE":"1114000000"}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_get_site_list_whose_biz_areas_of_interest(
+	@PARAMS
+);
+*/
 
-
-SET @ROOM_ID = 155;
-	SELECT DISTINCT DATE(CREATED_AT)
-    FROM CHATS
+/*
+    SELECT 
+		YEAR(CREATED_AT),
+		MONTH(CREATED_AT),
+		USER_CURRENT_TYPE,
+        COUNT(CREATED_AT)
+	FROM USERS 
 	WHERE 
-		ROOM_ID = @ROOM_ID;
-        
-        
-
-SET @PARAMS = '[{"USER_ID":7, "ROOM_ID":155, "PAGE_SIZE":1000, "OFFSET_SIZE":0}]' COLLATE utf8mb4_unicode_ci;
-CALL sp_admin_retrieve_chats(
-	@PARAMS
-);
+		YEAR(CREATED_AT) 		= 2022 AND
+        CLASS					= 201 AND
+        USER_CURRENT_TYPE		IN (2, 3)
+	GROUP BY 
+		YEAR(CREATED_AT), 
+		MONTH(CREATED_AT), 
+		USER_CURRENT_TYPE;	
 */
 
-/*
-SET @USER_ID = 7;
-SET @ROOM_ID = 155;
-SET @PAGE_SIZE= 1000;
-SET @OFFSET_SIZE = 0;
-CALL sp_test_005(
-	@ROOM_ID,
-	@USER_ID,
-	@PAGE_SIZE,
-	@OFFSET_SIZE,
-    @OUT_COUNT,
-	@json_data
-);
-SELECT 
-	@ROOM_ID,
-	@USER_ID,
-	@PAGE_SIZE,
-	@OFFSET_SIZE,
-    @OUT_COUNT,
-	@json_data;
-*/
-/*
-SET @PARAMS = '[{"USER_ID":7, "SITE_ID":0, "PAGE_SIZE":1000, "OFFSET_SIZE":0}]' COLLATE utf8mb4_unicode_ci;
-CALL sp_admin_retrieve_users(
-	@PARAMS
-);    
-*/
-/*
-USE chium;
-ALTER TABLE WSTE_TRMT_FCTL MODIFY ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY;
-*/
 
 /*
-call sp_req_b_trmt_fctl();
-*/
-
-/*
-SET @PARAMS = '[{"USER_ID":7, "SITE_ID":0, "PAGE_SIZE":15, "OFFSET_SIZE":0, "CONFIRMED":null, "ACTIVE":null, "SEARCH":"0007"}]' COLLATE utf8mb4_unicode_ci;
-CALL sp_admin_retrieve_users(
-	@PARAMS
-);    
-*/
-/*
-SET @SITE_ID = 45;
-SET @PARAMS = '[{"WSTE_CODE":"01-01-05", "APPR_CODE":2}, {"WSTE_CODE":"01-01-06", "APPR_CODE":1}]' COLLATE utf8mb4_unicode_ci;
-
-CALL sp_admin_update_site_wste_info(
-	@SITE_ID,
+SET @REPORT_ID = 100;
+SET @CATEGORY_ID = 61;
+SET @PARAMS = '[{"CAT_ID":7, "CAT_VAL":19}, {"CAT_ID":8, "CAT_VAL":25}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_insert_wste_trmt_fctl_processing(
+	@REPORT_ID,
+    @CATEGORY_ID,
     @PARAMS,
     @rtn_val,
     @msg_txt
+);        
+
+SELECT 
+	@REPORT_ID,
+    @CATEGORY_ID,
+    @PARAMS,
+    @rtn_val,
+    @msg_txt
+*/
+
+
+/*
+		SET @TIME_STAMP_START = unix_timestamp(now(6));
+        CALL sp_retrieve_current_state(
+			22
+        );
+		SET @IME_STAMP_END = unix_timestamp(now(6));
+		SET @TIME_ELAPSED = @TIME_STAMP_END - @TIME_STAMP_START;
+        SELECT @TIME_STAMP_END, @TIME_STAMP_START, @TIME_ELAPSED
+*/
+
+
+/*
+SET @TEST_ARRAY = '[{"TYPE":"ORDER", "KEY":"AAA", "VALUE":"VAL_1"},{"TYPE":"BIDDING", "KEY":"BBB", "VALUE":"VAL_2"}]' COLLATE utf8mb4_unicode_ci;
+SELECT JSON_EXTRACT(@TEST_ARRAY, '$[0]."KEY"');      
+*/
+
+
+/*
+SET @ADMIN_ID = 93;
+SET @ID = 62;
+SET @USER_NAME = '남명진222';
+
+SELECT JSON_OBJECT(
+	'ADMIN_ID', @ADMIN_ID,
+    'USER_DETAILS', 
+	JSON_OBJECT(
+		'ID', @ID,
+		'USER_NAME', @USER_NAME
+	)
+) INTO @PARAMS;
+
+CALL sp_test_008(
+	@PARAMS
 );
 */
 
-/*
-SET @PARAMS = JSON_OBJECT(
-	'USER_ID', 61,
-    'SITE_ID', 45,
-    'WSTE_LIST', 
-    JSON_OBJECT(
-		'WSTE_CODE', '01-01-08',
-		'APPR_CODE', 2
-	)
-);
 
-CALL sp_test_006(
+
+/*
+SET @PARAMS = '[{"USER_ID":49, "TRANSACTION_ID":2000}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_get_new_transaction_details(
 	@PARAMS
 );
 */
 
 /*
-CREATE TABLE `REPORTED_WSTE` (
-  `ID` bigint NOT NULL,
-  `REPORT_ID` bigint DEFAULT NULL COMMENT '최종보고서 등록번호(TRANSACTION_REPORT.ID)',
-  `DISPOSER_ID` bigint DEFAULT NULL COMMENT '폐기물 배출자의 등록번호(USERS.ID)',
-  `DISPOSER_SITE_ID` bigint DEFAULT NULL COMMENT '폐기물 배출자 사이트의 등록번호(COMP_SITE.ID)',
-  `COLLECTOR_ID` bigint DEFAULT NULL COMMENT '폐기물 수거자의 등록번호(COMP_SITE.ID)',
-  `PROCESSOR_ID` bigint DEFAULT NULL COMMENT '폐기물처리업자의 등록번호(COMP_SITE.ID)',
-  `TRMT_METHOD` varchar(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '처리방법(WSTE_TRMT_METHOD.CODE)',
-  `WSTE_CODE` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '폐기물코드(WSTE_CODE.CODE)',
-  `WSTE_APPEARANCE` int DEFAULT NULL COMMENT '폐기물성상(WSTE_APPEARANCE.ID)',
-  `WSTE_FCTL_ID` int DEFAULT NULL COMMENT '처리시설 분류코드(WSTE_TRMT_FCTL.ID)',
-  `CREATED_AT` datetime DEFAULT NULL,
-  `UPDATED_AT` datetime DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='처리보고서에서 다중 폐기물을 처리하는 시스템이 완료되었을 경우 사용하는  폐기물 관리테이블로서 수집운반 및 처리과정의 완료 또는 완료예정인 폐기물에 대한 정보를 관리하는 테이블'
+
+    SELECT 
+		A.USER_ID, 
+        A.USER_TYPE, 
+        A.SITE_ID, 
+        A.ORDER_ID, 
+        B.STATUS_NM_KO, 
+        C.STATUS_NM_KO, 
+        D.STATUS_NM_KO, 
+        E.SITE_NAME
+    FROM STATE_CONTROLLER A 
+    LEFT JOIN STATUS B ON A.ORDER_STATE = B.ID
+    LEFT JOIN STATUS C ON A.BIDDING_STATE = C.ID
+    LEFT JOIN STATUS D ON A.TRANSACTION_STATE = D.ID
+    LEFT JOIN COMP_SITE E ON A.SITE_ID = E.ID
+    WHERE A.ID = 324;
 */
 
 
 /*
-USE chium;
 
-DROP TABLE IF EXISTS GHG_EMIT_FACTOR;
+    SELECT
+		A.SENDER_ID,
+        A.USER_ID,
+        B.AFFILIATED_SITE,
+        C.AFFILIATED_SITE,
+        B.USER_NAME,
+        C.USER_NAME 
+	FROM PUSH_HISTORY A 
+    LEFT JOIN USERS B ON A.SENDER_ID = B.ID
+    LEFT JOIN USERS C ON A.USER_ID = C.ID
+    WHERE ID = 29822;
+*/
 
-CREATE TABLE `GHG_EMIT_FACTOR` (
-  `ID` int NOT NULL,
-  `NAME` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `FACTOR` float DEFAULT NULL,
-  `DEPTH` int DEFAULT NULL,
-  `PID` int DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='온실가스배출계산 보정계수';
+/*
+	DROP TABLE IF EXISTS ADMIN_GET_NEW_REPORTS_WITHOUT_HANDLER_TEMP;
 
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(1, '매립', NULL, 1, NULL);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(2, '생물학적처리', NULL, 1, NULL);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(3, '소각', NULL, 1, NULL);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(4, '폐수', NULL, 1, NULL);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(5, '복토유형에 따른 산화계수', NULL, 2, 1);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(11, '토양,퇴비 등으로 복토', 0.1, 3, 5);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(12, '기타(비 통기성 재질, 미 분류된) ', 0, 3, 5);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(6, '매립관리형태에 따른 보정계수(MCF)', NULL, 2, 1);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(13, '관리형-혐기성', 1, 3, 6);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(14, '관리형-준호기성', 0.5, 3, 6);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(15, '비관리형-5m이상', 8, 3, 6);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(16, '비관리형-5m미만', 0.4, 3, 6);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(17, '기타(미분류)', 0.6, 3, 6);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(7, '소각로 폐기물형태에 따른 N₂O배출계수', NULL, 2, 3);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(18, '생활폐기물', 39.8, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(19, '사업장폐기물(슬러지제외)', 113.19, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(20, '사업장폐기물(슬러지)', 408.41, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(21, '건설폐기물', 109.57, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(22, '지정폐기물(슬러지제외)', 83.52, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(23, '지정폐기물(슬러지)', 408.41, 3, 7);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(8, '소각로유형에 따른 CH₄배출계수', NULL, 2, 3);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(24, '연속식 - 스토커', 0.0002, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(25, '연속식 - 유동상', 0, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(26, '준연속식 - 스토커', 0.006, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(27, '준연속식 - 유동상', 0.188, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(28, '배치형 - 스토커', 0.06, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(29, '배치형 - 유동상', 0.237, 3, 8);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(9, '폐수처리유형에 따른 CH₄배출계수', NULL, 2, 4);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(30, '슬러지의 혐기성반응조', 0.2, 3, 9);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(31, '혐기성 반응조', 0.2, 3, 9);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(32, '혐기성라군(2m이하)', 0.05, 3, 9);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(33, '혐기성라군(2m초과)', 0.2, 3, 9);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(10, '생물학적처리에서 폐기물처리 중량기준', NULL, 2, 2);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(34, '건량', NULL, 3, 10);
-INSERT INTO GHG_EMIT_FACTOR (ID, NAME, FACTOR, DEPTH, PID) VALUES(35, '습량', NULL, 3, 10);
+SET @PARAMS = '[{"USER_ID":49, "SEARCH":null, "OFFSET_SIZE":0, "PAGE_SIZE":15}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_get_new_reports(
+	@PARAMS
+);    
+*/
+
+ /* 
+	DROP TABLE IF EXISTS ADMIN_RETRIEVE_LOGS_TEMP;
+
+SET @PARAMS = '[{"ADMIN_ID":49, "ORDER_ID":2879, "SEARCH":"FIRST_PLACE", "OFFSET_SIZE":0, "PAGE_SIZE":15}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_retrieve_logs(
+	@PARAMS
+);
+*/
+/*
+SET @PARAMS = '[{"USER_ID":49, "ORDER_ID":null, "SEARCH":"00207", "OFFSET_SIZE":0, "PAGE_SIZE":15}]' COLLATE utf8mb4_unicode_ci;
+CALL sp_admin_get_new_logs(
+	@PARAMS
+);
 */
 
 
 /*
-UPDATE chiumdev_2.WSTE_TRMT_FCTL A, chium.WSTE_TRMT_FCTL B SET A.GHG_EMIT_ID = B.GHG_EMIT_ID WHERE A.ID = B.ID
+select routine_schema, routine_name, routine_type
+from information_schema.ROUTINES
+WHERE routine_schema = 'test';
 */
+
+/*
+
+SET @USER_ID = 1;
+SET @OLD_NUMBER = '010-9169-0099';
+SET @NEW_NUMBER = '010-9169-0098';
+CALL sp_req_change_user_phone(
+	@USER_ID,
+    @OLD_NUMBER,
+    @NEW_NUMBER
+);
+*/
+
+/*
+CALL sp_req_user_detail(18);
+*/
+
+
+/*
+SELECT 
+	POST_ID, 
+	POST_CREATOR_ID, 
+	POST_RATING, 
+	POST_CONTENTS, 
+	POST_CREATED_AT, 
+	POST_DISPOSER_ORDER_ID
+FROM V_POSTS 
+WHERE 
+	POST_SITE_ID 		= 17 AND
+	POST_CATEGORY_ID 	= 4  AND 
+	POST_PID 			= 0  AND 
+	POST_ACTIVE		 	= TRUE  AND 
+	POST_DELETED		= FALSE 
+*/
+
+/*
+SET @ORDER_ID = 2908;
+SET @UNIT = '전체견적가';
+CALL sp_req_change_price_units(
+	@ORDER_ID,
+    @UNIT
+);
+*/
+
+/*
+CALL sp_req_user_login(
+	'hyejin2',
+    NULL,
+    NULL
+)
+*/
+
+
+/*
+SET @IN_USER_ID = 'com_col_31';
+SET @IN_PWD = '1234';
+SET @IN_USER_NAME = '수집자';
+SET @IN_PHONE = '030-0000-3013';
+SET @IN_COMP_NAME = '1';
+SET @IN_REP_NAME = '1';
+SET @IN_KIKCD_B_CODE = '1111012000';
+SET @IN_ADDR = '마을면 계록리 100';
+SET @IN_LNG = 1.1;
+SET @IN_LAT = 1.1;
+SET @IN_CONTACT = '1';
+SET @IN_TRMT_BIZ_CODE = '1';
+SET @IN_BIZ_REG_CODE = '12030107';
+SET @IN_AGREE_TERMS = 1;
+SET @IN_SOCIAL_NO = '0';
+SET @IN_BIZ_REG_IMG_PATH = "https://chium.s3.ap-northeast-2.amazonaws.com/temp/003107c7-03d7-47aa-bbfd-2c291b75ed97.jpeg";
+SET @IN_CONTACT_PATH = 1;
+call sp_create_company(
+	@IN_USER_ID,
+	@IN_PWD,
+	@IN_USER_NAME,
+	@IN_PHONE,
+	@IN_COMP_NAME,
+	@IN_REP_NAME,
+	@IN_KIKCD_B_CODE,
+	@IN_ADDR,
+	@IN_LNG,
+	@IN_LAT,
+	@IN_CONTACT,
+	@IN_TRMT_BIZ_CODE,
+	@IN_BIZ_REG_CODE,
+	@IN_AGREE_TERMS,
+	@IN_SOCIAL_NO,
+	@IN_BIZ_REG_IMG_PATH,
+	@IN_CONTACT_PATH
+);
+*/
+
+/*
+SET @IN_USER_ID = 107;
+SET @IN_SITE_ID = 74;
+SET @IN_WSTE_LIST = null;
+SET @IN_TRMT_BIZ_CODE = '1';
+SET @IN_PERMIT_REG_CODE = '12343';
+SET @IN_PERMIT_REG_IMG_PATH = '12345';
+
+CALL sp_update_site_permit_info(
+	@IN_USER_ID,
+	@IN_SITE_ID,
+	@IN_WSTE_LIST,
+	@IN_TRMT_BIZ_CODE,
+	@IN_PERMIT_REG_CODE,
+	@IN_PERMIT_REG_IMG_PATH
+);
+*/
+CALL sp_req_b_contact_path_without_handler(
+	@rtn_val,
+    @msg_txt,
+    @LISTS
+);
+SELECT 
+	@rtn_val,
+    @msg_txt,
+    @LISTS
