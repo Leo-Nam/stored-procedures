@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="ktWATJik5ayXsvhAUB-e" name="Page-1">
-        <mxGraphModel dx="6605" dy="7223" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="431" dy="3268" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -69,15 +69,8 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="242" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="19" target="35">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="2100" y="-390" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="266" value="TRUE: 방문신청함" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="242">
-                    <mxGeometry x="-0.6172" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
+                <mxCell id="242" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="19" target="241">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="19" value="&lt;font&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font&gt;수거자가 방문신청을 하였는가?&lt;br&gt;COLLECTOR_BIDDING&lt;br&gt;&lt;/font&gt;DATE_OF_VISIT IS NOT NULL&lt;/font&gt;&lt;br&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="1990" y="-667" width="220" height="176" as="geometry"/>
@@ -375,26 +368,27 @@
                 <mxCell id="95" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="99" target="100" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="96" value="TRUE: 수락함" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="95" vertex="1" connectable="0">
+                <mxCell id="96" value="TRUE:시간경과함" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="95" vertex="1" connectable="0">
                     <mxGeometry x="-0.2995" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="97" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="99" target="273" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="2740" y="2833" as="targetPoint"/>
-                    </mxGeometry>
+                <mxCell id="97" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="99" target="101" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="98" value="FALSE: 미수락" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="97" vertex="1" connectable="0">
+                <mxCell id="98" value="FALSE:지나지 않음" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="97" vertex="1" connectable="0">
                     <mxGeometry x="-0.6382" relative="1" as="geometry">
                         <mxPoint x="37" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="99" value="&lt;font style=&quot;font-size: 8px&quot;&gt;1순위자가 수거요청을 수락하였는가??&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;SITE_WSTE_DISPOSAL_ORDER&lt;/span&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;.&lt;br&gt;COLLECTOR_SELECTION_CONFIRMED&lt;/span&gt;&lt;br style=&quot;font-size: 8px&quot;&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;= TRUE&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                <mxCell id="99" value="&lt;font style=&quot;font-size: 8px&quot;&gt;배출자가 1순위자에게 &lt;br&gt;수거요청일을 보낼 기한이 지났는가?&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;COLLECTOR_BIDDING.&lt;br&gt;COLLECTOR_SELECTION_CONFIRMED&lt;/span&gt;&lt;br style=&quot;font-size: 8px&quot;&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;= TRUE&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="2340" y="2745" width="220" height="176" as="geometry"/>
                 </mxCell>
-                <mxCell id="100" value="213&lt;br&gt;유찰" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                <mxCell id="100" value="239&lt;br&gt;낙찰포기" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="2390" y="3059" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="245&lt;br&gt;낙찰결정중" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
+                    <mxGeometry x="2740" y="2803" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="102" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="106" target="188" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -406,7 +400,7 @@
                         <mxPoint x="16" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="193" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="106" target="267" edge="1">
+                <mxCell id="193" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=8;" parent="1" source="106" target="192" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="194" value="&lt;span style=&quot;font-size: 11px&quot;&gt;FALSE: 안보냄&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="193" vertex="1" connectable="0">
@@ -470,6 +464,43 @@
                 </mxCell>
                 <mxCell id="123" value="238&lt;br&gt;미입찰종료" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
                     <mxGeometry x="1370" y="1218" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="150" value="" style="edgeStyle=none;html=1;" parent="1" source="124" target="125" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="TRUE:입찰했음" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="150" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3526" y="-3" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="124" value="&lt;span style=&quot;font-size: 8px&quot;&gt;수거자가 입찰을 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;COLLECTOR_BIDDING&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;DATE_OF_BIDDING IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+                    <mxGeometry x="1620" y="-390" width="220" height="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="160" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="125" target="165" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1390" y="-150" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="161" value="미포기" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="160" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2572" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="125" value="&lt;span style=&quot;font-size: 8px&quot;&gt;수거자가 입찰을 포기하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;COLLECTOR_BIDDING&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;CANCEL_BIDDING = TRUE&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;strokeColor=#001DBC;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="1250" y="-390" width="220" height="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="125" target="238" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1190" y="-310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="164" value="포기함" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="163" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3064" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="165" value="253&lt;br&gt;예약입찰중" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="-120" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="168" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" parent="1" source="167" target="47" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -558,14 +589,8 @@
                 <mxCell id="189" value="&lt;span style=&quot;font-size: 8px&quot;&gt;1순위자가 배출자의 요청을 승낙하였는가?&lt;br&gt;COLLECTOR_BIDDING.MAKE_DECISION &lt;br&gt;= TRUE&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="3040" y="2233" width="220" height="176" as="geometry"/>
                 </mxCell>
-                <mxCell id="196" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="192" target="195" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="2450" y="1590"/>
-                            <mxPoint x="2630" y="1590"/>
-                            <mxPoint x="2630" y="1504"/>
-                        </Array>
-                    </mxGeometry>
+                <mxCell id="196" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=8;" parent="1" source="192" target="195" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="197" value="TRUE: 기한지남" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;" parent="196" vertex="1" connectable="0">
                     <mxGeometry x="-0.2619" y="1" relative="1" as="geometry">
@@ -581,13 +606,13 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="192" value="&lt;span style=&quot;font-size: 8px&quot;&gt;배출자가 1순위자에게 수거요청일을 보낼 &lt;br&gt;기한이 지났는가?&lt;br&gt;SITE_WSTE_DISPOSAL_ORDER.MAX_SELECT_AT&lt;br&gt;&amp;lt;= NOW()&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="2340" y="1674" width="220" height="176" as="geometry"/>
+                    <mxGeometry x="2340" y="1950" width="220" height="176" as="geometry"/>
                 </mxCell>
                 <mxCell id="195" value="214&lt;br&gt;삭제" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="2740" y="1474" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="2390" y="1731" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="198" value="226&lt;br&gt;낙찰결정중" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
-                    <mxGeometry x="2740" y="1732" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="2740" y="2008" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="205" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=8;" parent="1" source="201" target="204" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -684,94 +709,30 @@
                 <mxCell id="231" value="245&lt;br&gt;낙찰결정중" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="1" vertex="1">
                     <mxGeometry x="2040" y="3770" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="248" value="유효성 검사 삭제하고 방문중으로 변경해야함" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="2280" y="619" width="270" height="30" as="geometry"/>
+                <mxCell id="238" value="254&lt;br&gt;예약입찰포기" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+                    <mxGeometry x="1020" y="-332" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="251" value="" style="edgeStyle=none;html=1;" edge="1" source="253" target="256" parent="1">
+                <mxCell id="243" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="241" target="35">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="252" value="TRUE:입찰했음" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="251">
-                    <mxGeometry x="-0.3526" y="-3" relative="1" as="geometry">
-                        <mxPoint x="-12" y="3" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="253" value="&lt;span style=&quot;font-size: 8px&quot;&gt;수거자가 입찰을 하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;COLLECTOR_BIDDING&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;DATE_OF_BIDDING IS NOT NULL&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
-                    <mxGeometry x="950" y="160" width="220" height="176" as="geometry"/>
-                </mxCell>
-                <mxCell id="254" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="256" target="259" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="720" y="400" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="255" value="미포기" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="254">
-                    <mxGeometry x="-0.2572" y="-1" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="256" value="&lt;span style=&quot;font-size: 8px&quot;&gt;수거자가 입찰을 포기하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;COLLECTOR_BIDDING&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;CANCEL_BIDDING = TRUE&lt;/span&gt;&lt;span style=&quot;font-size: 10px&quot;&gt;&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;strokeColor=#001DBC;fontColor=#ffffff;" vertex="1" parent="1">
-                    <mxGeometry x="580" y="160" width="220" height="176" as="geometry"/>
-                </mxCell>
-                <mxCell id="257" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="256" target="260" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="520" y="240" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="258" value="포기함" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="257">
-                    <mxGeometry x="-0.3064" y="-2" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="259" value="253&lt;br&gt;예약입찰중" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
-                    <mxGeometry x="630" y="430" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="260" value="254&lt;br&gt;예약입찰포기" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
-                    <mxGeometry x="350" y="218" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="261" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="265" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1430" y="430" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="262" value="TRUE: 방문종료일 지남" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="261">
+                <mxCell id="246" value="TRUE: 방문종료일 지남" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="243">
                     <mxGeometry x="-0.2879" y="-3" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="263" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="265" target="253" parent="1">
+                <mxCell id="244" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="241" target="124">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="264" value="FALSE: 지나지 않음" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="263">
+                <mxCell id="245" value="FALSE: 지나지 않음" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="244">
                     <mxGeometry x="-0.1391" y="1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="265" value="&lt;span style=&quot;font-size: 8px&quot;&gt;방문종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;color: rgb(240 , 240 , 240)&quot;&gt;SITE_WSTE_DISPOSAL_ORDER&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;color: rgb(240 , 240 , 240) ; font-size: 10px&quot;&gt;VISIT_END_AT &amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
-                    <mxGeometry x="1320" y="160" width="220" height="176" as="geometry"/>
+                <mxCell id="241" value="&lt;span style=&quot;font-size: 8px&quot;&gt;방문종료일이 지났는가?&lt;/span&gt;&lt;br style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;span style=&quot;color: rgb(240 , 240 , 240)&quot;&gt;SITE_WSTE_DISPOSAL_ORDER&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;color: rgb(240 , 240 , 240) ; font-size: 10px&quot;&gt;VISIT_END_AT &amp;lt;= NOW()&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+                    <mxGeometry x="1990" y="-390" width="220" height="176" as="geometry"/>
                 </mxCell>
-                <mxCell id="268" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="267" target="192">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="272" value="FALSE: 입찰미포기" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="268">
-                    <mxGeometry x="-0.2731" y="1" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="270" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="267" target="269">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="271" value="TRUE: 입찰취소" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="270">
-                    <mxGeometry x="-0.299" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="267" value="&lt;span style=&quot;font-size: 8px&quot;&gt;1순위자가 입찰을 취소하였는가?&lt;/span&gt;&lt;br style=&quot;font-size: 8px&quot;&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;COLLECTOR_BIDDING.CANCEL_BIDDING&lt;/span&gt;&lt;br style=&quot;font-size: 8px&quot;&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;= TRUE&lt;/span&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
-                    <mxGeometry x="2340" y="1950" width="220" height="176" as="geometry"/>
-                </mxCell>
-                <mxCell id="269" value="207&lt;br&gt;입찰포기" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
-                    <mxGeometry x="2740" y="2008" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="273" value="&lt;font style=&quot;font-size: 8px&quot;&gt;1순위자가 수거요청을 수락하였는가??&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;COLLECTOR_BIDDING.MAKE_DECISION&lt;/span&gt;&lt;br style=&quot;font-size: 8px&quot;&gt;&lt;span style=&quot;font-size: 8px&quot;&gt;IS NOT NULL&lt;br&gt;&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontFamily=Helvetica;fontSize=12;align=center;strokeWidth=1;spacing=6;spacingTop=-4;" vertex="1" parent="1">
-                    <mxGeometry x="2690" y="2745" width="220" height="176" as="geometry"/>
+                <mxCell id="248" value="유효성 검사 삭제하고 방문중으로 변경해야함" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="2280" y="619" width="270" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
